@@ -66,19 +66,19 @@ output:
     Instead, it is something worth critically engaging with and
     refining, in a similar way that we would refine an essay or speech.
     Philosophy aside, there are still a few points that need to be
-    improved in this figure, \* The axis titles are not meaningful. \*
-    There is a strange gap between the left hand edge of the plot and
-    the start of the bars. \* I would also prefer if the bars were
-    exactly touching one another, without the small vertical gap. \* The
-    scientific notation for population size is unnecessarily
-    technical. \* The color scheme is a bit boring^\[.
+    improved in this figure,
+
+         * The axis titles are not meaningful.
+         * There is a strange gap between the left hand edge of the plot and the start of the bars.
+         * I would also prefer if the bars were exactly touching one another, without the small vertical gap.
+         * The scientific notation for population size is unnecessarily technical.
+         * The color scheme is a bit boring^[.
 
 7.  I’ve addressed each issue in the block below. Can you tell which
     piece of code makes which change? Try removing different components
     to verify your guesses.
 
         cols <- c("#80BFA2", "#7EB6D9", "#3E428C", "#D98BB6", "#BF2E21", "#F23A29")
-
             ggplot(gap2000) +
                geom_col(
                  aes(pop, reorder(country, pop), fill = cluster),
