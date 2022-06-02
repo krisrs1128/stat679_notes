@@ -79,7 +79,7 @@ output:
         ggplot(murders) +
           geom_point(aes(x = population, y = total, col = region))
 
-    ![](/assets/week1/unnamed-chunk-3-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-3-1.png)
 
 4.  The original plot used a log-scale. To transform the x and y axes,
     we can use scales.
@@ -89,7 +89,7 @@ output:
           scale_x_log10() +
           scale_y_log10()
 
-    ![](/assets/week1/unnamed-chunk-4-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-4-1.png)
 
     One nuance is that scales aren’t limited to x and y transformations.
     They can be applied to modify any relationship between a data field
@@ -102,7 +102,7 @@ output:
           scale_y_log10() +
           scale_color_manual(values = c("#6a4078", "#aa1518", "#9ecaf8", "#50838c"))
 
-    ![](/assets/week1/unnamed-chunk-5-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-5-1.png)
 
 5.  A problem with this graph is that it doesn’t tell us which state
     each point corresponds to. For that, we’ll need text labels. We can
@@ -118,7 +118,7 @@ output:
           scale_x_log10() +
           scale_y_log10()
 
-    ![](/assets/week1/unnamed-chunk-6-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-6-1.png)
 
     Note that each type of layer uses different visual properties to
     encode the data – the argument label is only available for the
@@ -139,7 +139,7 @@ output:
           scale_x_log10() +
           scale_y_log10()
 
-    ![](/assets/week1/unnamed-chunk-7-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-7-1.png)
 
 7.  How can we improve the readability of this plot? You might already
     have ideas,
@@ -194,4 +194,4 @@ output:
           ) +
           theme_minimal()
 
-    ![](/assets/week1/unnamed-chunk-8-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-8-1.png)

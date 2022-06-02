@@ -126,7 +126,7 @@ back to the data.frame in ggplot(murders).</p>
   geom_point(aes(x = population, y = total, col = region))
 </code></pre></div>    </div>
 
-    <p><img src="/assets/week1/unnamed-chunk-3-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-3-1.png" alt="" /></p>
   </li>
   <li>
     <p>The original plot used a log-scale. To transform the x and y axes,
@@ -138,7 +138,7 @@ we can use scales.</p>
   scale_y_log10()
 </code></pre></div>    </div>
 
-    <p><img src="/assets/week1/unnamed-chunk-4-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-4-1.png" alt="" /></p>
 
     <p>One nuance is that scales aren’t limited to x and y transformations.
 They can be applied to modify any relationship between a data field
@@ -152,7 +152,7 @@ mapping between the region field and circle color.</p>
   scale_color_manual(values = c("#6a4078", "#aa1518", "#9ecaf8", "#50838c"))
 </code></pre></div>    </div>
 
-    <p><img src="/assets/week1/unnamed-chunk-5-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-5-1.png" alt="" /></p>
   </li>
   <li>
     <p>A problem with this graph is that it doesn’t tell us which state
@@ -170,7 +170,7 @@ time within a <code class="language-plaintext highlighter-rouge">geom_text</code
   scale_y_log10()
 </code></pre></div>    </div>
 
-    <p><img src="/assets/week1/unnamed-chunk-6-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-6-1.png" alt="" /></p>
 
     <p>Note that each type of layer uses different visual properties to
 encode the data – the argument label is only available for the
@@ -193,7 +193,7 @@ arguments of <code class="language-plaintext highlighter-rouge">aes</code> are a
   scale_y_log10()
 </code></pre></div>    </div>
 
-    <p><img src="/assets/week1/unnamed-chunk-7-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-7-1.png" alt="" /></p>
   </li>
   <li>
     <p>How can we improve the readability of this plot? You might already
@@ -256,7 +256,7 @@ ggplot(murders, aes(population, total)) +
   theme_minimal()
 </code></pre></div>    </div>
 
-    <p><img src="/assets/week1/unnamed-chunk-8-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-8-1.png" alt="" /></p>
   </li>
 </ol>
 
