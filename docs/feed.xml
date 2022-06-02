@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-06-02T13:50:19-05:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Introduction to ggplot2</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-1.html" rel="alternate" type="text/html" title="Introduction to ggplot2" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-1.html"><![CDATA[<p><em>Design principles from the grammar of graphics.</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-06-02T14:04:19-05:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Introduction to ggplot2</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-1.html" rel="alternate" type="text/html" title="Introduction to ggplot2" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-1.html"><![CDATA[<p><em>Design principles from the grammar of graphics.</em></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
 library(ggrepel)
@@ -222,6 +222,118 @@ ggplot(murders, aes(population, total)) +
 </code></pre></div>    </div>
 
     <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-8-1.png" alt="" /></p>
+  </li>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Design principles from the grammar of graphics.]]></summary></entry><entry><title type="html">Visual Encodings</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html" rel="alternate" type="text/html" title="Visual Encodings" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html"><![CDATA[<p><em>Design principles from the grammar of graphics.</em></p>
+
+<ol>
+  <li>
+    <p>Visualizations link abstract data with the physical, geometric
+marks,</p>
+
+    <ul>
+      <li>Each observation (row) within a dataset corresponds to a
+geometric mark in a visualization.</li>
+      <li>Important attributes (columns) of an observation within a
+dataset can be encoded by properties of visual marks.</li>
+    </ul>
+
+    <p>This encoding of rows as marks and columns as properties of the
+marks is illustrated in the toy diagram below.</p>
+
+    <p><img src="/stat679_notes/assets/week1-1/encoding_illustration.png" alt="" /></p>
+  </li>
+  <li>
+    <p>A good visualization makes it easy to visually compare the relevant
+attributes across observations. A challenge is that there are often
+many possible marks and encodings for any given comparison. It’s
+also difficult to know which comparisons are actually of interest.
+For these reasons, we’re going to want to build up a vocabulary of
+marks and encodings.</p>
+
+    <p><img src="/stat679_notes//assets/week1-1/example_encodings.png" alt="" /></p>
+  </li>
+  <li>
+    <p>To identify good encodings, it can often help to first what the
+types of each field are.</p>
+
+    <ul>
+      <li>Nominal: These are fields that allow identity comparisons
+between observations (is <em>A</em> = <em>B</em>?), but don’t come with any
+notion of order.
+        <ul>
+          <li>City region, country name, movie genres, file types, …</li>
+        </ul>
+      </li>
+      <li>Ordinal: These are fields that allow ordering comparisons
+between observations (is <em>A</em> &gt; <em>B</em>?), but don’t let you
+quantify the degree of difference.
+        <ul>
+          <li>Shirt size, sports team rankings, order of appearance of
+characters on TV show</li>
+        </ul>
+      </li>
+      <li>Quantitative: These are field types that let you make distance
+comparisons between observations. For interval data, absolute
+comparisons can be made (<em>A</em> − <em>B</em>), while for ratio data, only
+relative ones ($\frac{A}{B}$) are possible.
+        <ul>
+          <li>Temperature, stock price, number of drinks sold in a coffee
+shop per day</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>This is not an exhaustive list, and there are subtleties,</p>
+
+    <ul>
+      <li>The same field could be treated as nominal, ordinal, or
+quantitative depending on the context. Age could be nominal
+(underage or overage), ordinal (gen Z, millenial, …), or
+quantitative.</li>
+      <li>A given field might be thought of hierarchically. There might be
+interesting patterns at the city, county, or region level – what
+seems like a single column can become the source for multiple
+derived fields.</li>
+      <li>Even though temporal fields can be thought of as quantitative,
+they come with their own conventions. For example, the hour -
+week - month hierarchy is a natural one for temporal data.</li>
+    </ul>
+  </li>
+  <li>
+    <p>It’s worth highlighting that, even if a particular encoding <em>could</em>
+be used for a given data type, different encodings have different
+effectiveness. When trying to encoding several data fields at once,
+a choice of one encoding over another will implicitly prioritize
+certain comparisons over others.</p>
+
+    <p>For example, in the figure below (Figure 5.8
+<a href="https://search.library.wisc.edu/catalog/9911196629502121">here</a>),
+the same two numbers are encoded using many different visual
+properties – position on a shared <em>y</em>-axis, position on distinct
+<em>y</em>-axes, etc. – and study participants were asked to gauge the
+difference in the numbers. People were best at comparing positions
+on a common scale, and worst at distinguishing differences in areas.</p>
+
+    <p><img src="/stat679_notes/assets/week1-1/encoding_effectiveness.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Here is a similar example. In the left four panels, a nominal field
+is encoded using color (left two) and shape (middle two). The red
+circles are easiest to find in the left two. In the right two
+panels, two nominal fields are encoded, using both shape and color.
+It’s much harder to find the red circle – you have to scan over the
+entire image to find it, which you didn’t have to do at all for the
+first two panels.</p>
+
+    <p><img src="/stat679_notes/assets/week1-1/encoding_effectiveness_2.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Implicit in this discussion is that there is never any “perfect”
+visualization for a given dataset – the quality of a visualization
+is a function of its intended purpose. What comparisons do you want
+to facilitate? The choice of encoding will strongly affect the types
+of comparisons that are easy to perform.</p>
   </li>
 </ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Design principles from the grammar of graphics.]]></summary></entry><entry><title type="html">A Vocabulary of Marks</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-3.html" rel="alternate" type="text/html" title="A Vocabulary of Marks" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-3.html"><![CDATA[<p><em>Encoding options in ggplot2</em></p>
 
