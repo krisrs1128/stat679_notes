@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content=""><title>Node - Link Diagrams | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/languages/r.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+  <meta name="keywords" content="">
+  <meta name="description" content=""><link rel="stylesheet" href="/stat679_notes/assets/main.css?v=0.3.3" />
+<script src="/stat679_notes/assets/main.js?v=0.3.3" defer></script><link rel="stylesheet" href="/stat679_notes/assets/css/tomorrow.css" />
+<script src="/stat679_notes/assets/js/highlight.js"></script><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js" defer></script></head>
+<body class="body-post">
+    <a href="/stat679_notes/" class="logo"><h1>Statistical Data Visualization</h1>
+</a><main class="post__wrapper"><div class="post__top_navs clearfix">
+    <nav class="post__archive_path"><a href="" id="archiveBtn">
+        <div class="post__archive_icon">
+          <svg width="40" height="40">
+            <circle class="circle-progress" r="18" cy="20" cx="20"  stroke-linejoin="round" stroke-linecap="round" />
+          </svg>
+          <span class="post__archive_icon"></span>
+        </div>
+        Statistical Data Visualization
+      </a>
+    </nav>
+  </div>
+  <article class="post">
+    <header class="post__header">
+      <h1 class="post__title">Node - Link Diagrams</h1>
+      <div class="post__meta">
+        <time>2022-06-01 00:00</time>
+      </div>
+    </header>
+    <div class="post__content content">
+      <p><strong>Representing relations with line marks</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
+library(ggraph)
+library(tidygraph)
+theme_set(theme_graph())
+</code></pre></div></div>
+
+<ol>
+  <li>
+    <p>A node-link diagram is a visual encoding strategy for network data,
+where nodes are drawn as points and links between nodes are drawn as
+lines between them. The dataset below is a friendship network
+derived from a survey of high schoolers in 1957 and 1958, available
+in the <code class="language-plaintext highlighter-rouge">tidygraph</code> package.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G_school &lt;- as_tbl_graph(highschool) %&gt;%
+  activate(edges) %&gt;%
+  mutate(year = factor(year))
+ggraph(G_school) +
+  geom_edge_link(aes(col = year), width = 0.1) +
+  geom_node_point()
+</code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week9-2/unnamed-chunk-3-1.png" alt="" /></p>
+  </li>
+  <li>
+    <p>For trees, the vertical or radial position can further encode the
+depth of a node in the tree. The data below represent the directory
+structure from a widely used web package called flare.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G_flare &lt;- tbl_graph(flare$vertices, flare$edges)
+p1 &lt;- ggraph(G_flare, 'tree') + 
+  geom_edge_link() +
+  geom_node_label(aes(label = shortName), size = 3)
+p2 &lt;- ggraph(G_flare, 'tree', circular = TRUE) + 
+  geom_edge_link() +
+  geom_node_label(aes(label = shortName), size = 3)
+
+library(patchwork)
+p1 + p2
+</code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week9-2/unnamed-chunk-4-1.png" alt="The same node-link diagram, with either height or radius encoding
+depth in the
+tree." /></p>
+  </li>
+  <li>
+    <p>In either trees or networks, attributes of nodes and edges can be
+encoded using size (node radius or edge width) or color.</p>
+  </li>
+  <li>
+    <p>The node-link representation is especially effective for the task of
+following paths. It’s an intuitive visualization for examining the
+local neighborhood of one node or describing the shortest path
+between two nodes.</p>
+  </li>
+  <li>
+    <p>In node-link diagrams, spatial position is subtle. It does not
+directly encode any attribute in the dataset, but layout algorithms
+(i.e., algorithms that try to determine the spatial positions of
+nodes in a node-link diagram) try to ensure that nodes that are
+close to one another in the shortest-path-sense also appear close to
+one another on the page.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>p1 &lt;- ggraph(G_school, layout = "kk") +
+  geom_edge_link(aes(col = year), width = 0.1) +
+  geom_node_point()
+p2 &lt;- ggraph(G_school, layout = "fr") +
+  geom_edge_link(aes(col = year), width = 0.1) +
+  geom_node_point()
+p1 + p2
+</code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week9-2/unnamed-chunk-5-1.png" alt="A comparison of two layout algorithms for the same
+network." /></p>
+  </li>
+  <li>
+    <p>One common layout algorithm uses force-directed placement. The edges
+here are interpreted as physical springs, and the node positions are
+iteratively updated according to the forces induced by the springs.</p>
+  </li>
+  <li>
+    <p>The key drawback of node-link diagrams is that they do not scale
+well to networks with a large number of nodes or with a large number
+of edges per node. The nodes and edges begin to overlap too much,
+and the result looks like a “hairball.”</p>
+  </li>
+  <li>
+    <p>In this situation, it is possible to use additional structure in the
+data to salvage the node-link display. For example, in a large tree,
+a rectangular or BubbleTree layout can be used.</p>
+
+    <p><img src="/https://uwmadison.box.com/shared/static/r9boadgujdkp0xy3hk23n6j2ri13yh6h.png" alt="Example rectangular and BubbleTree layouts, for very large trees,
+as shown in Visualization Analysis and
+Design." /></p>
+  </li>
+</ol>
+
+<p>If a large network has a modular structure, then it is possible to first
+lay out the separate clusters far apart from one another, before running
+force directed placement.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>![A hierarchical force directed layout algorithm, as shown in Visualization Analysis and Design.](/https://uwmadison.box.com/shared/static/0zihaty78j8ytmdjwlqetbxpjzbrz8k6.png)
+</code></pre></div></div>
+
+<p>If many edges go through a few shared paths, it may be possible to
+bundle them.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>![In edge bundling, similar paths are placed close to one another.](/https://www.data-to-viz.com/graph/IMG/bundle_compare.png)
+</code></pre></div></div>
+
+<p>Bundled connections can be visualized using the <code class="language-plaintext highlighter-rouge">geom_conn_bundle</code>
+geometry in ggraph. Before using this layout, it is necessary to have a
+hierarchy over all the nodes, since shared ancestry among connected
+nodes is how the proximity of paths is determined.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```r
+from &lt;- match(flare$imports$from, flare$vertices$name)
+to &lt;- match(flare$imports$to, flare$vertices$name)
+ggraph(G_flare, layout = 'dendrogram', circular = TRUE) + 
+  geom_conn_bundle(data = get_con(from = from, to = to), alpha = 0.1) + 
+  geom_node_label(aes(label = shortName), size = 2) +
+  coord_fixed()
+```
+
+![An example of hierarchical edge bundling in R.](/stat679_notes/assets/week9-2/unnamed-chunk-9-1.png)
+</code></pre></div></div>
+
+<ol>
+  <li>To summarize, node-link diagrams are very good for characterizing
+local structure, but struggle with large networks.</li>
+</ol>
+
+    </div>
+  </article></main><script>hljs.initHighlightingOnLoad();</script><footer class="site-footer">
+  © 2022<a href="/stat679_notes/">Statistical Data Visualization</a>. Theme<a href="https://github.com/erlzhang/jekyll-theme-persephone" target="_blank">Persephone</a>
+</footer>
+
+  </body>
+</html>

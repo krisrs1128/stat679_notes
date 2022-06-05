@@ -1,220 +1,136 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-06-03T13:53:04-05:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Graphical Queries - Click Events</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week3-1.html" rel="alternate" type="text/html" title="Graphical Queries - Click Events" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week3-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week3-1.html"><![CDATA[<p><em>An introduction to click events in Shiny</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-06-04T20:48:21-05:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Node - Link Diagrams</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week9-2.html" rel="alternate" type="text/html" title="Node - Link Diagrams" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week9-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week9-2.html"><![CDATA[<p><strong>Representing relations with line marks</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
+library(ggraph)
+library(tidygraph)
+theme_set(theme_graph())
+</code></pre></div></div>
 
 <ol>
   <li>
-    <p>Some of the most sophisticated interactive data visualizations are
-based on the idea that user queries can themselves be defined
-visually. For example, to select a date range, we could directly
-interact with a time series plot, rather than relying on a slider
-input. Or, instead of a long dropdown menu of items, a user could
-select items by clicking on bars in a bar plot. There are many
-variations of this idea, but they all leverage graphical (rather
-than textual) displays to define queries. The advantage of this
-approach is that it increases information density – the selection
-inputs themselves encode data.</p>
-  </li>
-  <li>
-    <p>To implement this in Shiny, we first need a way of registering user
-interactions on plots themselves. We will consider two types of plot
-interaction mechanisms: clicks and brushes. These can be specified
-by adding <code class="language-plaintext highlighter-rouge">click</code> or <code class="language-plaintext highlighter-rouge">brush</code> events to <code class="language-plaintext highlighter-rouge">plotOutput</code> objects.</p>
-  </li>
-  <li>
-    <p>This creates a UI with a single plot on which we will be able to
-track user clicks,</p>
+    <p>A node-link diagram is a visual encoding strategy for network data,
+where nodes are drawn as points and links between nodes are drawn as
+lines between them. The dataset below is a friendship network
+derived from a survey of high schoolers in 1957 and 1958, available
+in the <code class="language-plaintext highlighter-rouge">tidygraph</code> package.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ui &lt;- fluidPage(
-  plotOutput("plot", click = "plot_click")
-)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G_school &lt;- as_tbl_graph(highschool) %&gt;%
+  activate(edges) %&gt;%
+  mutate(year = factor(year))
+ggraph(G_school) +
+  geom_edge_link(aes(col = year), width = 0.1) +
+  geom_node_point()
 </code></pre></div>    </div>
 
-    <p>Here, <code class="language-plaintext highlighter-rouge">plot_click</code> is an ID that can be used as <code class="language-plaintext highlighter-rouge">input$plot_click</code>
-in the server. We could name it however we want, but we need to be
-consistent across the UI and server (just like ordinary,
-non-graphical inputs).</p>
+    <p><img src="/stat679_notes/assets/week9-2/unnamed-chunk-3-1.png" alt="" /></p>
   </li>
   <li>
-    <p>Before, we just needed to place the <code class="language-plaintext highlighter-rouge">input$id</code> items within <code class="language-plaintext highlighter-rouge">render</code>
-and <code class="language-plaintext highlighter-rouge">reactive</code> server components, and the associated outputs would
-automatically know to redraw each time the value of any input was
-changed. Clicks are treated slightly differently. We have to
-both (a) recognize when a click event has occurred and (b) extract
-relevant information about what the click was referring to.</p>
+    <p>For trees, the vertical or radial position can further encode the
+depth of a node in the tree. The data below represent the directory
+structure from a widely used web package called flare.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G_flare &lt;- tbl_graph(flare$vertices, flare$edges)
+p1 &lt;- ggraph(G_flare, 'tree') + 
+  geom_edge_link() +
+  geom_node_label(aes(label = shortName), size = 3)
+p2 &lt;- ggraph(G_flare, 'tree', circular = TRUE) + 
+  geom_edge_link() +
+  geom_node_label(aes(label = shortName), size = 3)
+
+library(patchwork)
+p1 + p2
+</code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week9-2/unnamed-chunk-4-1.png" alt="The same node-link diagram, with either height or radius encoding
+depth in the
+tree." /></p>
   </li>
   <li>
-    <p>For (a), we generally use <code class="language-plaintext highlighter-rouge">observeEvent</code>,</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>observeEvent(
-  input$plot_click,
-  ... things to do when the plot is clicked ...
-)
-</code></pre></div>    </div>
-
-    <p>This piece of code will be run anytime the plot is clicked.</p>
+    <p>In either trees or networks, attributes of nodes and edges can be
+encoded using size (node radius or edge width) or color.</p>
   </li>
   <li>
-    <p>For (b), we can use the <code class="language-plaintext highlighter-rouge">nearPoints</code> helper function. Suppose the
-plot was made using the data.frame <code class="language-plaintext highlighter-rouge">x</code>. Then</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nearPoints(x, input$click)
-</code></pre></div>    </div>
-
-    <p>will return the samples in <code class="language-plaintext highlighter-rouge">x</code> that are close to the clicked
-location. We will often use a variant of this code that doesn’t just
-return the closeby samples – it returns all samples, along with
-their distance from the clicked location,</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nearPoints(x, input$click, allRows = TRUE, addDist = TRUE)
-</code></pre></div>    </div>
+    <p>The node-link representation is especially effective for the task of
+following paths. It’s an intuitive visualization for examining the
+local neighborhood of one node or describing the shortest path
+between two nodes.</p>
   </li>
   <li>
-    <p>We are almost ready to build a visualization whose outputs respond
-to graphical queries. Suppose we want a scatterplot where point
-sizes update according to their distance from the user’s click.
-Everytime the plot is clicked, we need to update the set of
-distances between samples and the clicked point. We then need to
-rerender the plot to reflect the new distances. This logic is
-captured by the block below,</p>
+    <p>In node-link diagrams, spatial position is subtle. It does not
+directly encode any attribute in the dataset, but layout algorithms
+(i.e., algorithms that try to determine the spatial positions of
+nodes in a node-link diagram) try to ensure that nodes that are
+close to one another in the shortest-path-sense also appear close to
+one another on the page.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server &lt;- function(input, output) {
-  dist &lt;- reactiveVal(rep(1, nrow(x)))
-  observeEvent(
-    input$plot_click,
-    dist(reset_dist(x, input$plot_click))
-  )
-
-  output$plot &lt;- renderPlot({
-    scatter(x, dist())
-  })
-}
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>p1 &lt;- ggraph(G_school, layout = "kk") +
+  geom_edge_link(aes(col = year), width = 0.1) +
+  geom_node_point()
+p2 &lt;- ggraph(G_school, layout = "fr") +
+  geom_edge_link(aes(col = year), width = 0.1) +
+  geom_node_point()
+p1 + p2
 </code></pre></div>    </div>
 
-    <p>The code above uses one new concept, the <code class="language-plaintext highlighter-rouge">reactiveVal</code> on the first
-line of the function. It is a variable that doesn’t directly depend
-on any inputs, which can become a source node for downstream
-<code class="language-plaintext highlighter-rouge">reactive</code> and <code class="language-plaintext highlighter-rouge">render</code> nodes in the reactive graph. Anytime the
-variable’s value is changed, all downstream nodes will be
-recomputed. A very common pattern is use an <code class="language-plaintext highlighter-rouge">observeEvent</code> to update
-a <code class="language-plaintext highlighter-rouge">reactiveVal</code> every time a graphical query is performed. Any plots
-that depend on this value will then be updated. For example,</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>val &lt;- reactiveVal(initial_val) # initialize the reactive value
-
-observeEvent(
-  ...some input event...
-  ...do some computation...
-  val(new_value) # update val to new_val
-)
-
-# runs each time the reactiveVal changes
-renderPlot({
-  val() # get the current value of the reactive value
-})
-</code></pre></div>    </div>
+    <p><img src="/stat679_notes/assets/week9-2/unnamed-chunk-5-1.png" alt="A comparison of two layout algorithms for the same
+network." /></p>
   </li>
   <li>
-    <p>So, revisiting the <code class="language-plaintext highlighter-rouge">dist</code> in the earlier code block, we see that it
-is initialized as a vector of <code class="language-plaintext highlighter-rouge">1</code>’s whose length is equal to the
-number of rows of <code class="language-plaintext highlighter-rouge">x</code>. Everytime the plot is clicked, we update the
-value of <code class="language-plaintext highlighter-rouge">dist</code> according to the function <code class="language-plaintext highlighter-rouge">reset_dist</code>. Finally, the
-changed value of <code class="language-plaintext highlighter-rouge">dist</code> triggers a rerun of <code class="language-plaintext highlighter-rouge">renderPlot</code>. Let’s look
-at the full application in action. It makes a scatterplot using the
-cars dataset and resizes points every time the plot is clicked.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
-library(shiny)
-
-# wrapper to get the distances from points to clicks
-reset_dist &lt;- function(x, click) {
-  nearPoints(x, click, allRows = TRUE, addDist = TRUE)$dist_
-}
-
-# scatterplot plot with point size dependent on click location
-scatter &lt;- function(x, dists) {
-  x %&gt;%
-    mutate(dist = dists) %&gt;%
-    ggplot() +
-    geom_point(aes(mpg, hp, size = dist)) +
-    scale_size(range = c(6, 1))
-}
-
-ui &lt;- fluidPage(
-  plotOutput("plot", click = "plot_click")
-)
-
-server &lt;- function(input, output) {
-  dist &lt;- reactiveVal(rep(1, nrow(mtcars)))
-  observeEvent(
-    input$plot_click,
-    dist(reset_dist(mtcars, input$plot_click))
-  )
-
-  output$plot &lt;- renderPlot(scatter(mtcars, dist()))
-}
-
-shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week3-1/unnamed-chunk-8-1.png" alt="" /></p>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/17a54e4c-5237-4018-b6fe-20c1555cf337/" allowfullscreen="" data-external="1" height="400" width="600"></iframe>
+    <p>One common layout algorithm uses force-directed placement. The edges
+here are interpreted as physical springs, and the node positions are
+iteratively updated according to the forces induced by the springs.</p>
   </li>
   <li>
-    <p>The <code class="language-plaintext highlighter-rouge">reset_dist</code> function uses <code class="language-plaintext highlighter-rouge">nearPoints</code> to compute the distance
-between each sample and the plot, each time the plot is clicked. The
-associated reactive value <code class="language-plaintext highlighter-rouge">dist</code> gets changed, which triggers
-<code class="language-plaintext highlighter-rouge">scatterplot</code> to run, and it is encoded using size in the downstream
-ggplot2 figure.</p>
+    <p>The key drawback of node-link diagrams is that they do not scale
+well to networks with a large number of nodes or with a large number
+of edges per node. The nodes and edges begin to overlap too much,
+and the result looks like a “hairball.”</p>
   </li>
   <li>
-    <p>We can make the plot more interesting by outputting a table showing
-the original dataset. Using the same <code class="language-plaintext highlighter-rouge">dist()</code> call, we can sort the
-table by distance each time the plot is clicked.</p>
+    <p>In this situation, it is possible to use additional structure in the
+data to salvage the node-link display. For example, in a large tree,
+a rectangular or BubbleTree layout can be used.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
-library(shiny)
-mtcars &lt;- add_rownames(mtcars)
-
-reset_dist &lt;- function(x, click) {
-  nearPoints(x, click, allRows = TRUE, addDist = TRUE)$dist_
-}
-
-scatter &lt;- function(x, dists) {
-  x %&gt;%
-    mutate(dist = dists) %&gt;%
-    ggplot() +
-    geom_point(aes(mpg, hp, size = dist)) +
-    scale_size(range = c(6, 1))
-}
-
-ui &lt;- fluidPage(
-  plotOutput("plot", click = "plot_click"),
-  dataTableOutput("table")
-)
-
-server &lt;- function(input, output) {
-  dist &lt;- reactiveVal(rep(1, nrow(mtcars)))
-  observeEvent(
-    input$plot_click,
-    dist(reset_dist(mtcars, input$plot_click))
-  )
-
-  output$plot &lt;- renderPlot(scatter(mtcars, dist()))
-  output$table &lt;- renderDataTable({
-    mtcars %&gt;%
-      mutate(dist = dist()) %&gt;%
-      arrange(dist)
-  })
-}
-
-shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week3-1/unnamed-chunk-9-1.png" alt="" /></p>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/9fcf3583-a74f-4d84-8d7c-68ac3595bf6b/" allowfullscreen="" data-external="1" height="750" width="800"></iframe>
+    <p><img src="/https://uwmadison.box.com/shared/static/r9boadgujdkp0xy3hk23n6j2ri13yh6h.png" alt="Example rectangular and BubbleTree layouts, for very large trees,
+as shown in Visualization Analysis and
+Design." /></p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[An introduction to click events in Shiny]]></summary></entry><entry><title type="html">Visual Encodings</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html" rel="alternate" type="text/html" title="Visual Encodings" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html"><![CDATA[<p><em>Design principles from the grammar of graphics.</em></p>
+</ol>
+
+<p>If a large network has a modular structure, then it is possible to first
+lay out the separate clusters far apart from one another, before running
+force directed placement.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>![A hierarchical force directed layout algorithm, as shown in Visualization Analysis and Design.](/https://uwmadison.box.com/shared/static/0zihaty78j8ytmdjwlqetbxpjzbrz8k6.png)
+</code></pre></div></div>
+
+<p>If many edges go through a few shared paths, it may be possible to
+bundle them.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>![In edge bundling, similar paths are placed close to one another.](/https://www.data-to-viz.com/graph/IMG/bundle_compare.png)
+</code></pre></div></div>
+
+<p>Bundled connections can be visualized using the <code class="language-plaintext highlighter-rouge">geom_conn_bundle</code>
+geometry in ggraph. Before using this layout, it is necessary to have a
+hierarchy over all the nodes, since shared ancestry among connected
+nodes is how the proximity of paths is determined.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```r
+from &lt;- match(flare$imports$from, flare$vertices$name)
+to &lt;- match(flare$imports$to, flare$vertices$name)
+ggraph(G_flare, layout = 'dendrogram', circular = TRUE) + 
+  geom_conn_bundle(data = get_con(from = from, to = to), alpha = 0.1) + 
+  geom_node_label(aes(label = shortName), size = 2) +
+  coord_fixed()
+```
+
+![An example of hierarchical edge bundling in R.](/stat679_notes/assets/week9-2/unnamed-chunk-9-1.png)
+</code></pre></div></div>
+
+<ol>
+  <li>To summarize, node-link diagrams are very good for characterizing
+local structure, but struggle with large networks.</li>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Representing relations with line marks]]></summary></entry><entry><title type="html">Visual Encodings</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html" rel="alternate" type="text/html" title="Visual Encodings" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html"><![CDATA[<p><em>Design principles from the grammar of graphics.</em></p>
 
 <ol>
   <li>
@@ -1489,229 +1405,371 @@ to answer: What is the joint distribution of movie ratings,
 conditional on being a drama?</li>
     </ul>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Using Shiny to explore a movies dataset]]></summary></entry><entry><title type="html">Introduction to ggplot2</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-1.html" rel="alternate" type="text/html" title="Introduction to ggplot2" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-1.html"><![CDATA[<p><em>Design principles from the grammar of graphics.</em></p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
-library(ggrepel)
-library(scales)
-library(dslabs)
-</code></pre></div></div>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Using Shiny to explore a movies dataset]]></summary></entry><entry><title type="html">Graphical Queries - Click Events</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week3-1.html" rel="alternate" type="text/html" title="Graphical Queries - Click Events" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week3-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week3-1.html"><![CDATA[<p><em>An introduction to click events in Shiny</em></p>
 
 <ol>
   <li>
-    <p>ggplot2 is an R implementation of the Grammar of Graphics. The idea
-is to define the basic “words” from which visualizations are built,
-and then let users compose them in original ways. This is in
-contrast to systems with prespecified chart types, where the user is
-forced to pick from a limited dropdown menu of plots. Just like in
-ordinary language, the creative combination of simple building
-blocks can support a very wide range of expression.</p>
+    <p>Some of the most sophisticated interactive data visualizations are
+based on the idea that user queries can themselves be defined
+visually. For example, to select a date range, we could directly
+interact with a time series plot, rather than relying on a slider
+input. Or, instead of a long dropdown menu of items, a user could
+select items by clicking on bars in a bar plot. There are many
+variations of this idea, but they all leverage graphical (rather
+than textual) displays to define queries. The advantage of this
+approach is that it increases information density – the selection
+inputs themselves encode data.</p>
   </li>
   <li>
-    <p>We’re going to create this plot in these notes.</p>
+    <p>To implement this in Shiny, we first need a way of registering user
+interactions on plots themselves. We will consider two types of plot
+interaction mechanisms: clicks and brushes. These can be specified
+by adding <code class="language-plaintext highlighter-rouge">click</code> or <code class="language-plaintext highlighter-rouge">brush</code> events to <code class="language-plaintext highlighter-rouge">plotOutput</code> objects.</p>
   </li>
   <li>
-    <p>Every ggplot2 plot is made from three components,</p>
+    <p>This creates a UI with a single plot on which we will be able to
+track user clicks,</p>
 
-    <ul>
-      <li>Data: This is the data.frame that we want to visualize.</li>
-      <li>Geometry: These are the types of visual marks that appear on the
-plot.</li>
-      <li>Aesthetic Mapping: This links the data with the visual marks.</li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>Data</strong>. Each row is an observation, and each column is an
-attribute that describes the observation. This is important because
-each mark that you see on a ggplot – a line, a point, a tile, … –
-had to start out as a row within an R data.frame. The visual
-properties of the mark (e.g., color) are determined by the values
-along columns. These type of data are often referred to as tidy
-data.</p>
-  </li>
-  <li>
-    <p>Here’s an example of the data above in tidy format,</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ui &lt;- fluidPage(
+  plotOutput("plot", click = "plot_click")
+)
+</code></pre></div>    </div>
 
-    <p>This is one example of how the same information might be stored in a
-non-tidy way, making visualization much harder.</p>
-
-    <p>Often, one of the hardest parts in making a ggplot2 plot is not
-coming up with the right ggplot2 commands, but reshaping the data so
-that it’s in a tidy format.</p>
+    <p>Here, <code class="language-plaintext highlighter-rouge">plot_click</code> is an ID that can be used as <code class="language-plaintext highlighter-rouge">input$plot_click</code>
+in the server. We could name it however we want, but we need to be
+consistent across the UI and server (just like ordinary,
+non-graphical inputs).</p>
   </li>
   <li>
-    <p><strong>Geometry</strong> The words in the grammar of graphics are the geometry
-layers. We can associate each row of a data frame with points,
-lines, tiles, etc., just by referring to the appropriate geom in
-ggplot2. A typical plot will compose a chain of layers on top of a
-dataset,</p>
+    <p>Before, we just needed to place the <code class="language-plaintext highlighter-rouge">input$id</code> items within <code class="language-plaintext highlighter-rouge">render</code>
+and <code class="language-plaintext highlighter-rouge">reactive</code> server components, and the associated outputs would
+automatically know to redraw each time the value of any input was
+changed. Clicks are treated slightly differently. We have to
+both (a) recognize when a click event has occurred and (b) extract
+relevant information about what the click was referring to.</p>
+  </li>
+  <li>
+    <p>For (a), we generally use <code class="language-plaintext highlighter-rouge">observeEvent</code>,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>observeEvent(
+  input$plot_click,
+  ... things to do when the plot is clicked ...
+)
+</code></pre></div>    </div>
+
+    <p>This piece of code will be run anytime the plot is clicked.</p>
+  </li>
+  <li>
+    <p>For (b), we can use the <code class="language-plaintext highlighter-rouge">nearPoints</code> helper function. Suppose the
+plot was made using the data.frame <code class="language-plaintext highlighter-rouge">x</code>. Then</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nearPoints(x, input$click)
+</code></pre></div>    </div>
+
+    <p>will return the samples in <code class="language-plaintext highlighter-rouge">x</code> that are close to the clicked
+location. We will often use a variant of this code that doesn’t just
+return the closeby samples – it returns all samples, along with
+their distance from the clicked location,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nearPoints(x, input$click, allRows = TRUE, addDist = TRUE)
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>We are almost ready to build a visualization whose outputs respond
+to graphical queries. Suppose we want a scatterplot where point
+sizes update according to their distance from the user’s click.
+Everytime the plot is clicked, we need to update the set of
+distances between samples and the clicked point. We then need to
+rerender the plot to reflect the new distances. This logic is
+captured by the block below,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server &lt;- function(input, output) {
+  dist &lt;- reactiveVal(rep(1, nrow(x)))
+  observeEvent(
+    input$plot_click,
+    dist(reset_dist(x, input$plot_click))
+  )
+
+  output$plot &lt;- renderPlot({
+    scatter(x, dist())
+  })
+}
+</code></pre></div>    </div>
+
+    <p>The code above uses one new concept, the <code class="language-plaintext highlighter-rouge">reactiveVal</code> on the first
+line of the function. It is a variable that doesn’t directly depend
+on any inputs, which can become a source node for downstream
+<code class="language-plaintext highlighter-rouge">reactive</code> and <code class="language-plaintext highlighter-rouge">render</code> nodes in the reactive graph. Anytime the
+variable’s value is changed, all downstream nodes will be
+recomputed. A very common pattern is use an <code class="language-plaintext highlighter-rouge">observeEvent</code> to update
+a <code class="language-plaintext highlighter-rouge">reactiveVal</code> every time a graphical query is performed. Any plots
+that depend on this value will then be updated. For example,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>val &lt;- reactiveVal(initial_val) # initialize the reactive value
+
+observeEvent(
+  ...some input event...
+  ...do some computation...
+  val(new_value) # update val to new_val
+)
+
+# runs each time the reactiveVal changes
+renderPlot({
+  val() # get the current value of the reactive value
+})
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>So, revisiting the <code class="language-plaintext highlighter-rouge">dist</code> in the earlier code block, we see that it
+is initialized as a vector of <code class="language-plaintext highlighter-rouge">1</code>’s whose length is equal to the
+number of rows of <code class="language-plaintext highlighter-rouge">x</code>. Everytime the plot is clicked, we update the
+value of <code class="language-plaintext highlighter-rouge">dist</code> according to the function <code class="language-plaintext highlighter-rouge">reset_dist</code>. Finally, the
+changed value of <code class="language-plaintext highlighter-rouge">dist</code> triggers a rerun of <code class="language-plaintext highlighter-rouge">renderPlot</code>. Let’s look
+at the full application in action. It makes a scatterplot using the
+cars dataset and resizes points every time the plot is clicked.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
+library(shiny)
+
+# wrapper to get the distances from points to clicks
+reset_dist &lt;- function(x, click) {
+  nearPoints(x, click, allRows = TRUE, addDist = TRUE)$dist_
+}
+
+# scatterplot plot with point size dependent on click location
+scatter &lt;- function(x, dists) {
+  x %&gt;%
+    mutate(dist = dists) %&gt;%
+    ggplot() +
+    geom_point(aes(mpg, hp, size = dist)) +
+    scale_size(range = c(6, 1))
+}
+
+ui &lt;- fluidPage(
+  plotOutput("plot", click = "plot_click")
+)
+
+server &lt;- function(input, output) {
+  dist &lt;- reactiveVal(rep(1, nrow(mtcars)))
+  observeEvent(
+    input$plot_click,
+    dist(reset_dist(mtcars, input$plot_click))
+  )
+
+  output$plot &lt;- renderPlot(scatter(mtcars, dist()))
+}
+
+shinyApp(ui, server)
+</code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week3-1/unnamed-chunk-8-1.png" alt="" /></p>
+
+    <iframe src="https://data-viz.it.wisc.edu/content/17a54e4c-5237-4018-b6fe-20c1555cf337/" allowfullscreen="" data-external="1" height="400" width="600"></iframe>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">reset_dist</code> function uses <code class="language-plaintext highlighter-rouge">nearPoints</code> to compute the distance
+between each sample and the plot, each time the plot is clicked. The
+associated reactive value <code class="language-plaintext highlighter-rouge">dist</code> gets changed, which triggers
+<code class="language-plaintext highlighter-rouge">scatterplot</code> to run, and it is encoded using size in the downstream
+ggplot2 figure.</p>
+  </li>
+  <li>
+    <p>We can make the plot more interesting by outputting a table showing
+the original dataset. Using the same <code class="language-plaintext highlighter-rouge">dist()</code> call, we can sort the
+table by distance each time the plot is clicked.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
+library(shiny)
+mtcars &lt;- add_rownames(mtcars)
+
+reset_dist &lt;- function(x, click) {
+  nearPoints(x, click, allRows = TRUE, addDist = TRUE)$dist_
+}
+
+scatter &lt;- function(x, dists) {
+  x %&gt;%
+    mutate(dist = dists) %&gt;%
+    ggplot() +
+    geom_point(aes(mpg, hp, size = dist)) +
+    scale_size(range = c(6, 1))
+}
+
+ui &lt;- fluidPage(
+  plotOutput("plot", click = "plot_click"),
+  dataTableOutput("table")
+)
+
+server &lt;- function(input, output) {
+  dist &lt;- reactiveVal(rep(1, nrow(mtcars)))
+  observeEvent(
+    input$plot_click,
+    dist(reset_dist(mtcars, input$plot_click))
+  )
+
+  output$plot &lt;- renderPlot(scatter(mtcars, dist()))
+  output$table &lt;- renderDataTable({
+    mtcars %&gt;%
+      mutate(dist = dist()) %&gt;%
+      arrange(dist)
+  })
+}
+
+shinyApp(ui, server)
+</code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week3-1/unnamed-chunk-9-1.png" alt="" /></p>
+
+    <iframe src="https://data-viz.it.wisc.edu/content/9fcf3583-a74f-4d84-8d7c-68ac3595bf6b/" allowfullscreen="" data-external="1" height="750" width="800"></iframe>
+  </li>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[An introduction to click events in Shiny]]></summary></entry><entry><title type="html">Graphical Queries - Brush Events</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week3-2.html" rel="alternate" type="text/html" title="Graphical Queries - Brush Events" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week3-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week3-2.html"><![CDATA[<p><strong>An introduction to brush events in Shiny</strong></p>
+
+<ol>
+  <li>
+    <p>Click events are useful for referring to individual samples.
+However, they are not ideal for referring to groups of samples. In
+this case, a useful type of plot input is a <code class="language-plaintext highlighter-rouge">brush</code>. This is a
+selection that can be defined by clicking and dragging over a
+region.</p>
+  </li>
+  <li>
+    <p>In shiny, brush events are treated similarly to click events. For
+example, to define a new brush input, we can set the <code class="language-plaintext highlighter-rouge">brush</code>
+argument to <code class="language-plaintext highlighter-rouge">plotOutput</code>.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ui &lt;- fluidPage(
+  plotOutput("plot", brush = "plot_brush")
+)
+</code></pre></div>    </div>
+
+    <p>Just like the <code class="language-plaintext highlighter-rouge">click</code> argument, the value <code class="language-plaintext highlighter-rouge">"plot_brush"</code> is an ID
+that can be used in the server. Also like in click events, we can
+setup an observer to change a reactive value every time a brush is
+drawn[1]. The general pattern is similar to what we had before,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server &lt;- function(input, output) {
+  selected &lt;- reactiveVal(initial value)
+  observeEvent(
+    input$plot_brush,
+    ... computation using get new_value ...
+    selected(new_value)
+  )
+
+  output$plot &lt;- renderPlot(... use scatter() reactive val...)
+}
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>The example below is similar to the <code class="language-plaintext highlighter-rouge">plot_click</code> example from the
+previous notes. Instead of sorting points by proximity to the click,
+though, prints the subset of rows that have been currently brushed.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
+library(shiny)
+mtcars &lt;- add_rownames(mtcars)
+
+reset_selection &lt;- function(x, brush) {
+  brushedPoints(x, brush, allRows = TRUE)$selected_
+}
+
+scatter &lt;- function(x, selected_) {
+  x %&gt;%
+    mutate(selected_ = selected_) %&gt;%
+    ggplot() +
+    geom_point(aes(mpg, hp, alpha = as.numeric(selected_))) +
+    scale_alpha(range = c(0.1, 1))
+}
+
+ui &lt;- fluidPage(
+  plotOutput("plot", brush = "plot_brush"),
+  dataTableOutput("table")
+)
+
+server &lt;- function(input, output) {
+  selected &lt;- reactiveVal(rep(TRUE, nrow(mtcars)))
+  observeEvent(
+    input$plot_brush,
+    selected(reset_selection(mtcars, input$plot_brush))
+  )
+
+  output$plot &lt;- renderPlot(scatter(mtcars, selected()))
+  output$table &lt;- renderDataTable(filter(mtcars, selected()))
+}
+
+shinyApp(ui, server)
+</code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week3-2/unnamed-chunk-4-1.png" alt="" /></p>
+
+    <iframe src="https://data-viz.it.wisc.edu/content/a651bc7b-6773-445d-8bc6-22084155e21a/" allowfullscreen="" data-external="1" height="700" width="600"></iframe>
+  </li>
+  <li>
+    <p>It is often useful to combine multi-view composition (<em>i.e.</em>,
+faceting or compound figures) with dynamic queries. The basic idea
+is to (a) show different aspects of a dataset using different views,
+and then (b) link the views using dynamic queries. This strategy is
+sometimes called dynamic linking.</p>
+  </li>
+  <li>
+    <p>The example below implements dynamic linking with the penguins
+dataset. Brushing over either scatterplot highlights the
+corresponding points in the adjacent plot (it also updates the data
+table). This is a way of understanding structure beyond two
+dimensions. The implementation is similar to the brushing above,
+except that the reactive value <code class="language-plaintext highlighter-rouge">selected()</code> is called in two
+<code class="language-plaintext highlighter-rouge">renderPlot</code> contexts, leading to changes in both plots every time
+the brush is moved.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
+library(shiny)
+penguins &lt;- read_csv("https://uwmadison.box.com/shared/static/ijh7iipc9ect1jf0z8qa2n3j7dgem1gh.csv")
+
+reset_selection &lt;- function(x, brush) {
+  brushedPoints(x, brush, allRows = TRUE)$selected_
+}
+
+scatter &lt;- function(x, selected_, var1, var2) {
+  x %&gt;%
+    mutate(selected_ = selected_) %&gt;%
+    ggplot(aes_string(var1, var2)) +
+    geom_point(aes(alpha = as.numeric(selected_), col = species)) +
+    scale_alpha(range = c(0.1, 1))
+}
+
+ui &lt;- fluidPage(
+  fluidRow(
+    column(6, plotOutput("scatter1", brush = "plot_brush")),
+    column(6, plotOutput("scatter2", brush = "plot_brush"))
+  ),
+  dataTableOutput("table")
+)
+
+server &lt;- function(input, output) {
+  selected &lt;- reactiveVal(rep(TRUE, nrow(penguins)))
+  observeEvent(
+    input$plot_brush,
+    selected(reset_selection(penguins, input$plot_brush))
+  )
+
+  output$scatter1 &lt;- renderPlot({
+    scatter(penguins, selected(), "bill_length_mm", "bill_depth_mm")
+  })
+  output$scatter2 &lt;- renderPlot({
+    scatter(penguins, selected(), "flipper_length_mm", "body_mass_g")
+  })
+
+  output$table &lt;- renderDataTable(filter(penguins, selected()))
+}
+
+shinyApp(ui, server)
+</code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week3-2/unnamed-chunk-5-1.png" alt="" /></p>
+
+    <iframe src="https://data-viz.it.wisc.edu/content/8e4b07a5-d671-40cb-9d57-22d25533b8fe/" allowfullscreen="" data-external="1" height="800" width="600"></iframe>
   </li>
 </ol>
 
-<!-- -->
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ggplot(data) + [layer 1] + [layer 2] + …
-</code></pre></div></div>
-
-<ol>
-  <li>
-    <p>For example, by deconstructing the plot above, we would expect to
-have point and text layers. For now, let’s just tell the plot to put
-all the geom’s at the origin. You can see all the types of geoms in
-the cheat sheet. We’ll be experimenting with a few of these in a
-later lecture.</p>
-  </li>
-  <li>
-    <p><strong>Aesthetic Mapping</strong> Aesthetic mappings make the connection between
-the data and the geometry. It’s the piece that translates abstract
-data fields into visual properties. Analyzing the original graph, we
-recognize these specific mappings.</p>
-
-    <ul>
-      <li>State Population → x-axis coordinate</li>
-      <li>Number of murders → y-axis coordinate</li>
-      <li>Geographical region → color</li>
-    </ul>
-  </li>
-  <li>
-    <p>To establish these mappings, we need to use the aes function. Notice
-that column names don’t have to be quoted – ggplot2 knows to refer
-back to the data.frame in ggplot(murders).</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(murders) +
-  geom_point(aes(x = population, y = total, col = region))
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-3-1.png" alt="" /></p>
-  </li>
-  <li>
-    <p>The original plot used a log-scale. To transform the x and y axes,
-we can use scales.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(murders) +
-  geom_point(aes(x = population, y = total, col = region)) +
-  scale_x_log10() +
-  scale_y_log10()
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-4-1.png" alt="" /></p>
-
-    <p>One nuance is that scales aren’t limited to x and y transformations.
-They can be applied to modify any relationship between a data field
-and its appearance on the page. For example, this changes the
-mapping between the region field and circle color.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(murders) +
-  geom_point(aes(x = population, y = total, col = region)) +
-  scale_x_log10() +
-  scale_y_log10() +
-  scale_color_manual(values = c("#6a4078", "#aa1518", "#9ecaf8", "#50838c"))
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-5-1.png" alt="" /></p>
-  </li>
-  <li>
-    <p>A problem with this graph is that it doesn’t tell us which state
-each point corresponds to. For that, we’ll need text labels. We can
-encode the coordinates for these marks again using aes, but this
-time within a <code class="language-plaintext highlighter-rouge">geom_text</code> layer.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(murders) +
-  geom_point(aes(x = population, y = total, col = region)) +
-  geom_text(
-    aes(x = population, y = total, label = abb),
-    nudge_x = 0.08 # what would happen if I remove this?
-  ) +
-  scale_x_log10() +
-  scale_y_log10()
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-6-1.png" alt="" /></p>
-
-    <p>Note that each type of layer uses different visual properties to
-encode the data – the argument label is only available for the
-<code class="language-plaintext highlighter-rouge">geom_text</code> layer. You can see which aesthetic mappings are required
-for each type of geom by checking that geom’s documentation page,
-under the Aesthetics heading.</p>
-  </li>
-  <li>
-    <p>It’s usually a good thing to make your code as concise as possible.
-For ggplot2, we can achieve this by sharing elements across aes
-calls (e.g., not having to type population and total twice). This
-can be done by defining a “global” aesthetic, putting it inside the
-initial ggplot call. We can also use the fact that the first two
-arguments of <code class="language-plaintext highlighter-rouge">aes</code> are always the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> positional mappings.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(murders, aes(population, total)) +
-  geom_point(aes(col = region)) +
-  geom_text(aes(label = abb), nudge_x = 0.08) +
-  scale_x_log10() +
-  scale_y_log10()
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-7-1.png" alt="" /></p>
-  </li>
-  <li>
-    <p>How can we improve the readability of this plot? You might already
-have ideas,</p>
-
-    <ul>
-      <li>Prevent labels from overlapping. It’s impossible to read some of
-the state names.</li>
-      <li>Add a line showing the national rate. This serves as a point of
-reference, allowing us to see whether an individual state is
-above or below the national murder rate.</li>
-      <li>Give meaningful axis / legend labels and a title.</li>
-      <li>Move the legend to the top of the figure. Right now, we’re
-wasting a lot of visual real estate in the right hand side, just
-to let people know what each color means.</li>
-      <li>Use a better color theme.</li>
-    </ul>
-  </li>
-  <li>
-    <p>For each of the problems above, we have the corresponding solution
-techniques,</p>
-
-    <ul>
-      <li>The ggrepel package. This tries to find better label positions,
-using lines when necessary.</li>
-      <li>Use <code class="language-plaintext highlighter-rouge">geom_abline</code> to encode the national murder rate as the
-slope and intercept in a line graph. All states would lie on
-this line if their murder rate was equal to the national
-average.</li>
-      <li>Add a labs layer to write labels and a theme to reposition the
-legend. I used <code class="language-plaintext highlighter-rouge">label_number</code> from the scales package to change
-the scientific notation in the <em>x</em>-axis labels to something more
-readable.</li>
-      <li>I find the gray background with reference lines a bit
-distracting. We can simplify the appearance using
-<code class="language-plaintext highlighter-rouge">theme_minimal</code>. I also like the colorbrewer palette, which can
-be used by calling a different color scale.</li>
-    </ul>
-  </li>
-  <li>
-    <p>Putting all these modifications together yields</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>r &lt;- murders %&gt;%
-  summarize(rate = sum(total) /  sum(population)) %&gt;%
-  pull(rate)
-
-ggplot(murders, aes(population, total)) +
-  geom_abline(intercept = log10(r), size = 0.4, col = "#b3b3b3") +
-  geom_text_repel(aes(label = abb), segment.size = 0.2) +
-  geom_point(aes(col = region)) +
-  scale_x_log10(labels = label_number(scale_cut = cut_short_scale())) +
-  scale_y_log10() +
-  scale_color_brewer(palette = "Set2") +
-  labs(
-    x = "Population (log scale)",
-    y = "Total number of murders (log scale)",
-    color = "Region",
-    title = "US Gun Murders in 2010"
-  ) +
-  theme_minimal()
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-8-1.png" alt="" /></p>
-  </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Design principles from the grammar of graphics.]]></summary></entry></feed>
+<p>[1] Technically, the code only executes when the mouse lifts off the
+brush selection. Some visualizations will be able to call the updating
+code every time the mouse is moved with the brush selected. This creates
+a smoother experience.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[An introduction to brush events in Shiny]]></summary></entry><entry><title type="html">Shiny Layouts and Customization</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week3-3.html" rel="alternate" type="text/html" title="Shiny Layouts and Customization" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week3-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week3-3.html"><![CDATA[<p><em>More flexible designs in Shiny</em></p>]]></content><author><name></name></author><summary type="html"><![CDATA[More flexible designs in Shiny]]></summary></entry></feed>
