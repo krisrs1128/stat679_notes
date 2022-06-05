@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-06-04T21:22:34-05:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Node - Link Diagrams</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week9-2.html" rel="alternate" type="text/html" title="Node - Link Diagrams" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week9-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week9-2.html"><![CDATA[<p><strong>Representing relations with line marks</strong></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-06-04T21:26:29-05:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Node - Link Diagrams</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week9-2.html" rel="alternate" type="text/html" title="Node - Link Diagrams" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week9-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week9-2.html"><![CDATA[<p><strong>Representing relations with line marks</strong></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
 library(ggraph)
@@ -110,23 +110,24 @@ lay out the separate clusters far apart from one another, before running
 force directed placement.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;figure&gt;
-  &lt;img src="https://uwmadison.box.com/shared/static/0zihaty78j8ytmdjwlqetbxpjzbrz8k6.png"
-       alt="Hierarchical layout"&gt;
-  &lt;figcaption&gt;A hierarchical force directed layout algorithm, as shown in Visualization Analysis and Design.
-  &lt;/figcaption&gt;
-&lt;/figure&gt;
+&lt;img src="https://uwmadison.box.com/shared/static/0zihaty78j8ytmdjwlqetbxpjzbrz8k6.png"
+     alt="Hierarchical layout"&gt;
+&lt;figcaption&gt;A hierarchical force directed layout algorithm, as shown in Visualization Analysis and Design.&lt;/figcaption&gt;
 </code></pre></div></div>
+
+<p>&lt;/figure&gt;</p>
 
 <p>If many edges go through a few shared paths, it may be possible to
 bundle them.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;figure&gt;
-  &lt;img src="https://www.data-to-viz.com/graph/IMG/bundle_compare.png"
-       alt="Hierarchical layout"&gt;
-  &lt;figcaption&gt;In edge bundling, similar paths are placed close to one another.
-  &lt;/figcaption&gt;
-&lt;/figure&gt;
+&lt;img src="https://www.data-to-viz.com/graph/IMG/bundle_compare.png"
+     alt="Hierarchical layout"&gt;
+&lt;figcaption&gt;In edge bundling, similar paths are placed close to one another.
+&lt;/figcaption&gt;
 </code></pre></div></div>
+
+<p>&lt;/figure&gt;</p>
 
 <p>Bundled connections can be visualized using the <code class="language-plaintext highlighter-rouge">geom_conn_bundle</code>
 geometry in ggraph. Before using this layout, it is necessary to have a
