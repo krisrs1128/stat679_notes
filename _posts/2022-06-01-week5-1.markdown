@@ -1,0 +1,170 @@
+---
+title: Enter, Update, Exit
+layout: post
+output:
+  md_document:
+    preserve_yaml: true
+---
+
+_Modifying the DOM with data_
+
+
+1. In interactive visualization, we often need to add or remove elements from
+the previous static view. Alternatively, we may choose to modify the visual
+encodings in an updated view. Both types of tasks can be accomplished using d3’s
+enter-exit-update pattern. This pattern is so common that it is often called
+d3’s “general update pattern.”
+
+2. The pattern operates on d3 selections that are already bound to data stored
+in an array. If we bind a new dataset to the same selection, there are two types
+of changes we need to account for,
+
+	* The number of array elements may no longer match the number of HTML tags.
+	* The values stored in each array element might have changed, and we may want
+    visual encodings to update accordingly.
+
+3. For the first issue, there are two functions that are helpful for resolving
+the discrepancy,
+
+	* `.enter()` refers to the array elements that don’t have corresponding HTML
+	  tags. It is most often used to append new SVG objects to the original
+	  selection.
+	* `.exit()` refers to HTML tags that no longer have associated array elements.
+	  It is most often used to remove tags that are no longer needed (because the
+	  data has become smaller).
+
+4. Let’s tinker with these ideas in a more hands on example. First, I will bind
+a sequence of 10 numbers to a selection of circles and then append them to a
+parent SVG. The circles’ x-coordinates are determined by the number in the
+array. So far, there are no enters / exits / updates to consider.
+
+  ```
+	let circles = d3.range(10);
+
+	d3.select("svg")
+	  .selectAll("circle")
+	  .data(circles).enter()
+	  .append("circle")
+	  .attrs({
+  		r: 10,
+  		cx: d => (d + 1) * 50,
+  		cy: 100,
+	  })
+  ```
+
+5. Now, suppose we add three additional elements to the circles array.
+  ```
+	circles = circles.concat([10, 11, 12])
+  ```
+	How can we add associated elements to the page without having to redraw
+	everything? We can rebind the data and use `.enter()`. We’ve drawn them in a
+	different color, so you can see that it’s not just redrawing all the circles.
+
+  ```
+	d3.select("svg")
+	  .selectAll("circle")
+	  .data(circles).enter()
+	  .append("circle")
+	  .attrs({
+  		r: 10,
+  		cx: d => (d + 1) * 50,
+  		cy: 100,
+  		fill: "red"
+	  })
+  ```
+
+6. Similar logic works for exits. Suppose that instead of adding three elements,
+we had removed three.
+  ```
+	circles = circles.slice(3)
+  ```
+
+	We can refer to the tags that no longer have data bound to them using
+	`.exit()`. The block below shades those points in blue.
+  ```
+	d3.select("svg")
+	  .selectAll("circle")
+	  .data(circles).exit()
+	  .attr("fill", "blue")
+  ```
+
+7. Notice that the logic of `enter` and `exit` is tied closely with the indices
+of the arrays given to `.data()`. These functions simply check the lengths of
+arrays across data binds, always associating the first tag on the page with the
+first element in the array, the second tag with the second element, etc. We’ll
+see alternative ways to bind that refer to the actual values in the arrays,
+rather than simply their index.
+
+8. The enter and exit patterns are commonly coupled with transitions, to allow
+for smoother fade in / out. For example, if we want to smoothly fade in the
+entered red circles, we first append them with radius 0 and then increase their
+size following a transition.
+  ```
+	circles = circles.concat([10, 11, 12])
+	d3.select("svg")
+	  .selectAll("circle")
+	  .data(circles).enter()
+	  .append("circle")
+	  .attrs({                  // append circles at
+  		cx: d => (d + 1) * 50,  // right position, but
+  		cy: 100,                // invisibly
+  		r: 0,
+  		fill: "red"
+	  })
+	  .transition()
+	  .duration(2000)
+	  .attr("r", 10)            // grow the circles
+  ```
+
+9. Alternatively, if we want to gradually shrink the circles before they
+disappear, we can change their radius attribute and then call `.remove()` to
+remove the tags from the DOM.
+  ```
+	circles = circles.slice(3)
+	d3.select("svg")
+	  .selectAll("circle")
+	  .data(circles).exit()
+	  .transition()
+	  .duration(4000)
+	  .attr("r", 0)
+	  .remove()
+  ```
+
+10. What if want to change attributes for all tags, and not just those that were
+entered / exited? There are several strategies. The simplest is to reselect all
+matching items. For example, if we want all circles to be red, not just those
+that were entered, we could use
+  ```
+	circles = circles.concat([10, 11, 12])
+	d3.select("svg")
+	  .selectAll("circle")
+	  .data(circles).enter()
+	  .append("circle")
+	  .attrs({
+  		cx: d => (d + 1) * 50,
+  		cy: 100,
+  		r: 10,
+  		fill: "red"
+	  })
+
+	d3.select("svg")
+	  .selectAll("circle")
+	  .attrs({ fill: "red" })
+  ```
+	but this is inefficient, because it will change attributes even for the entered elements, which we already know have the correct attributes. An alternative is to store the “update” selection (those that were present in both data binds) in a variable and then handle the enter and update changes separately.
+  ```
+	let circ = d3.select("svg")
+	  .selectAll("circle")
+	  .data(circles)
+
+	circ.enter()
+	  .append("circle")
+	  .attrs({
+  		cx: d => (d + 1) * 50,
+  		cy: 100,
+  		r: 10,
+  		fill: "red"
+	  })
+
+	circ.attrs({ fill: "red" })
+  ```
