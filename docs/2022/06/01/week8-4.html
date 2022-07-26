@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content=""><title>Spatial Interaction | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/languages/r.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+  <meta name="keywords" content="">
+  <meta name="description" content=""><link rel="stylesheet" href="/stat679_notes/assets/main.css?v=0.3.3" />
+<script src="/stat679_notes/assets/main.js?v=0.3.3" defer></script><link rel="stylesheet" href="/stat679_notes/assets/css/tomorrow.css" />
+<script src="/stat679_notes/assets/js/highlight.js"></script><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js" defer></script></head>
+<body class="body-post">
+    <a href="/stat679_notes/" class="logo"><h1>Statistical Data Visualization</h1>
+</a><main class="post__wrapper"><div class="post__top_navs clearfix">
+    <nav class="post__archive_path"><a href="" id="archiveBtn">
+        <div class="post__archive_icon">
+          <svg width="40" height="40">
+            <circle class="circle-progress" r="18" cy="20" cx="20"  stroke-linejoin="round" stroke-linecap="round" />
+          </svg>
+          <span class="post__archive_icon"></span>
+        </div>
+        Statistical Data Visualization
+      </a>
+    </nav>
+  </div>
+  <article class="post">
+    <header class="post__header">
+      <h1 class="post__title">Spatial Interaction</h1>
+      <div class="post__meta">
+        <time>2022-06-01 00:00</time>
+      </div>
+    </header>
+    <div class="post__content content">
+      <p><em>Idioms for interacting with geographic data</em></p>
+
+<ol>
+  <li>
+    <p>Maps can be information dense, so it’s often useful to make them
+interactive. These notes review some basic strategies for
+interactive spatial data visualization.</p>
+  </li>
+  <li>
+    <p>A simple approach that’s often sufficient in practice is to use
+leaflet. This library creates good interactive maps using intuitive
+defaults. It offers several types of marks (marks, circles,
+polygons) and allows them to encode fields in a dataset. Note that
+its interface is more like base R than ggplot2 — we specify each
+attribute in one plot command.</p>
+  </li>
+  <li>
+    <p>In the example below, we are looking at library budgets across
+Wisconsin. We can encode the average budget per library using the
+fill attribute of each polygon.</p>
+  </li>
+  <li>
+    <p>Since this is done in R, we can easily embed the map within Shiny.
+For example, we can allow the user to filter counties according to
+their total library budgets.</p>
+  </li>
+  <li>
+    <p>We can often dynamically query spatial data. Querying a map can
+highlight properties of samples within a geographic region.</p>
+  </li>
+  <li>
+    <p>For example, let’s build a simple version of the opioid atlas. This
+is a dataset showing how global opioid prescription rates changed
+several decades, using data from the INCB. By hovering the mouse
+over individual countries, we can bring up the time series
+associated with it.</p>
+  </li>
+  <li>
+    <p>Alternatively, querying linked panels can be used to identify
+regions with specified properties. This is like what we did in the
+library example above.</p>
+  </li>
+  <li>
+    <p>Note that interactivity here is done like in any other D3
+visualization. We can treat the map as just another collection of
+SVG paths, and all our interaction events behave in the same way.</p>
+  </li>
+  <li>
+    <p>Though it’s not exactly interaction, another common strategy for
+spatiotemporal data is animation. The major trends often become
+apparent by visualizing the flow of visual marks on the screen.</p>
+  </li>
+  <li>
+    <p>For example, how can we visualize where football players go on a
+field before they score a goal? One approach is to animate the
+trajectories leading up to the goal. This shows the most common
+paths and the speed at which the players run.</p>
+  </li>
+</ol>
+
+    </div>
+  </article></main><script>hljs.initHighlightingOnLoad();</script><footer class="site-footer">
+  © 2022<a href="/stat679_notes/">Statistical Data Visualization</a>. Theme<a href="https://github.com/erlzhang/jekyll-theme-persephone" target="_blank">Persephone</a>
+</footer>
+
+  </body>
+</html>

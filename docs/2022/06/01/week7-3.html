@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content=""><title>Geospatial Visualization (I) | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/languages/r.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+  <meta name="keywords" content="">
+  <meta name="description" content=""><link rel="stylesheet" href="/stat679_notes/assets/main.css?v=0.3.3" />
+<script src="/stat679_notes/assets/main.js?v=0.3.3" defer></script><link rel="stylesheet" href="/stat679_notes/assets/css/tomorrow.css" />
+<script src="/stat679_notes/assets/js/highlight.js"></script><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js" defer></script></head>
+<body class="body-post">
+    <a href="/stat679_notes/" class="logo"><h1>Statistical Data Visualization</h1>
+</a><main class="post__wrapper"><div class="post__top_navs clearfix">
+    <nav class="post__archive_path"><a href="" id="archiveBtn">
+        <div class="post__archive_icon">
+          <svg width="40" height="40">
+            <circle class="circle-progress" r="18" cy="20" cx="20"  stroke-linejoin="round" stroke-linecap="round" />
+          </svg>
+          <span class="post__archive_icon"></span>
+        </div>
+        Statistical Data Visualization
+      </a>
+    </nav>
+  </div>
+  <article class="post">
+    <header class="post__header">
+      <h1 class="post__title">Geospatial Visualization (I)</h1>
+      <div class="post__meta">
+        <time>2022-06-01 00:00</time>
+      </div>
+    </header>
+    <div class="post__content content">
+      <p><strong>An introduction to visualizing geospatial data</strong></p>
+
+<ol>
+  <li>
+    <p>In the same way that time plays a central role in analysis of time
+series datasets, space / location is often a central element in
+geographic data visualization. Indeed, these two types of
+visualization have much longer histories than even the simple
+scatterplot (which only emerged in the 19th century, as the abstract
+analog of map).</p>
+  </li>
+  <li>
+    <p>There are two types of geographic data worth distinguishing between
+— vector and raster data.</p>
+  </li>
+  <li>
+    <p>Vector data formats are used to store geometric information, like
+the locations of hospitals (points), trajectories of bus routes
+(lines), or boundaries of counties (polygons). It’s useful to think
+of the associated data as being spatially enriched data frames, with
+each row corresponding to one of these geometric features. Vector
+data are usually stored in .geojson, .wkt, .shp, or .topojson
+formats.</p>
+  </li>
+  <li>
+    <p>Raster data give a measurement along a spatial grid. You can think
+of them as spatially enriched matrices, where the metadata says
+where on the earth each entry of the matrix is associated with.
+Raster data are often stored in tiff format.</p>
+  </li>
+  <li>
+    <p>There are three packages that are especially useful for working with
+spatial data in R. <code class="language-plaintext highlighter-rouge">sf</code> and <code class="language-plaintext highlighter-rouge">terra</code> are designed to support
+manipulation of vector and raster data, respectively. <code class="language-plaintext highlighter-rouge">tmap</code> is a
+visualization package applicable to either format (or even
+combinations of them).</p>
+  </li>
+  <li>
+    <p>Let’s look at some vector data. The examples below read in a road
+network from Rio de Janeiro, polygons of glacier boundaries in
+Nepal, and locations of hospitals in Madison. Notice that each row
+is georeferenced (try searching the lat / lon coordinates online,
+like this).</p>
+  </li>
+  <li>
+    <p>We will use <code class="language-plaintext highlighter-rouge">tmap</code> to visualize each of these datasets. The logic of
+the package mirrors that of <code class="language-plaintext highlighter-rouge">ggplot2</code>, we use <code class="language-plaintext highlighter-rouge">tmap_shape</code> to tell
+the package our source data, and then we can add on layers that add
+visual marks based on it. For example, to draw the road network, we
+use add on a <code class="language-plaintext highlighter-rouge">tmap_line</code> layer. For the glaciers and hospitals, we
+can use the analogous fill and point layers.</p>
+  </li>
+  <li>
+    <p>Remember that each element of a vector dataset can be thought of as
+a row of a data.frame (just with added georeferencing information).
+This means that it is often possible to encode features of each
+element using properties of the marks used to represent them. For
+example, we’ve shaded in each of the glaciers by their thickness,
+which shows that the larger and more central ones tend to be
+thicker.</p>
+  </li>
+  <li>
+    <p>These kinds of fill-encoded polygon visualizations are sometimes
+called choropleths. You have almost surely seen these before. For
+example, here are vote percentages across census tracts in the
+united states.</p>
+  </li>
+  <li>
+    <p>What about raster data? We can again use <code class="language-plaintext highlighter-rouge">tmap</code>, but we have to use
+different types of layers. For example, the data read in below come
+from the Sentinel 2 satellite, an open (and continually updated)
+collection of satellite images maintained by the European Space
+Agency. They give imagery associated with one small subset of the
+glaciers labels. To visualize just one image channel from this data,
+we can use <code class="language-plaintext highlighter-rouge">tmap_raster</code>.</p>
+  </li>
+  <li>
+    <p>Many raster datasets have more than just one channel (our Sentinel
+dataset has 13). We can plot combinations of them using <code class="language-plaintext highlighter-rouge">tmap_rgb</code>.
+For example, channels 2 - 4 correspond to the usual RGB channels
+that appear in ordinary camera images.</p>
+  </li>
+  <li>
+    <p>In all the discussion above, we’ve worked with the original spatial
+data that were given to us. In practice, we will often want to
+manipulate these data before making a final visualization — for
+example, we may want to crop to a specific region of interest or
+unify sources from a few neighboring regions. These types of
+operations are the bread and butter of <code class="language-plaintext highlighter-rouge">sf</code> and <code class="language-plaintext highlighter-rouge">terra</code>. For
+example, if we want to crop the glacier labels down to the region
+contained by the satellite image, we can use <code class="language-plaintext highlighter-rouge">sf</code>’s <code class="language-plaintext highlighter-rouge">st_crop</code>
+command.</p>
+  </li>
+  <li>
+    <p>We can also zoom into the raster data using <code class="language-plaintext highlighter-rouge">terra</code>’s crop function.
+We crop both datasets again to get a high-resolution view of this
+region.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">tmap</code> provides many functions for customizing the appearance of our
+maps. For example, there are layers for adding specific cartographic
+elements, like bar scales (<code class="language-plaintext highlighter-rouge">tmap_bar</code>) and compasses
+(<code class="language-plaintext highlighter-rouge">tmap_compass</code>).</p>
+  </li>
+  <li>
+    <p>Moreover, the themes and layout of the existing layers can be
+adapted using the <code class="language-plaintext highlighter-rouge">tmap_layout</code> function. In the example below,
+we’ve moved the legend so that they don’t overlap with the observed
+shapefiles. We’ve also changed the color palette so that the
+glaciers are more clearly visible.</p>
+  </li>
+</ol>
+
+    </div>
+  </article></main><script>hljs.initHighlightingOnLoad();</script><footer class="site-footer">
+  © 2022<a href="/stat679_notes/">Statistical Data Visualization</a>. Theme<a href="https://github.com/erlzhang/jekyll-theme-persephone" target="_blank">Persephone</a>
+</footer>
+
+  </body>
+</html>

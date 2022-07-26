@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content=""><title>General Update Pattern and Animation | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/languages/r.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+  <meta name="keywords" content="">
+  <meta name="description" content=""><link rel="stylesheet" href="/stat679_notes/assets/main.css?v=0.3.3" />
+<script src="/stat679_notes/assets/main.js?v=0.3.3" defer></script><link rel="stylesheet" href="/stat679_notes/assets/css/tomorrow.css" />
+<script src="/stat679_notes/assets/js/highlight.js"></script><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js" defer></script></head>
+<body class="body-post">
+    <a href="/stat679_notes/" class="logo"><h1>Statistical Data Visualization</h1>
+</a><main class="post__wrapper"><div class="post__top_navs clearfix">
+    <nav class="post__archive_path"><a href="" id="archiveBtn">
+        <div class="post__archive_icon">
+          <svg width="40" height="40">
+            <circle class="circle-progress" r="18" cy="20" cx="20"  stroke-linejoin="round" stroke-linecap="round" />
+          </svg>
+          <span class="post__archive_icon"></span>
+        </div>
+        Statistical Data Visualization
+      </a>
+    </nav>
+  </div>
+  <article class="post">
+    <header class="post__header">
+      <h1 class="post__title">General Update Pattern and Animation</h1>
+      <div class="post__meta">
+        <time>2022-06-01 00:00</time>
+      </div>
+    </header>
+    <div class="post__content content">
+      <p><strong>Neverending enters, updates, and exits…</strong></p>
+
+<ol>
+  <li>
+    <p>In these notes, we consider a slightly more advanced example of d3’s general
+update pattern. We’ll first look at how this pattern is used in this animation,</p>
+
+    <p>(iframe to the final version)</p>
+  </li>
+  <li>
+    <p>Consider the animation above. Since circles are continually being added,
+modified, and removed, we know we will want to use the general update pattern.</p>
+  </li>
+  <li>
+    <p>To use this pattern, we need to keep track of a continually evolving data
+array. Each array element will be associated with one circle, and the value
+encoding its radius will be changed from step to the next.</p>
+  </li>
+  <li>Let’s consider the logic for creating and updating this data array, before we
+consider how exactly we would visualize it. The code block below creates a
+single javascript object parametrizing one circle.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> function new_point(width, height, max_radius) {
+   let generator = d3.randomUniform();
+   return {
+  		x: width * generator(),
+  		y: height * generator(),
+  		r: 2,
+  		max_radius: max_radius * generator(),
+  		rate: 1 + 0.1 * generator()
+   }
+ }
+</code></pre></div>    </div>
+
+    <p>The <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> positions are uniformly chosen across the window. All circles
+ start with a radius of two pixels, but some are allowed to grow larger than
+ others (<code class="language-plaintext highlighter-rouge">max_radius</code>). Finally, the rate at which their size increases is
+ itself random, given by <code class="language-plaintext highlighter-rouge">rate</code>, a number distributed uniformly from 1 (no
+ increase across frames) to 1.1 (10% increase with each frame).</p>
+  </li>
+  <li>We store the data as an array of these objects. With each frame, we add a
+single new circle to the array using the function above. Any circles that are
+already on the screen have their radius increased, and if it grows beyond
+<code class="language-plaintext highlighter-rouge">max_radius</code>, the circle is removed from the array. This logic is reflected in
+the function below.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> function update_data(rain) {
+   rain = rain.concat(new_point(900, 200, 50));
+   rain = rain.map(d =&gt; { d.r *= d.rate;	return d});
+   return rain.filter(d =&gt; d.r &lt; d.max_radius);
+ }
+</code></pre></div>    </div>
+  </li>
+  <li>Even without any visualization, we can see how the radius of each circle is
+increasing every time <code class="language-plaintext highlighter-rouge">update_data</code> is called. For example, copying this block
+into the console will show how the radius of the first circle increases across
+10 frames.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> let rain = []
+ for (let i = 0; i &lt; 10; i++) {
+   rain = update_data(rain);
+   console.log(rain[0]["r"]);
+ }
+</code></pre></div>    </div>
+  </li>
+  <li>Now, let’s consider how we can visualize a dataset that’s evolving in this
+way. Let’s create a selection and bind the <code class="language-plaintext highlighter-rouge">rain</code> array to it,
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> let circ = d3.select("svg")
+   .selectAll("circle")
+   .data(rain)
+</code></pre></div>    </div>
+  </li>
+  <li>If there is a new element in the array relative to the previous frame, we
+need to append a new circle that represents it,
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> circ.enter()
+   .append("circle")
+   .attrs({ cx: d =&gt; d.x,  cy: d.y})
+</code></pre></div>    </div>
+    <p>and since the radius for all elements in the array will have been changed,
+ since the previous frame, we need to update the radius property across the
+ entire selection,</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> circ.attr("r", d =&gt; d.r)
+</code></pre></div>    </div>
+    <p>Finally, since some circles will have been filtered out (their radius got too
+ large), we need to exit their corresponding tags.</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> circ.exit().remove();
+</code></pre></div>    </div>
+  </li>
+  <li>We can capture the entire general update pattern within a function. Using the
+<code class="language-plaintext highlighter-rouge">d3.timer()</code> function to call it every 100 milliseconds, we get an animated view
+of the <code class="language-plaintext highlighter-rouge">rain</code> array.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> function update_vis() {
+   rain = update_data(rain);
+   let circ = d3.select("svg")
+  		.selectAll("circle")
+  		.data(rain)
+
+   circ.enter()
+  		.append("circle")
+  		.attrs({ cx: d =&gt; d.x,  cy: d.y})
+   circ.attr("r", d =&gt; d.r)
+   circ.exit().remove();
+ }
+
+ d3.interval(update_vis, 100);
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>There is a subtle bug in this implementation. Can you see what it is? The
+issue is that sometimes a circle in the middle of the array will have its radius
+grow too large, and it will be filtered away. But our data bind only knows that
+the array has gotten shorter, so it just exits the very last circle tag, even if
+that wasn’t the one that should be removed. This issue is illustrated in the
+sketch below.</p>
+  </li>
+  <li>
+    <p>To fix this, we can use a data bind with an ID function. if we give an ID to
+every circle that is ever appended (this is called below, we can tell d3 to
+remove elements from the DOM matching those IDs which have disappeared from the
+array.</p>
+  </li>
+  <li>In our case, we create a <code class="language-plaintext highlighter-rouge">id</code> attribute for each circle (we guarantee its
+uniqueness with an <code class="language-plaintext highlighter-rouge">id</code> global variable).
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function new_point(width, height, max_radius) {
+  let generator = d3.randomUniform();
+  id += 1;
+  return {
+  		x: width * generator(),
+  		y: height * generator(),
+  		r: 2,
+  		max_radius: max_radius * generator(),
+  		rate: 1 + 0.1 * generator(),
+  		id: id
+  }
+}
+</code></pre></div>    </div>
+
+    <p>and then we refer to this id during the data bind</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let circ = d3.select("svg")
+  .selectAll("circle")
+  .data(rain, d =&gt; d.id)
+</code></pre></div>    </div>
+
+    <p>Now, when a circle in the middle of the array is removed, the associated
+element from the visualization will also be exited.</p>
+  </li>
+</ol>
+
+    </div>
+  </article></main><script>hljs.initHighlightingOnLoad();</script><footer class="site-footer">
+  © 2022<a href="/stat679_notes/">Statistical Data Visualization</a>. Theme<a href="https://github.com/erlzhang/jekyll-theme-persephone" target="_blank">Persephone</a>
+</footer>
+
+  </body>
+</html>

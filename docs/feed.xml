@@ -1,84 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-06-12T16:30:45-05:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Node - Link Diagrams</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week9-2.html" rel="alternate" type="text/html" title="Node - Link Diagrams" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week9-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week9-2.html"><![CDATA[<p><strong>Representing relations with line marks</strong></p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
-library(ggraph)
-library(tidygraph)
-theme_set(theme_graph())
-</code></pre></div></div>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-07-26T13:41:22-05:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Graph Representations</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week9-4.html" rel="alternate" type="text/html" title="Graph Representations" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week9-4</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week9-4.html"><![CDATA[<p><em>Visual marks for general graphs</em></p>
 
 <ol>
   <li>
-    <p>A node-link diagram is a visual encoding strategy for network data,
-where nodes are drawn as points and links between nodes are drawn as
-lines between them. The dataset below is a friendship network
-derived from a survey of high schoolers in 1957 and 1958, available
-in the <code class="language-plaintext highlighter-rouge">tidygraph</code> package.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G_school &lt;- as_tbl_graph(highschool) %&gt;%
-  activate(edges) %&gt;%
-  mutate(year = factor(year))
-ggraph(G_school) +
-  geom_edge_link(aes(col = year), width = 0.1) +
-  geom_node_point()
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week9-2/unnamed-chunk-3-1.png" alt="" /></p>
+    <p>In these notes, we’ll discuss how to implement a few basic types of
+general graph visualizations using R and javascript. For R, we’ll
+focus on ggraph, and for javascript, we’ll use D3’s graph layout
+functions.</p>
   </li>
   <li>
-    <p>For trees, the vertical or radial position can further encode the
-depth of a node in the tree. The data below represent the directory
-structure from a widely used web package called flare.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>G_flare &lt;- tbl_graph(flare$vertices, flare$edges)
-p1 &lt;- ggraph(G_flare, 'tree') + 
-  geom_edge_link() +
-  geom_node_label(aes(label = shortName), size = 3)
-p2 &lt;- ggraph(G_flare, 'tree', circular = TRUE) + 
-  geom_edge_link() +
-  geom_node_label(aes(label = shortName), size = 3)
-
-library(patchwork)
-p1 + p2
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week9-2/unnamed-chunk-4-1.png" alt="The same node-link diagram, with either height or radius encoding
-depth in the
-tree." /></p>
+    <p>The goal of the ggraph package is to provide ggplot2-like design
+iteration for graph structured (rather than tabular) data. Like
+ggplot2, visualizations are built by composing layers for separate
+visual marks. Scale and labeling functions are also available to
+customize the appearance of these marks.</p>
   </li>
   <li>
-    <p>In either trees or networks, attributes of nodes and edges can be
-encoded using size (node radius or edge width) or color.</p>
+    <p>For example, to build a node-link visualization, we can use the
+<code class="language-plaintext highlighter-rouge">geom_node</code> and <code class="language-plaintext highlighter-rouge">geom_edge_link</code> layers. Note that <code class="language-plaintext highlighter-rouge">ggraph</code> expects
+a <code class="language-plaintext highlighter-rouge">tbl_graph</code> as input, not simply a <code class="language-plaintext highlighter-rouge">data.frame</code>.</p>
   </li>
   <li>
-    <p>The node-link representation is especially effective for the task of
-following paths. It’s an intuitive visualization for examining the
-local neighborhood of one node or describing the shortest path
-between two nodes.</p>
+    <p>Attributes of nodes and edges can be encoded using size (node radius
+or edge width) or color. The node-link representation is especially
+effective for the task of following paths. It’s an intuitive
+visualization for examining the local neighborhood of one node or
+describing the shortest path between two nodes.</p>
   </li>
   <li>
-    <p>In node-link diagrams, spatial position is subtle. It does not
-directly encode any attribute in the dataset, but layout algorithms
-(i.e., algorithms that try to determine the spatial positions of
-nodes in a node-link diagram) try to ensure that nodes that are
-close to one another in the shortest-path-sense also appear close to
-one another on the page.</p>
+    <p>Let’s make the analogous graph in D3. We first read in the JSON’s
+associated the nodes and edges.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>p1 &lt;- ggraph(G_school, layout = "kk") +
-  geom_edge_link(aes(col = year), width = 0.1) +
-  geom_node_point()
-p2 &lt;- ggraph(G_school, layout = "fr") +
-  geom_edge_link(aes(col = year), width = 0.1) +
-  geom_node_point()
-p1 + p2
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week9-2/unnamed-chunk-5-1.png" alt="A comparison of two layout algorithms for the same
-network." /></p>
-  </li>
-  <li>
-    <p>One common layout algorithm uses force-directed placement. The edges
-here are interpreted as physical springs, and the node positions are
-iteratively updated according to the forces induced by the springs.</p>
+    <p>We can then use d3’s force-directed layout algorithm to compute a
+layout of the nodes given a connectivity structure. The algorithm
+simulates forces that try to repel nodes from each other, while
+tension on the edges keeps connected ones close to one another. It
+is just one of many layout algorithms, some of which we’ll review in
+the next lecture.</p>
   </li>
   <li>
     <p>The key drawback of node-link diagrams is that they do not scale
@@ -87,69 +44,53 @@ of edges per node. The nodes and edges begin to overlap too much,
 and the result looks like a “hairball.”</p>
   </li>
   <li>
-    <p>In this situation, it is possible to use additional structure in the
-data to salvage the node-link display. For example, in a large tree,
-a rectangular or BubbleTree layout can be used.</p>
-
-    <figure>
-
-<img src="https://uwmadison.box.com/shared/static/r9boadgujdkp0xy3hk23n6j2ri13yh6h.png" alt="Recommendation network" />
-
-<figcaption>
-
-Example rectangular and BubbleTree layouts, for very large trees, as
-shown in Visualization Analysis and Design.
-
-</figcaption>
-</figure>
+    <p>In this case, it’s often useful to try filtering or aggregating
+nodes. For example, aggregation works by replacing the original
+nodes with metanodes representing entire clusters. This is
+especially powerful if the degree of filtering or aggregation can be
+adjusted interactively — we’ll explore this strategy when we study
+interactivity for graph visualization.</p>
   </li>
-</ol>
-
-<p>If a large network has a modular structure, then it is possible to first
-lay out the separate clusters far apart from one another, before running
-force directed placement.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;figure&gt;
-&lt;img src="https://uwmadison.box.com/shared/static/0zihaty78j8ytmdjwlqetbxpjzbrz8k6.png"
-     alt="Hierarchical layout"&gt;
-&lt;figcaption&gt;A hierarchical force directed layout algorithm, as shown in Visualization Analysis and Design.&lt;/figcaption&gt;
-</code></pre></div></div>
-
-<p>&lt;/figure&gt;</p>
-
-<p>If many edges go through a few shared paths, it may be possible to
-bundle them.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;figure&gt;
-&lt;img src="https://www.data-to-viz.com/graph/IMG/bundle_compare.png"
-     alt="Hierarchical layout"&gt;
-&lt;figcaption&gt;In edge bundling, similar paths are placed close to one another.
-&lt;/figcaption&gt;
-</code></pre></div></div>
-
-<p>&lt;/figure&gt;</p>
-
-<p>Bundled connections can be visualized using the <code class="language-plaintext highlighter-rouge">geom_conn_bundle</code>
-geometry in ggraph. Before using this layout, it is necessary to have a
-hierarchy over all the nodes, since shared ancestry among connected
-nodes is how the proximity of paths is determined.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```r
-from &lt;- match(flare$imports$from, flare$vertices$name)
-to &lt;- match(flare$imports$to, flare$vertices$name)
-ggraph(G_flare, layout = 'dendrogram', circular = TRUE) + 
-  geom_conn_bundle(data = get_con(from = from, to = to), alpha = 0.1) + 
-  geom_node_label(aes(label = shortName), size = 2) +
-  coord_fixed()
-```
-
-![An example of hierarchical edge bundling in R.](/stat679_notes/assets/week9-2/unnamed-chunk-6-1.png)
-</code></pre></div></div>
-
-<ol>
-  <li>To summarize, node-link diagrams are very good for characterizing
-local structure, but struggle with large networks.</li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Representing relations with line marks]]></summary></entry><entry><title type="html">Visual Encodings</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html" rel="alternate" type="text/html" title="Visual Encodings" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html"><![CDATA[<p><em>Design principles from the grammar of graphics.</em></p>
+  <li>
+    <p>Alternatively, another way to solve the hairball problem is to use
+an adjacency matrix visualization instead. The adjacency matrix of a
+graph is the matrix with a 1 in entry ij if nodes i and j are linked
+by an edge and 0 otherwise. It has one row and one column for every
+node in the graph. Visually, these 1’s and 0’s can be encoded as a
+black and white squares.</p>
+  </li>
+  <li>
+    <p>The example below shows the adjacency matrix associated with the
+high-school student friendship network from last lecture. We use the
+“matrix” layout with a <code class="language-plaintext highlighter-rouge">geom_edge_tile</code> layer to draw adjacency
+matrices in ggraph.</p>
+  </li>
+  <li>
+    <p>In D3, an adjacency matrix visualization is simply a collection of
+appropriately placed SVG <code class="language-plaintext highlighter-rouge">rect</code>s.</p>
+  </li>
+  <li>
+    <p>Note that we have to associate each node with both an x and a y
+coordinate and that the visualization is dependent on the choice of
+ordering. There are a variety of algorithms available for ordering
+nodes in an adjacency matrix, but implementing this manually can be
+tedious. Fortunately, there is a javascript package (reorder.js)
+that specifically supports these algorithms.</p>
+  </li>
+  <li>
+    <p>The key advantage of visualization using adjacency matrices is that
+they can scale to large and dense networks. It’s possible to
+perceive structure even when the squares are quite small, and there
+is no risk of edges overlapping with one another.</p>
+  </li>
+  <li>
+    <p>The key disadvantage of adjacency matrix visualization is that it’s
+challenging to make sense of the local topology around a node.
+Finding the « friends of friends » of a node requires effort.
+Another issue is that different orderings of rows and columns can
+have a dramatic effect on the structure that’s visible.</p>
+  </li>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Visual marks for general graphs]]></summary></entry><entry><title type="html">Visual Encodings</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html" rel="alternate" type="text/html" title="Visual Encodings" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html"><![CDATA[<p><em>Design principles from the grammar of graphics.</em></p>
 
 <ol>
   <li>

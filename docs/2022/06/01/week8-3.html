@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content=""><title>Spatial Data in D3 | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/languages/r.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+  <meta name="keywords" content="">
+  <meta name="description" content=""><link rel="stylesheet" href="/stat679_notes/assets/main.css?v=0.3.3" />
+<script src="/stat679_notes/assets/main.js?v=0.3.3" defer></script><link rel="stylesheet" href="/stat679_notes/assets/css/tomorrow.css" />
+<script src="/stat679_notes/assets/js/highlight.js"></script><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js" defer></script></head>
+<body class="body-post">
+    <a href="/stat679_notes/" class="logo"><h1>Statistical Data Visualization</h1>
+</a><main class="post__wrapper"><div class="post__top_navs clearfix">
+    <nav class="post__archive_path"><a href="" id="archiveBtn">
+        <div class="post__archive_icon">
+          <svg width="40" height="40">
+            <circle class="circle-progress" r="18" cy="20" cx="20"  stroke-linejoin="round" stroke-linecap="round" />
+          </svg>
+          <span class="post__archive_icon"></span>
+        </div>
+        Statistical Data Visualization
+      </a>
+    </nav>
+  </div>
+  <article class="post">
+    <header class="post__header">
+      <h1 class="post__title">Spatial Data in D3</h1>
+      <div class="post__meta">
+        <time>2022-06-01 00:00</time>
+      </div>
+    </header>
+    <div class="post__content content">
+      <p><em>Manipulating spatial data in D3</em></p>
+
+<ol>
+  <li>
+    <p>These notes summarize methods for static visualization of geospatial
+data in D3.</p>
+  </li>
+  <li>
+    <p>Before we can make any plots, we need to be able to read in data. To
+read in vector data, it’s most convenient to store the data as
+geojson and read it in using <code class="language-plaintext highlighter-rouge">d3.geojson()</code>. The javascript object
+created by this function includes a <code class="language-plaintext highlighter-rouge">features</code> array. The <code class="language-plaintext highlighter-rouge">$i^{th}$</code>
+element in this array gives properties of the <code class="language-plaintext highlighter-rouge">$i^{th}$</code> feature in
+the vector dataset.</p>
+  </li>
+  <li>
+    <p>For example, we can use this to read in the glaciers data.</p>
+  </li>
+  <li>
+    <p>Even though these look like basic javascript objects, d3.geojson is
+actually keeping track geographic metadata behind the scenes. This
+allows us to do some basic geographic queries directly from
+javascript. For example, if we want to query the geographic centroid
+or areas (in square kilometers) of each feature, we can use the
+functions below.</p>
+
+    <p>[d3-geo query example]</p>
+
+    <p>A variety of related processing functions can be found in the
+<code class="language-plaintext highlighter-rouge">d3-geo</code> library.</p>
+  </li>
+  <li>
+    <p>How can we display these data? We need a way of translating the
+abstract data into SVGs on the screen. For vector data, we can use
+D3’s geoPath generators. These work like line generators — they are
+initialized with visual encoding functions and can then be applied
+to any new collection of vector features.</p>
+  </li>
+  <li>
+    <p>For example, we can use a path generator to draw the glacier
+boundaries.</p>
+  </li>
+  <li>
+    <p>Remember that we have the vector feature attributes stored in
+<code class="language-plaintext highlighter-rouge">.features</code>. This allows us to modify the SVG attributes to reflect
+the data. For example, we can shade the glaciers in by their depth.</p>
+  </li>
+  <li>
+    <p>We haven’t considered raster data in this lecture. This is because
+javascript doesn’t have a simple built-in way to handle raster data.
+If we want to visualize a raster dataset, we need to first convert
+them to simple PNG images — this loses the geographic metadata, and
+so any geographic processing has to be done before this step. In
+practice, it’s common to either manually convert to a PNG or to use
+a tiling library, which automatically converts raster data into a
+collection of PNGs. Both of these techniques are beyond the scope of
+our class, unfortunately.</p>
+  </li>
+</ol>
+
+    </div>
+  </article></main><script>hljs.initHighlightingOnLoad();</script><footer class="site-footer">
+  © 2022<a href="/stat679_notes/">Statistical Data Visualization</a>. Theme<a href="https://github.com/erlzhang/jekyll-theme-persephone" target="_blank">Persephone</a>
+</footer>
+
+  </body>
+</html>

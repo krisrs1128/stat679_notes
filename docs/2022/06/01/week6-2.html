@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content=""><title>Time Series (2) | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/languages/r.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+  <meta name="keywords" content="">
+  <meta name="description" content=""><link rel="stylesheet" href="/stat679_notes/assets/main.css?v=0.3.3" />
+<script src="/stat679_notes/assets/main.js?v=0.3.3" defer></script><link rel="stylesheet" href="/stat679_notes/assets/css/tomorrow.css" />
+<script src="/stat679_notes/assets/js/highlight.js"></script><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js" defer></script></head>
+<body class="body-post">
+    <a href="/stat679_notes/" class="logo"><h1>Statistical Data Visualization</h1>
+</a><main class="post__wrapper"><div class="post__top_navs clearfix">
+    <nav class="post__archive_path"><a href="" id="archiveBtn">
+        <div class="post__archive_icon">
+          <svg width="40" height="40">
+            <circle class="circle-progress" r="18" cy="20" cx="20"  stroke-linejoin="round" stroke-linecap="round" />
+          </svg>
+          <span class="post__archive_icon"></span>
+        </div>
+        Statistical Data Visualization
+      </a>
+    </nav>
+  </div>
+  <article class="post">
+    <header class="post__header">
+      <h1 class="post__title">Time Series (2)</h1>
+      <div class="post__meta">
+        <time>2022-06-01 00:00</time>
+      </div>
+    </header>
+    <div class="post__content content">
+      <ol>
+  <li>
+    <p>In these notes, we continue our tour of static time series visualization techniques, with a special emphasis on collections of time series.</p>
+  </li>
+  <li>
+    <p>Our first more advanced method is called the horizon plot. Below, I’ve created a horizon plot of the Australian tourism data, along with the line plot we made last time for comparison.</p>
+  </li>
+  <li>
+    <p>This figure isn’t yet standard, so let’s walk through how to read it. We’ve taken the explanation below from the FlowingData blog. The main idea is to split the time series into a few horizontal bands, each of which will be assigned to a separate color. A special dividing line (the horizon line) is used to split between two colors in a diverging color scheme.</p>
+  </li>
+  <li>
+    <p>Once the bands are defined, the components are all collapsed on top of one another. In this way, even though there may be a large range in the realized y-values, the amount of space needed to display them all is relatively small. We’re able to decide which overall band we are in (and hence the overall value of y) based on color.</p>
+  </li>
+  <li>
+    <p>We created the figure above using the <code class="language-plaintext highlighter-rouge">gghorizon</code> package. We have to specify both the horizon line (<code class="language-plaintext highlighter-rouge">origin</code>) and the cutoffs that separate the bands (<code class="language-plaintext highlighter-rouge">scales</code>). Using the <code class="language-plaintext highlighter-rouge">cutoffs</code> argument creates the color legend.</p>
+  </li>
+  <li>
+    <p>Overall, the horizon plot gives a reasonable compromise between faceting and heatmaps — it preserves some of the advantages of using y-position to encode value while having some of the compactness of heatmaps. The advantages of taking this middle ground has been documented in research. However, the approach is not very intuitive, and for a general audience, we typically will have to explain how to read these figures.</p>
+  </li>
+  <li>
+    <p>What if we are interested more in totals and composition (i.e., values divided by total) across a collection? A few approaches make it especially easy to answer these types of queries.</p>
+  </li>
+  <li>
+    <p>We’ll consider the X-men appearances dataset. This includes the number of times each character appeared on the page across all the issues of the comic (as well as whether they were dressed normally or as superheroes during each appearance). We’ve filtered down to just the most common characters, to make comparison easier.</p>
+  </li>
+  <li>
+    <p>One way to visualize how the total number and composition of character appearances change over issues is to use a stacked area plot. This is the analog of an area plot, but where multiple areas are stacked on top of one another.</p>
+  </li>
+  <li>
+    <p>An alternative is the stream graph (also sometimes called “Theme River”). It is like a stacked area chart, but oriented around a central (rather than base) line. These are also almost always smoothed slightly, so that the transitions are not too jarring.</p>
+  </li>
+  <li>
+    <p>There has been a debate about whether approaches like streamgraphs are actually more effective than area plots. Broadly speaking, one camp focuses on functionality, evaluating approaches by user experiments on formal tasks. Another allows aesthetic appeal to factor into decision-making. It’s not necessary to take up any particular position in this course, but it’s good when speaking with others in the visualization community to know that these positions exist (and that your designs might elicit cliched reactions).</p>
+  </li>
+  <li>
+    <p>Even though both stacked area and stream graphs make it easier to tell how the totals at any timepoint breakdown across groups, they don’t necessarily make it easy to rank the groups by their relative contribution (groups with similar contributions might be hard to rank).</p>
+  </li>
+  <li>
+    <p>For example, consider the dataset below, which describes the number of refugees leaving countries around the world between 2000 and 2010. The stacked area graph shows that there was a clear increase in refugees from Iraq starting in 2004, but it’s unclear whether this overtook Afghanistan.</p>
+  </li>
+  <li>
+    <p>If we want to explicitly rank the groups, we can use an alluvial plot. It is a hybrid between a bump chart and streamgraph. It is read like a stream graph, but at each timepoint, the groups are sorted from largest to smallest contribution. Applying it to the dataset above shows that Iraq did indeed become the largest source of refugees within the Mideast starting around 2004.</p>
+  </li>
+</ol>
+
+    </div>
+  </article></main><script>hljs.initHighlightingOnLoad();</script><footer class="site-footer">
+  © 2022<a href="/stat679_notes/">Statistical Data Visualization</a>. Theme<a href="https://github.com/erlzhang/jekyll-theme-persephone" target="_blank">Persephone</a>
+</footer>
+
+  </body>
+</html>

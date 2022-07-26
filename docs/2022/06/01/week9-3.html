@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content=""><title>Tree Representations | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/languages/r.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+  <meta name="keywords" content="">
+  <meta name="description" content=""><link rel="stylesheet" href="/stat679_notes/assets/main.css?v=0.3.3" />
+<script src="/stat679_notes/assets/main.js?v=0.3.3" defer></script><link rel="stylesheet" href="/stat679_notes/assets/css/tomorrow.css" />
+<script src="/stat679_notes/assets/js/highlight.js"></script><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js" defer></script></head>
+<body class="body-post">
+    <a href="/stat679_notes/" class="logo"><h1>Statistical Data Visualization</h1>
+</a><main class="post__wrapper"><div class="post__top_navs clearfix">
+    <nav class="post__archive_path"><a href="" id="archiveBtn">
+        <div class="post__archive_icon">
+          <svg width="40" height="40">
+            <circle class="circle-progress" r="18" cy="20" cx="20"  stroke-linejoin="round" stroke-linecap="round" />
+          </svg>
+          <span class="post__archive_icon"></span>
+        </div>
+        Statistical Data Visualization
+      </a>
+    </nav>
+  </div>
+  <article class="post">
+    <header class="post__header">
+      <h1 class="post__title">Tree Representations</h1>
+      <div class="post__meta">
+        <time>2022-06-01 00:00</time>
+      </div>
+    </header>
+    <div class="post__content content">
+      <p><em>An important special case of graph data visualization</em></p>
+
+<ol>
+  <li>
+    <p>Formally, trees are a special type of graph which have no cycles
+(paths starting at one node that can return without retracing any
+steps). Informally, they can be thought of as hierarchies descending
+from a “root” node. These notes review some techniques for
+visualizing tree structured data.</p>
+  </li>
+  <li>
+    <p>We can adapt the vertical or radial position can further encode the
+depth of a node in the tree. The data below represent the directory
+structure from a widely used web package called flare.</p>
+  </li>
+  <li>
+    <p>In ggraph, this kind of visualization is constructed using the same
+type of node-link geoms as before. We can organize nodes by depth
+(distance from the root) by specifying that the layout be <code class="language-plaintext highlighter-rouge">tree</code>.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    G_flare &lt;- tbl_graph(flare$vertices, flare$edges)
+    p1 &lt;- ggraph(G_flare, 'tree') + 
+      geom_edge_link() +
+      geom_node_label(aes(label = shortName), size = 3)
+
+    p2 &lt;- ggraph(G_flare, 'tree', circular = TRUE) + 
+      geom_edge_link() +
+      geom_node_label(aes(label = shortName), size = 3)
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>In D3, it’s possible to convert entries in a tree-structured
+javascript object to tree-structured pixel coordinates using the
+<code class="language-plaintext highlighter-rouge">d3.tree</code> layout function. For example, to reconstruct the flare
+graph from above, we can use the code below,</p>
+
+    <p>In the first step, we create a layout function. <code class="language-plaintext highlighter-rouge">d3.tree()</code> can be
+thought of similarly to <code class="language-plaintext highlighter-rouge">d3.line()</code> — it is a kind of functional,
+whose output is a function that takes data and returns pixel
+coordinates. The second step applies this function to the root node
+of the original data, and this is what is ultimately used to draw
+the nodes (circles) and links (paths) on the SVG.</p>
+  </li>
+  <li>
+    <p>Alternatively, trees can also be visualized using enclosure (i.e.,
+the containment of some visual marks within others) to encode those
+relationships.</p>
+  </li>
+  <li>
+    <p>Enclosure is used in treemaps. In this visualization, each node is
+allocated an area, and all its children are drawn within that area
+(and so on, recursively, down to the leaves).</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ggraph(graph, "treemap", weight = size) +
+      geom_node_tile(aes(fill = depth, size = depth), size = 0.25) +
+      scale_fill_distiller(direction = 1) +
+      coord_fixed()
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>This is a particularly useful visualization when it’s important to
+visualize a continuous attribute associated with each node. In the
+above example, the size of each tile was was determined by the
+<code class="language-plaintext highlighter-rouge">size</code> variable. For example, a large node might correspond to a
+large part of a budget or a large directory in a filesystem.</p>
+  </li>
+  <li>
+    <p>The main difficulty with using enclosure is that it becomes more
+difficult to trace the parent-child structure of the tree.
+Connections between nodes immediately stand out in the node-link
+diagram, but they require deliberate inspection when using treemaps.</p>
+  </li>
+  <li>
+    <p>In D3, the analogous code is generated using the <code class="language-plaintext highlighter-rouge">d3.treemap</code>
+function. Though the layout is quite different, the way in which it
+is applied to data is very similar to the use of <code class="language-plaintext highlighter-rouge">d3.tree</code>.</p>
+  </li>
+  <li>
+    <p>An intermediate between the node-link and the treemap approach is to
+use an icicle plot. In this approach, the distance from the root is
+still encoded using position, like in a node-link diagram. A
+continuous value can be associated with each descendant node and
+encoded encoded using the length of the associated rectangle.</p>
+  </li>
+  <li>
+    <p>In ggraph, we can create this using the <code class="language-plaintext highlighter-rouge">geom_node_tile</code> layer.</p>
+  </li>
+  <li>
+    <p>In D3, we can specify the tile centers using <code class="language-plaintext highlighter-rouge">d3.heirarchy</code> and
+widths using <code class="language-plaintext highlighter-rouge">d3.partition</code>.</p>
+  </li>
+</ol>
+
+    </div>
+  </article></main><script>hljs.initHighlightingOnLoad();</script><footer class="site-footer">
+  © 2022<a href="/stat679_notes/">Statistical Data Visualization</a>. Theme<a href="https://github.com/erlzhang/jekyll-theme-persephone" target="_blank">Persephone</a>
+</footer>
+
+  </body>
+</html>
