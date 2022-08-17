@@ -1,7 +1,7 @@
 ---
 title: Introduction to ggplot2
 layout: post
-output:
+output: 
   md_document:
     preserve_yaml: true
 ---
@@ -21,9 +21,12 @@ output:
     ordinary language, the creative combination of simple building
     blocks can support a very wide range of expression.
 
-2.  We’re going to create this plot in these notes.
+2.  In these notes, we’ll create this plot.
 
-3.  Every ggplot2 plot is made from three components,
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-3-1.png)
+
+3.  But before writing any code, let’s review the main ideas of ggplot2.
+    Every ggplot2 plot is made from three components,
 
     -   Data: This is the data.frame that we want to visualize.
     -   Geometry: These are the types of visual marks that appear on the
@@ -40,8 +43,30 @@ output:
 
 5.  Here’s an example of the data above in tidy format,
 
+        data(murders)
+        head(murders)
+
+        ##        state abb region population total
+        ## 1    Alabama  AL  South    4779736   135
+        ## 2     Alaska  AK   West     710231    19
+        ## 3    Arizona  AZ   West    6392017   232
+        ## 4   Arkansas  AR  South    2915918    93
+        ## 5 California  CA   West   37253956  1257
+        ## 6   Colorado  CO   West    5029196    65
+
     This is one example of how the same information might be stored in a
     non-tidy way, making visualization much harder.
+
+        non_tidy <- data.frame(t(murders))
+        colnames(non_tidy) <- non_tidy[1, ]
+        non_tidy <- non_tidy[-1, ]
+        non_tidy[, 1:6]
+
+        ##             Alabama   Alaska  Arizona Arkansas California Colorado
+        ## abb              AL       AK       AZ       AR         CA       CO
+        ## region        South     West     West    South       West     West
+        ## population  4779736   710231  6392017  2915918   37253956  5029196
+        ## total           135       19      232       93       1257       65
 
     Often, one of the hardest parts in making a ggplot2 plot is not
     coming up with the right ggplot2 commands, but reshaping the data so
@@ -53,17 +78,23 @@ output:
     ggplot2. A typical plot will compose a chain of layers on top of a
     dataset,
 
-<!-- -->
+    > ggplot(data) + \[layer 1\] + \[layer 2\] + …
 
-      ggplot(data) + [layer 1] + [layer 2] + …
-
-1.  For example, by deconstructing the plot above, we would expect to
+7.  For example, by deconstructing the plot above, we would expect to
     have point and text layers. For now, let’s just tell the plot to put
     all the geom’s at the origin. You can see all the types of geoms in
-    the cheat sheet. We’ll be experimenting with a few of these in a
-    later lecture.
+    the [cheat
+    sheet](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf).
+    We’ll be experimenting with a few of these in a [later
+    lecture](https://krisrs1128.github.io/stat679_notes/2022/06/01/week1-3.html).
 
-2.  **Aesthetic Mapping** Aesthetic mappings make the connection between
+        ggplot(murders) +
+          geom_point(x = 0, y = 0) +
+          geom_text(x = 0, y = 0, label = "test")
+
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-6-1.png)
+
+8.  **Aesthetic Mapping** Aesthetic mappings make the connection between
     the data and the geometry. It’s the piece that translates abstract
     data fields into visual properties. Analyzing the original graph, we
     recognize these specific mappings.
@@ -72,16 +103,16 @@ output:
     -   Number of murders → y-axis coordinate
     -   Geographical region → color
 
-3.  To establish these mappings, we need to use the aes function. Notice
+9.  To establish these mappings, we need to use the aes function. Notice
     that column names don’t have to be quoted – ggplot2 knows to refer
     back to the data.frame in ggplot(murders).
 
         ggplot(murders) +
           geom_point(aes(x = population, y = total, col = region))
 
-    ![](/stat679_notes/assets/week1-2/unnamed-chunk-3-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-7-1.png)
 
-4.  The original plot used a log-scale. To transform the x and y axes,
+10. The original plot used a log-scale. To transform the x and y axes,
     we can use scales.
 
         ggplot(murders) +
@@ -89,7 +120,7 @@ output:
           scale_x_log10() +
           scale_y_log10()
 
-    ![](/stat679_notes/assets/week1-2/unnamed-chunk-4-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-8-1.png)
 
     One nuance is that scales aren’t limited to x and y transformations.
     They can be applied to modify any relationship between a data field
@@ -102,9 +133,9 @@ output:
           scale_y_log10() +
           scale_color_manual(values = c("#6a4078", "#aa1518", "#9ecaf8", "#50838c"))
 
-    ![](/stat679_notes/assets/week1-2/unnamed-chunk-5-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-9-1.png)
 
-5.  A problem with this graph is that it doesn’t tell us which state
+11. A problem with this graph is that it doesn’t tell us which state
     each point corresponds to. For that, we’ll need text labels. We can
     encode the coordinates for these marks again using aes, but this
     time within a `geom_text` layer.
@@ -118,7 +149,7 @@ output:
           scale_x_log10() +
           scale_y_log10()
 
-    ![](/stat679_notes/assets/week1-2/unnamed-chunk-6-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-10-1.png)
 
     Note that each type of layer uses different visual properties to
     encode the data – the argument label is only available for the
@@ -126,7 +157,7 @@ output:
     for each type of geom by checking that geom’s documentation page,
     under the Aesthetics heading.
 
-6.  It’s usually a good thing to make your code as concise as possible.
+12. It’s usually a good thing to make your code as concise as possible.
     For ggplot2, we can achieve this by sharing elements across aes
     calls (e.g., not having to type population and total twice). This
     can be done by defining a “global” aesthetic, putting it inside the
@@ -139,9 +170,9 @@ output:
           scale_x_log10() +
           scale_y_log10()
 
-    ![](/stat679_notes/assets/week1-2/unnamed-chunk-7-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-11-1.png)
 
-7.  How can we improve the readability of this plot? You might already
+13. How can we improve the readability of this plot? You might already
     have ideas,
 
     -   Prevent labels from overlapping. It’s impossible to read some of
@@ -155,7 +186,7 @@ output:
         to let people know what each color means.
     -   Use a better color theme.
 
-8.  For each of the problems above, we have the corresponding solution
+14. For each of the problems above, we have the corresponding solution
     techniques,
 
     -   The ggrepel package. This tries to find better label positions,
@@ -173,9 +204,9 @@ output:
         `theme_minimal`. I also like the colorbrewer palette, which can
         be used by calling a different color scale.
 
-9.  Putting all these modifications together yields
+15. Putting all these modifications together yields
 
-        r <- murders %>%
+        r <- murders %>% 
           summarize(rate = sum(total) /  sum(population)) %>%
           pull(rate)
 
@@ -194,4 +225,4 @@ output:
           ) +
           theme_minimal()
 
-    ![](/stat679_notes/assets/week1-2/unnamed-chunk-8-1.png)
+    ![](/stat679_notes/assets/week1-2/unnamed-chunk-12-1.png)
