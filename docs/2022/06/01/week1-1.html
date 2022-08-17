@@ -2,9 +2,9 @@
 <html lang="en"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content=""><title>Introduction to ggplot2 | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/default.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/languages/r.min.js"></script>
+  <meta name="author" content=""><title>Introduction to ggplot2 | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/r.min.js"></script>
 <script>hljs.highlightAll();</script>
 
   <meta name="keywords" content="">
@@ -52,10 +52,13 @@ ordinary language, the creative combination of simple building
 blocks can support a very wide range of expression.</p>
   </li>
   <li>
-    <p>We’re going to create this plot in these notes.</p>
+    <p>In these notes, we’ll create this plot.</p>
+
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-3-1.png" alt="" /></p>
   </li>
   <li>
-    <p>Every ggplot2 plot is made from three components,</p>
+    <p>But before writing any code, let’s review the main ideas of ggplot2.
+Every ggplot2 plot is made from three components,</p>
 
     <ul>
       <li>Data: This is the data.frame that we want to visualize.</li>
@@ -76,8 +79,32 @@ data.</p>
   <li>
     <p>Here’s an example of the data above in tidy format,</p>
 
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data(murders)
+head(murders)
+
+##        state abb region population total
+## 1    Alabama  AL  South    4779736   135
+## 2     Alaska  AK   West     710231    19
+## 3    Arizona  AZ   West    6392017   232
+## 4   Arkansas  AR  South    2915918    93
+## 5 California  CA   West   37253956  1257
+## 6   Colorado  CO   West    5029196    65
+</code></pre></div>    </div>
+
     <p>This is one example of how the same information might be stored in a
 non-tidy way, making visualization much harder.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>non_tidy &lt;- data.frame(t(murders))
+colnames(non_tidy) &lt;- non_tidy[1, ]
+non_tidy &lt;- non_tidy[-1, ]
+non_tidy[, 1:6]
+
+##             Alabama   Alaska  Arizona Arkansas California Colorado
+## abb              AL       AK       AZ       AR         CA       CO
+## region        South     West     West    South       West     West
+## population  4779736   710231  6392017  2915918   37253956  5029196
+## total           135       19      232       93       1257       65
+</code></pre></div>    </div>
 
     <p>Often, one of the hardest parts in making a ggplot2 plot is not
 coming up with the right ggplot2 commands, but reshaping the data so
@@ -89,21 +116,26 @@ layers. We can associate each row of a data frame with points,
 lines, tiles, etc., just by referring to the appropriate geom in
 ggplot2. A typical plot will compose a chain of layers on top of a
 dataset,</p>
+
+    <blockquote>
+      <p>ggplot(data) + [layer 1] + [layer 2] + …</p>
+    </blockquote>
   </li>
-</ol>
-
-<!-- -->
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ggplot(data) + [layer 1] + [layer 2] + …
-</code></pre></div></div>
-
-<ol>
   <li>
     <p>For example, by deconstructing the plot above, we would expect to
 have point and text layers. For now, let’s just tell the plot to put
 all the geom’s at the origin. You can see all the types of geoms in
-the cheat sheet. We’ll be experimenting with a few of these in a
-later lecture.</p>
+the <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-visualization.pdf">cheat
+sheet</a>.
+We’ll be experimenting with a few of these in a <a href="https://krisrs1128.github.io/stat679_notes/2022/06/01/week1-3.html">later
+lecture</a>.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(murders) +
+  geom_point(x = 0, y = 0) +
+  geom_text(x = 0, y = 0, label = "test")
+</code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-6-1.png" alt="" /></p>
   </li>
   <li>
     <p><strong>Aesthetic Mapping</strong> Aesthetic mappings make the connection between
@@ -126,7 +158,7 @@ back to the data.frame in ggplot(murders).</p>
   geom_point(aes(x = population, y = total, col = region))
 </code></pre></div>    </div>
 
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-3-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-7-1.png" alt="" /></p>
   </li>
   <li>
     <p>The original plot used a log-scale. To transform the x and y axes,
@@ -138,7 +170,7 @@ we can use scales.</p>
   scale_y_log10()
 </code></pre></div>    </div>
 
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-4-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-8-1.png" alt="" /></p>
 
     <p>One nuance is that scales aren’t limited to x and y transformations.
 They can be applied to modify any relationship between a data field
@@ -152,7 +184,7 @@ mapping between the region field and circle color.</p>
   scale_color_manual(values = c("#6a4078", "#aa1518", "#9ecaf8", "#50838c"))
 </code></pre></div>    </div>
 
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-5-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-9-1.png" alt="" /></p>
   </li>
   <li>
     <p>A problem with this graph is that it doesn’t tell us which state
@@ -170,7 +202,7 @@ time within a <code class="language-plaintext highlighter-rouge">geom_text</code
   scale_y_log10()
 </code></pre></div>    </div>
 
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-6-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-10-1.png" alt="" /></p>
 
     <p>Note that each type of layer uses different visual properties to
 encode the data – the argument label is only available for the
@@ -193,7 +225,7 @@ arguments of <code class="language-plaintext highlighter-rouge">aes</code> are a
   scale_y_log10()
 </code></pre></div>    </div>
 
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-7-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-11-1.png" alt="" /></p>
   </li>
   <li>
     <p>How can we improve the readability of this plot? You might already
@@ -236,7 +268,7 @@ be used by calling a different color scale.</li>
   <li>
     <p>Putting all these modifications together yields</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>r &lt;- murders %&gt;%
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>r &lt;- murders %&gt;% 
   summarize(rate = sum(total) /  sum(population)) %&gt;%
   pull(rate)
 
@@ -256,7 +288,7 @@ ggplot(murders, aes(population, total)) +
   theme_minimal()
 </code></pre></div>    </div>
 
-    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-8-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-12-1.png" alt="" /></p>
   </li>
 </ol>
 

@@ -1,562 +1,210 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-07-26T18:42:45-05:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Graph Representations</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week9-4.html" rel="alternate" type="text/html" title="Graph Representations" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week9-4</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week9-4.html"><![CDATA[<p><em>Visual marks for general graphs</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-08-17T16:28:30-05:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Visualizing Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html" rel="alternate" type="text/html" title="Visualizing Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html"><![CDATA[<p><em>Short description</em></p>
 
 <ol>
   <li>
-    <p>In these notes, we’ll discuss how to implement a few basic types of
-general graph visualizations using R and javascript. For R, we’ll
-focus on ggraph, and for javascript, we’ll use D3’s graph layout
-functions.</p>
-  </li>
-  <li>
-    <p>The goal of the ggraph package is to provide ggplot2-like design
-iteration for graph structured (rather than tabular) data. Like
-ggplot2, visualizations are built by composing layers for separate
-visual marks. Scale and labeling functions are also available to
-customize the appearance of these marks.</p>
-  </li>
-  <li>
-    <p>For example, to build a node-link visualization, we can use the
-<code class="language-plaintext highlighter-rouge">geom_node</code> and <code class="language-plaintext highlighter-rouge">geom_edge_link</code> layers. Note that <code class="language-plaintext highlighter-rouge">ggraph</code> expects
-a <code class="language-plaintext highlighter-rouge">tbl_graph</code> as input, not simply a <code class="language-plaintext highlighter-rouge">data.frame</code>.</p>
-  </li>
-  <li>
-    <p>Attributes of nodes and edges can be encoded using size (node radius
-or edge width) or color. The node-link representation is especially
-effective for the task of following paths. It’s an intuitive
-visualization for examining the local neighborhood of one node or
-describing the shortest path between two nodes.</p>
-  </li>
-  <li>
-    <p>Let’s make the analogous graph in D3. We first read in the JSON’s
-associated the nodes and edges.</p>
+    <p>A topic is a probability distribution across a collection of words.
+If the vocabulary isn’t too large, two appropriate visualization
+strategies are,</p>
 
-    <p>We can then use d3’s force-directed layout algorithm to compute a
-layout of the nodes given a connectivity structure. The algorithm
-simulates forces that try to repel nodes from each other, while
-tension on the edges keeps connected ones close to one another. It
-is just one of many layout algorithms, some of which we’ll review in
-the next lecture.</p>
-  </li>
-  <li>
-    <p>The key drawback of node-link diagrams is that they do not scale
-well to networks with a large number of nodes or with a large number
-of edges per node. The nodes and edges begin to overlap too much,
-and the result looks like a “hairball.”</p>
-  </li>
-  <li>
-    <p>In this case, it’s often useful to try filtering or aggregating
-nodes. For example, aggregation works by replacing the original
-nodes with metanodes representing entire clusters. This is
-especially powerful if the degree of filtering or aggregation can be
-adjusted interactively — we’ll explore this strategy when we study
-interactivity for graph visualization.</p>
-  </li>
-  <li>
-    <p>Alternatively, another way to solve the hairball problem is to use
-an adjacency matrix visualization instead. The adjacency matrix of a
-graph is the matrix with a 1 in entry ij if nodes i and j are linked
-by an edge and 0 otherwise. It has one row and one column for every
-node in the graph. Visually, these 1’s and 0’s can be encoded as a
-black and white squares.</p>
-  </li>
-  <li>
-    <p>The example below shows the adjacency matrix associated with the
-high-school student friendship network from last lecture. We use the
-“matrix” layout with a <code class="language-plaintext highlighter-rouge">geom_edge_tile</code> layer to draw adjacency
-matrices in ggraph.</p>
-  </li>
-  <li>
-    <p>In D3, an adjacency matrix visualization is simply a collection of
-appropriately placed SVG <code class="language-plaintext highlighter-rouge">rect</code>s.</p>
-  </li>
-  <li>
-    <p>Note that we have to associate each node with both an x and a y
-coordinate and that the visualization is dependent on the choice of
-ordering. There are a variety of algorithms available for ordering
-nodes in an adjacency matrix, but implementing this manually can be
-tedious. Fortunately, there is a javascript package (reorder.js)
-that specifically supports these algorithms.</p>
-  </li>
-  <li>
-    <p>The key advantage of visualization using adjacency matrices is that
-they can scale to large and dense networks. It’s possible to
-perceive structure even when the squares are quite small, and there
-is no risk of edges overlapping with one another.</p>
-  </li>
-  <li>
-    <p>The key disadvantage of adjacency matrix visualization is that it’s
-challenging to make sense of the local topology around a node.
-Finding the « friends of friends » of a node requires effort.
-Another issue is that different orderings of rows and columns can
-have a dramatic effect on the structure that’s visible.</p>
-  </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Visual marks for general graphs]]></summary></entry><entry><title type="html">Visual Encodings</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html" rel="alternate" type="text/html" title="Visual Encodings" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-2.html"><![CDATA[<p><em>Design principles from the grammar of graphics.</em></p>
-
-<ol>
-  <li>
-    <p>Visualizations link abstract data with the physical, geometric
-marks,</p>
-
-    <ul>
-      <li>Each observation (row) within a dataset corresponds to a
-geometric mark in a visualization.</li>
-      <li>Important attributes (columns) of an observation within a
-dataset can be encoded by properties of visual marks.</li>
-    </ul>
-
-    <p>This encoding of rows as marks and columns as properties of the
-marks is illustrated in the toy diagram below.</p>
-
-    <p><img src="/stat679_notes/assets/week1-1/encoding_illustration.png" alt="" /></p>
-  </li>
-  <li>
-    <p>A good visualization makes it easy to visually compare the relevant
-attributes across observations. A challenge is that there are often
-many possible marks and encodings for any given comparison. It’s
-also difficult to know which comparisons are actually of interest.
-For these reasons, we’re going to want to build up a vocabulary of
-marks and encodings.</p>
-
-    <p><img src="/stat679_notes//assets/week1-1/example_encodings.png" alt="" /></p>
-  </li>
-  <li>
-    <p>To identify good encodings, it can often help to first what the
-types of each field are.</p>
-
-    <ul>
-      <li>Nominal: These are fields that allow identity comparisons
-between observations (is <em>A</em> = <em>B</em>?), but don’t come with any
-notion of order.
-        <ul>
-          <li>City region, country name, movie genres, file types, …</li>
-        </ul>
-      </li>
-      <li>Ordinal: These are fields that allow ordering comparisons
-between observations (is <em>A</em> &gt; <em>B</em>?), but don’t let you
-quantify the degree of difference.
-        <ul>
-          <li>Shirt size, sports team rankings, order of appearance of
-characters on TV show</li>
-        </ul>
-      </li>
-      <li>Quantitative: These are field types that let you make distance
-comparisons between observations. For interval data, absolute
-comparisons can be made (<em>A</em> − <em>B</em>), while for ratio data, only
-relative ones ($\frac{A}{B}$) are possible.
-        <ul>
-          <li>Temperature, stock price, number of drinks sold in a coffee
-shop per day</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <p>This is not an exhaustive list, and there are subtleties,</p>
-
-    <ul>
-      <li>The same field could be treated as nominal, ordinal, or
-quantitative depending on the context. Age could be nominal
-(underage or overage), ordinal (gen Z, millenial, …), or
-quantitative.</li>
-      <li>A given field might be thought of hierarchically. There might be
-interesting patterns at the city, county, or region level – what
-seems like a single column can become the source for multiple
-derived fields.</li>
-      <li>Even though temporal fields can be thought of as quantitative,
-they come with their own conventions. For example, the hour -
-week - month hierarchy is a natural one for temporal data.</li>
-    </ul>
-  </li>
-  <li>
-    <p>It’s worth highlighting that, even if a particular encoding <em>could</em>
-be used for a given data type, different encodings have different
-effectiveness. When trying to encoding several data fields at once,
-a choice of one encoding over another will implicitly prioritize
-certain comparisons over others.</p>
-
-    <p>For example, in the figure below (Figure 5.8
-<a href="https://search.library.wisc.edu/catalog/9911196629502121">here</a>),
-the same two numbers are encoded using many different visual
-properties – position on a shared <em>y</em>-axis, position on distinct
-<em>y</em>-axes, etc. – and study participants were asked to gauge the
-difference in the numbers. People were best at comparing positions
-on a common scale, and worst at distinguishing differences in areas.</p>
-
-    <p><img src="/stat679_notes/assets/week1-1/encoding_effectiveness.png" alt="" /></p>
-  </li>
-  <li>
-    <p>Here is a similar example. In the left four panels, a nominal field
-is encoded using color (left two) and shape (middle two). The red
-circles are easiest to find in the left two. In the right two
-panels, two nominal fields are encoded, using both shape and color.
-It’s much harder to find the red circle – you have to scan over the
-entire image to find it, which you didn’t have to do at all for the
-first two panels.</p>
-
-    <p><img src="/stat679_notes/assets/week1-1/encoding_effectiveness_2.png" alt="" /></p>
-  </li>
-  <li>
-    <p>Implicit in this discussion is that there is never any “perfect”
-visualization for a given dataset – the quality of a visualization
-is a function of its intended purpose. What comparisons do you want
-to facilitate? The choice of encoding will strongly affect the types
-of comparisons that are easy to perform.</p>
-  </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Design principles from the grammar of graphics.]]></summary></entry><entry><title type="html">A Vocabulary of Marks</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-3.html" rel="alternate" type="text/html" title="A Vocabulary of Marks" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-3.html"><![CDATA[<p><em>Encoding options in ggplot2</em></p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
-library(scales)
-theme_set(theme_minimal())
-</code></pre></div></div>
-
-<ol>
-  <li>
-    <p>The choice of encodings influences (1) the types of comparisons that
-a visualization suggests and (2) the accuracy of the conclusions
-that readers leave with. With this in mind, it’s in our best
-interest to build a rich vocabulary of potential visual encodings.
-The more kinds of marks and encodings that are at your fingertips,
-the better your chances are that you’ll arrive at a configuration
-that helps you achieve your purpose.</p>
-  </li>
-  <li>
-    <p><strong>Point marks</strong> can encode data fields using their x and y
-positions, color, size, and shape. Below, each mark is a country,
-and we’re using shape and the y position to distinguish between
-country clusters.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gapminder &lt;- read_csv("https://uwmadison.box.com/shared/static/dyz0qohqvgake2ghm4ngupbltkzpqb7t.csv", col_types = cols()) %&gt;%
-  mutate(cluster = as.factor(cluster)) # specify that cluster is nominal
-gap2000 &lt;- gapminder %&gt;%
-  filter(year == 2000) # keep only year 2000
-    ggplot(gap2000) +
-      geom_point(aes(x = fertility, y = cluster, shape = cluster))
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Faceted barplot: Each facet corresponds to a topic. The height of each bar
+ corresponds to a given word’s probability within the topic. The sum of heights
+ across all bars is 1.
+ * Heatmap: Each row is a topic and each column is a word. The color of the
+ heatmap cells gives the probability of the word within the given topic.
 </code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-3/unnamed-chunk-3-1.png" alt="" /></p>
   </li>
   <li>
-    <p><strong>Bar marks</strong> Bar marks let us associate a continuous field with a
-nominal one.</p>
+    <p>We can construct a faceted barplot using the tidied beta matrix.
+We’ve filtered to only words with a probability of at least 0.0003
+in at least one topic, but there are still more words than we could
+begin to inspect. Nonetheless, it seems that there are words that
+have relatively high probability in one topic, but not others.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(gap2000) +
-  geom_col(aes(country, pop))
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ggplot(topics %&gt;% filter(beta &gt; 3e-4), aes(term, beta)) +
+      geom_col() +
+      facet_grid(topic ~ .) +
+      theme(axis.text.x = element_blank())
 </code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-3/unnamed-chunk-4-1.png" alt="" /></p>
   </li>
   <li>
-    <p>This plot can be improved. The grid lines and tick marks associated
-with each bar are distracting and the axis labels are all running
-over one another. We resolve this by changing the theme and turning
-the bars on their side[1]</p>
+    <p>For the heatmap, we need to pivot the topics, so that words appear
+along columns. From there, we can use superheatmap. The advantage of
+the heatmap is that it takes up less space, and while it obscures
+comparisons between word probabilities 1 the main differences of
+interest are between low and high probability words.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ggplot(gap2000) +
-      geom_col(aes(pop, country)) +
-      theme(
-        panel.grid.major.y = element_blank(),
-        axis.ticks = element_blank() # remove tick marks
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    topics %&gt;%
+      filter(beta &gt; 3e-4) %&gt;%
+      pivot_wider(topic, term, values_from = "beta", values_fill = 0, names_repair = "unique") %&gt;%
+      select(-1) %&gt;%
+      superheat(
+        pretty.order.cols = TRUE,
+        legend = FALSE
       )
 </code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-3/unnamed-chunk-5-1.png" alt="" /></p>
   </li>
   <li>
-    <p>To make comparisons between countries with similar populations
-easier, we can order them by population (alphabetical ordering is
-not that meaningful). To compare clusters, we can color in the bars.</p>
-  </li>
-  <li>
-    <p>We’ve been spending a lot of time on this plot. This is because I
-want to emphasize that a visualization is not just something we can
-get just by memorizing some magic (programming) incantation.
-Instead, it is something worth critically engaging with and
-refining, in a similar way that we would refine an essay or speech.
-Philosophy aside, there are still a few points that need to be
-improved in this figure,</p>
+    <p>Neither approach is very satisfactory since there are too many words
+for us to effectively label. A workaround is to restrict attention
+to a subset of “interesting” words. For example, we could filter to,</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * The axis titles are not meaningful.
- * There is a strange gap between the left hand edge of the plot and the start of the bars.
- * I would also prefer if the bars were exactly touching one another, without the small vertical gap.
- * The scientific notation for population size is unnecessarily technical.
- * The color scheme is a bit boring^[.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Top words overall: We can consider only words whose probabilities are above
+ some threshold. This is the approach used in the visualizations above, though
+ the threshold is very low (there are still too many words to add labels).
+ * Top words per topic: We can sort the words within each topic in order from
+ highest to lowest probability, and then keep only the S largest.
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>I’ve addressed each issue in the block below. Can you tell which
-piece of code makes which change? Try removing different components
-to verify your guesses.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cols &lt;- c("#80BFA2", "#7EB6D9", "#3E428C", "#D98BB6", "#BF2E21", "#F23A29")
-    ggplot(gap2000) +
-       geom_col(
-         aes(pop, reorder(country, pop), fill = cluster),
-         width = 1
-       ) +
-       scale_x_continuous(label = label_number_si(), expand = c(0, 0, 0.1, 0.1)) +
-       scale_fill_manual(values = cols) +
-       labs(x = "Population", y = "Country", fill = "Country Group", color = "Country Group") +
-       theme(
-         axis.ticks = element_blank(),
-         panel.grid.major.y = element_blank()
-       )
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-3/unnamed-chunk-6-1.png" alt="" /></p>
+    <p>Most discriminative words: Some words have high probability just
+because they are common. They have high probability within each
+topic but aren’t actually interesting as far as characterizing the
+topics is concerned. Instead, we can focus on words that are common
+in some topics but rare in others.</p>
   </li>
   <li>
-    <p><strong>Segment marks</strong>. In the plot above, each bar is anchored at 0.
-Instead, we could have each bar encode two continuous values, a left
-and right. To illustrate, let’s compare the minimum and maximimum
-life expectancies within each country cluster. We’ll need to create
-a new data.frame with just the summary information. For this, we
-<code class="language-plaintext highlighter-rouge">group_by</code> each cluster, so that a summarise call finds the minimum
-and maximum life expectancies restricted to each cluster.</p>
+    <p>We can obtain the most probable words using the <code class="language-plaintext highlighter-rouge">slice_max</code>
+function, after first grouping by topic. Then, we use the same
+<code class="language-plaintext highlighter-rouge">reorder_within</code> function from the PCA lectures to reorder words
+within each topic. The resulting plot is much more interpretable.
+Judging from the words that are common in each topic’s distribution,
+we can guess that the topics approximately correspond to: 1 -&gt;
+Great Expectations, 2 -&gt; 20,000 Leagues Under the Sea, 3 -&gt;
+Pride &amp; Prejudice, 4 -&gt; War of the Worlds.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># find summary statistics
-life_ranges &lt;- gap2000 %&gt;%
-  group_by(cluster) %&gt;%
-  summarise(
-    min_life = min(life_expect),
-    max_life = max(life_expect)
-  )
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    top_terms &lt;- topics %&gt;%
+      group_by(topic) %&gt;%
+      slice_max(beta, n = 10) %&gt;%
+      mutate(term = reorder_within(term, beta, topic))
 
-ggplot(life_ranges) +
-  geom_segment(
-    aes(min_life, reorder(cluster, max_life), xend = max_life, yend = cluster, col = cluster),
-    size = 5,
-  ) +
-  scale_color_manual(values = cols) +
-  labs(x = "Minimum and Maximum Expected Span", col = "Country Group", y = "Country Group") +
-  xlim(0, 85) # otherwise would only range from 42 to 82
+    ggplot(top_terms, aes(beta, term, fill = factor(topic))) +
+      geom_col(show.legend = FALSE) +
+      facet_wrap(~ topic, scales = "free") +
+      scale_fill_brewer(palette = "Set2") +
+      scale_y_reordered()
 </code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-3/unnamed-chunk-7-1.png" alt="" /></p>
   </li>
   <li>
-    <p><strong>Line marks</strong> are useful for comparing changes. Our eyes naturally
-focus on rates of change when we see lines. Below, we’ll plot the
-fertility over time, colored in by country cluster. The group
-argument is useful for ensuring each country gets its own line; if
-we removed it, ggplot2 would become confused by the fact that the
-same x (year) values are associated with multiple y’s (fertility
-rates).</p>
+    <p>To visualize discriminative words, we first compute a discrimination
+measure for each word and filter to those with the top score. The
+filtered results can be used in either faceted barplots or heatmaps.
+Specifically, to find the words that discriminate between topics k
+and l, we compute D(k,l):=βkwlog(βkwβlw)+(βlw−βkw) for each word w.
+By maximizing over all pairs k,l, we can determine whether the word
+is discriminative between any pair of topics. This might seem like a
+mysterious formula, but it is just a function that is large when
+topic k has much larger probability than topic l (see the figure).</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ggplot(gapminder) +
-      geom_line(
-        aes(year, fertility, col = cluster, group = country),
-          alpha = 0.7, size = 0.9
-      ) +
-      scale_x_continuous(expand = c(0, 0)) +  # same trick of removing gap
-      scale_color_manual(values = cols)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    p &lt;- seq(0.01, .99, length.out = 50)
+    df &lt;- expand.grid(p, p) %&gt;%
+      mutate(D = kl_div(Var1, Var2))
+
+    ggplot(df, aes(Var2, Var1)) +
+      geom_tile(aes(col = D, fill = D)) +
+      scale_x_continuous(expand = c(0, 0)) +
+      scale_y_continuous(expand = c(0, 0)) +
+      coord_fixed() +
+      scale_color_distiller(direction = 1) +
+      scale_fill_distiller(direction = 1) +
+      labs(
+        y = expression(beta[kw]),
+        x = expression(beta[lw])
+      )
 </code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-3/unnamed-chunk-8-1.png" alt="" /></p>
   </li>
   <li>
-    <p>Area marks have a flavor of both bar and line marks. The filled area
-supports absolute comparisons, while the changes in shape suggest
-derivatives.</p>
+    <p>An example heatmap of discriminative words is shown below. This
+backs up our interpretation from the figure above. It also has the
+advantage that it removes common words (e.g., hand, people, and time
+appeared in the plot above) and highlights rarer words that are
+specific to individual topics (e.g., names of characters that appear
+in only one of the books).</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>population_sums &lt;- gapminder %&gt;%
-  group_by(year, cluster) %&gt;%
-  summarise(total_pop = sum(pop))
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    discriminative_terms &lt;- topics %&gt;%
+      group_by(term) %&gt;%
+      mutate(D = discrepancy(beta)) %&gt;%
+      ungroup() %&gt;%
+      slice_max(D, n = 200) %&gt;%
+      mutate(term = fct_reorder(term, -D))
 
-ggplot(population_sums) +
-  geom_area(aes(year, total_pop, fill = cluster)) +
-  scale_y_continuous(expand = c(0, 0, .1, .1), label = label_number(cut_short_scale())) +
-  scale_x_continuous(expand = c(0, 0)) +
-  scale_fill_manual(values = cols)
+    discriminative_terms %&gt;%
+      pivot_wider(term, topic, values_from = "beta") %&gt;%
+      column_to_rownames("term") %&gt;%
+      superheat(
+        pretty.order.rows = TRUE,
+        left.label.size = 1.5,
+        left.label.text.size = 3,
+        bottom.label.size = 0.05,
+        legend = FALSE
+      )
 </code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-3/unnamed-chunk-9-1.png" alt="" /></p>
-  </li>
-  <li>
-    <p>Just like in bar marks, we don’t necessarily need to anchor the
-y-axis at 0. For example, here the bottom and top of each area mark
-is given by the 30% and 70% quantiles of population within each
-country cluster.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>population_ranges &lt;- gapminder %&gt;%
-  group_by(year, cluster) %&gt;%
-  summarise(min_pop = quantile(pop, 0.3), max_pop = quantile(pop, 0.7))
-
-ggplot(population_ranges) +
-  geom_ribbon(
-    aes(x = year, ymin = min_pop, ymax = max_pop, fill = cluster),
-    alpha = 0.8
-  ) +
-  scale_y_continuous(expand = c(0, 0, .1, .1), label = label_number_si()) +
-  scale_x_continuous(expand = c(0, 0)) +
-  scale_fill_manual(values = cols)
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-3/unnamed-chunk-10-1.png" alt="" /></p>
   </li>
 </ol>
 
-<p>[1] An alternative is to turn rotate the labels by 90 degrees. I prefer
-to turn the whole plot this, because this way, readers don’t have to
-tilt their heads to read the country names.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[Encoding options in ggplot2]]></summary></entry><entry><title type="html">Small Multiples and Faceting</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week1-4.html" rel="alternate" type="text/html" title="Small Multiples and Faceting" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week1-4</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week1-4.html"><![CDATA[<p><em>Increased information density through faceting</em></p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(dslabs)
-library(tidyverse)
-theme_set(theme_minimal())
-</code></pre></div></div>
+<h4 id="visualizing-memberships">Visualizing Memberships</h4>
 
 <ol>
   <li>
-    <p>It might seem like we’re limited with the total number of variables
-we can display at a time. While there are many types of encodings we
-could in theory use, only a few them are very effective, and they
-can interfere with one another.</p>
-  </li>
-  <li>
-    <p>Not all is lost, though! A very useful idea for visualizing
-high-dimensional data is the idea of small multiples. It turns out
-that our eyes are pretty good at making sense of many small plots,
-as long as there is some shared structure across the plots.</p>
+    <p>Besides the topics, it is useful to study the topic proportions for
+each chapter. One compact approach is to use a boxplot. The result
+below suggest that each chapter is very definitely assigned to one
+of the four topics, except for chapters from Great Expectations.
+Therefore, while the model had the flexibility to learn more complex
+mixtures, it decided that a clustering structure made the most sense
+for Pride &amp; Prejudice, War of the Worlds, and 20,000 Leagues Under
+the Sea.</p>
 
-    <p><img src="https://krisrs1128.github.io/stat479/posts/2021-01-20-week2-1/assets/sparklines.png" alt="" /></p>
-  </li>
-  <li>
-    <p>In ggplot2, we can implement this idea using the <code class="language-plaintext highlighter-rouge">facet_wrap</code> and
-<code class="language-plaintext highlighter-rouge">facet_grid</code> commands. We specify the column in the data.frame along
-which we want to generate comparable small multiples.</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>memberships &lt;- memberships %&gt;%
+  mutate(
+    book = str_extract(document, "[^_]+"),
+    topic = factor(topic)
+  )
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>years &lt;- c(1962, 1980, 1990, 2000, 2012)
-continents &lt;- c("Europe", "Asia")
-gapminder_subset &lt;- gapminder %&gt;%
-  filter(year %in% years, continent %in% continents)
-
-ggplot(
-    gapminder_subset, 
-    aes(fertility, life_expectancy, col = continent)
-  ) +
-  geom_point() +
-  facet_grid(. ~ year) +
-  theme(legend.position = "bottom")
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-4/unnamed-chunk-3-1.png" alt="" /></p>
-  </li>
-  <li>
-    <p>In facet grid, you specify whether you want the plot to be repeated
-across rows or columns, depending on whether you put the variable
-before or after the tilde.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(
-    gapminder_subset, 
-    aes(fertility, life_expectancy, col = continent)
-  ) +
-  geom_point() +
-  facet_grid(year ~ .) +
-  theme(legend.position = "bottom")
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-4/unnamed-chunk-4-1.png" alt="" /></p>
-  </li>
-  <li>
-    <p>You can also facet by more than one variable at a time, specifying
-which variables should go in rows and which should go in columns
-again using the tilde.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(
-    gapminder %&gt;% filter(year %in% years),
-    aes(fertility, life_expectancy, col = continent)
-  ) +
-  geom_point() +
-  facet_grid(year ~ continent) +
-  theme(legend.position = "bottom")
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-4/unnamed-chunk-5-1.png" alt="" /></p>
-  </li>
-  <li>
-    <p>Sometimes, you just want to see the display repeated over groups,
-but you don’t really need them to all appear in the same row or
-column. In this case, you can use <code class="language-plaintext highlighter-rouge">facet_wrap</code>.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(
-    gapminder %&gt;% filter(year %in% years),
-    aes(x = fertility, y = life_expectancy, col = continent)
-  ) +
-  geom_point() +
-  facet_wrap(~ year)
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-4/unnamed-chunk-6-1.png" alt="" /></p>
-  </li>
-  <li>
-    <p>Just to illustrate, faceting makes sense for datasets other than
-scatterplots. This example also shows that faceting will apply to
-multiple geom layers at once. The dataset below shows the abundances
-of five different bacteria across three different subjects over
-time, as they were subjected to antibiotics. The data were the basis
-for [this study](&lt;)&gt;.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>antibiotic &lt;- read_csv("https://uwmadison.box.com/shared/static/5jmd9pku62291ek20lioevsw1c588ahx.csv")
-head(antibiotic)
-
-## # A tibble: 6 × 7
-##   species  sample value ind    time svalue antibiotic     
-##   &lt;chr&gt;    &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;          
-## 1 Unc05qi6 D1         0 D         1   NA   Antibiotic-free
-## 2 Unc05qi6 D2         0 D         2   NA   Antibiotic-free
-## 3 Unc05qi6 D3         0 D         3    0   Antibiotic-free
-## 4 Unc05qi6 D4         0 D         4    0   Antibiotic-free
-## 5 Unc05qi6 D5         0 D         5    0   Antibiotic-free
-## 6 Unc05qi6 D6         0 D         6    0.2 Antibiotic-free
+ggplot(memberships, aes(topic, gamma)) +
+  geom_boxplot() +
+  facet_wrap(~book)
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>I have also separately computed running averages for each of the
-variables – this is in the <code class="language-plaintext highlighter-rouge">svalue</code> column.</p>
+    <p>The boxplot considers the collection of documents in aggregate. If
+we want to avoid aggregation and visualize individual documents, we
+can use a heatmap or jittered scatterplot. These approaches are
+useful because heatmap cells and individual points can be drawn
+relatively small — anything requiring more space would become
+unwieldy as the number of documents grows. For example, the plot
+below shows that chapter 119 of Great Expectations has unusually
+high membership in Topic 2 and low membership in topic 3.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ggplot(antibiotic, aes(x = time)) +
-      geom_line(aes(y = svalue), size = 1.2) +
-      geom_point(aes(y = value, col = antibiotic), size = 0.5, alpha = 0.8) +
-      facet_grid(species ~ ind) +
-      scale_color_brewer(palette = "Set2") +
-      theme(strip.text.y = element_text(angle = 0))
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(memberships, aes(topic, gamma, col = book)) +
+  geom_point(position = position_jitter(h = 0.05, w = 0.3)) +
+  geom_text_repel(aes(label = document), size = 3) +
+  facet_wrap(~ book) +
+  scale_color_brewer(palette = "Set1")
 </code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-4/unnamed-chunk-8-1.png" alt="" /></p>
   </li>
   <li>
-    <p>It seems like some of the species are much more abundant than
-others. In this situation, it might make sense to rescale the
-y-axis. Though, this is always a risky decision – people might
-easily misinterpret the plot and conclude that the different species
-all have the same abundances. Nonetheless, it can’t hurt to try,
-using the scale argument to <code class="language-plaintext highlighter-rouge">facet_grid</code>.</p>
+    <p>Alternatively, we can use a “structure” plot. This is a type of
+stacked barplot where the colors of each bar corresponds to a topic.
+We’ve sorted the documents using the result of a hierarchical
+clustering on their proportion vectors. The takeaways here are
+similar to those in the scatterplot above.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ggplot(antibiotic, aes(x = time)) +
-      geom_line(aes(y = svalue), size = 1.2) +
-      geom_point(aes(y = value, col = antibiotic), size = 0.5, alpha = 0.8) +
-      facet_grid(species ~ ind, scale = "free_y") +
-      scale_color_brewer(palette = "Set2") +
-      theme(strip.text.y = element_text(angle = 0))
-</code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-4/unnamed-chunk-9-1.png" alt="" /></p>
-  </li>
-  <li>
-    <p>Unlike the years example, the facets don’t automatically come with
-their own natural order. We can define an order based on the average
-value of the responses over the course of the survey.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(antibiotic, aes(x = time)) +
-  geom_line(aes(y = svalue), size = 1.2) +
-  geom_point(aes(y = value, col = antibiotic), size = 0.5, alpha = 0.8) +
-  facet_grid(reorder(species, value, mean) ~ ind, scale = "free_y") +
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gamma &lt;- memberships %&gt;%
+  pivot_wider(document:book, topic, values_from = gamma)
+hclust_result &lt;- hclust(dist(gamma[, 3:6]))
+document_order &lt;- gamma$document[hclust_result$order]
+memberships &lt;- memberships %&gt;%
+  mutate(document = factor(document, levels = document_order))
+ggplot(memberships, aes(gamma, document, fill = topic, col = topic)) +
+  geom_col(position = position_stack()) +
+  facet_grid(book ~ ., scales = "free", space = "free") +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_fill_brewer(palette = "Set2") +
   scale_color_brewer(palette = "Set2") +
-  theme(strip.text.y = element_text(angle = 0))
+  theme(axis.text.y = element_blank())
 </code></pre></div>    </div>
-
-    <p><img src="/stat679_notes/assets/week1-4/unnamed-chunk-10-1.png" alt="" /></p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Increased information density through faceting]]></summary></entry><entry><title type="html">Structured Graphs</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week10-1.html" rel="alternate" type="text/html" title="Structured Graphs" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week10-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week10-1.html"><![CDATA[<p><em>Representing known structure in graphs</em></p>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Short description]]></summary></entry><entry><title type="html">Structured Graphs</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week10-1.html" rel="alternate" type="text/html" title="Structured Graphs" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week10-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week10-1.html"><![CDATA[<p><em>Representing known structure in graphs</em></p>
 
 <ol>
   <li>
@@ -669,7 +317,7 @@ Even for those of us who are more practically oriented, this
 literature can be worth being familiar, if only because it can be a
 treasure trove of visual problem solving devices.</p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Representing known structure in graphs]]></summary></entry><entry><title type="html">Graph Interactivity I</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week10-2.html" rel="alternate" type="text/html" title="Graph Interactivity I" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week10-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week10-2.html"><![CDATA[<p><em>View interaction in graphs</em></p>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Representing known structure in graphs]]></summary></entry><entry><title type="html">Graph Interactivity I</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week10-2.html" rel="alternate" type="text/html" title="Graph Interactivity I" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week10-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week10-2.html"><![CDATA[<p><em>View interaction in graphs</em></p>
 
 <ol>
   <li>
@@ -765,7 +413,7 @@ Interactivity) or their encodings (Encoding Interactivity). In the
 next set of notes, we’ll consider these more substantive
 interactions.</p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[View interaction in graphs]]></summary></entry><entry><title type="html">Graph Interactivity II</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week10-3.html" rel="alternate" type="text/html" title="Graph Interactivity II" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week10-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week10-3.html"><![CDATA[<p><em>Encoding and data interaction in graphs</em></p>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[View interaction in graphs]]></summary></entry><entry><title type="html">Graph Interactivity II</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week10-3.html" rel="alternate" type="text/html" title="Graph Interactivity II" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week10-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week10-3.html"><![CDATA[<p><em>Encoding and data interaction in graphs</em></p>
 
 <ol>
   <li>
@@ -871,813 +519,622 @@ techniques we described here are still areas of active research, and
 perhaps in the future, it will be easier to design and implement
 graph interactions suited to specific problems of interest.</p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Encoding and data interaction in graphs]]></summary></entry><entry><title type="html">Elements of a Shiny App</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week2-1.html" rel="alternate" type="text/html" title="Elements of a Shiny App" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week2-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week2-1.html"><![CDATA[<p><em>Vocabulary used by R Shiny Library, and a few example apps.</em></p>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Encoding and data interaction in graphs]]></summary></entry><entry><title type="html">Goals of Dimensionality Reduction</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week11-1.html" rel="alternate" type="text/html" title="Goals of Dimensionality Reduction" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week11-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week11-1.html"><![CDATA[<p><em>When is dimensionality reduction helpful?</em></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
-theme_set(theme_minimal())
+<ol>
+  <li>
+    <p>High-dimensional data are data where many features are collected for
+each observation. These tend to be wide datasets with many columns.
+The name comes from the fact that each row of the dataset can be
+viewed as a vector in a high-dimensional space (one dimension for
+each feature). These data are common in modern applications,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Each cell in a genomics dataset might have measurements for hundreds of
+ molecules.
+ * Each survey respondent might provide answers to dozens of questions.
+ * Each image might have several thousand pixels.
+ * Each document might have counts across several thousand relevant words.
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>For example, consider the Metropolitan Museum of Art dataset, which
+contains images of many artworks. Abstractly, each artwork is a
+high-dimensional object, containing pixel intensities across many
+pixels. But it is reasonable to derive a feature based on the
+average brightness.</p>
+  </li>
+  <li>
+    <p>In general, manual feature construction can be difficult.
+Algorithmic approaches try streamline the process of generating
+these maps by optimizing some more generic criterion. Different
+algorithms use different criteria, which we will review in the next
+couple of lectures.</p>
+  </li>
+  <li>
+    <p>Informally, the goal of dimensionality reduction techniques is to
+produce a low-dimensional “atlas” relating members of a collection
+of complex objects. Samples that are similar to one another in the
+high-dimensional space should be placed near one another in the
+low-dimensional view. For example, we might want to make an atlas of
+artworks, with similar styles and historical periods being placed
+near to one another.</p>
+  </li>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[When is dimensionality reduction helpful?]]></summary></entry><entry><title type="html">Principal Components Analysis</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week11-2.html" rel="alternate" type="text/html" title="Principal Components Analysis" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week11-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week11-2.html"><![CDATA[<p><em>Linear dimensionality reduction with PCA</em></p>
+
+<ol>
+  <li>
+    <p>For low-dimensional data, we could visually encode all the features
+in our data directly, either using properties of marks or through
+faceting. In high-dimensional data, this is no longer possible.
+However, though there are many features associated with each
+observation, it may still be possible to organize samples across a
+smaller number of meaningful, derived features. In the next week,
+we’ll explore a few ways of partially automating the search for
+relevant features.</p>
+  </li>
+  <li>
+    <p>An important special case for dimensionality reduction emerges when
+we make the following assumptions about the set of derived features,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Features that are linear combinations of the raw input columns.
+ * Features that are orthogonal to one another.
+ * Features that have high variance.
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Why would we want features to have these properties?</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Restricting to linear combinations allows for an analytical solution. We
+ will relax this requirement when discussing UMAP.
+ * Orthogonality means that the derived features will be uncorrelated with one
+ another. This is a nice property, because it would be wasteful if features
+ were redundant.
+ * High variance is desirable because it means we preserve more of the
+ essential structure of the underlying data. For example, if you look at this
+ 2D representation of a 3D object, it’s hard to tell what it is,
+
+ (img)
+
+ But when viewing an alternative reduction which has higher variance…
+
+ (img)
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Principal Components Analysis (PCA) is the optimal dimensionality
+reduction under these three restrictions, in the sense that it finds
+derived features with the highest variance. Formally, PCA finds a
+matrix Φ∈ℝD×K and a set of vector zi∈ℝK such that xi≈Φzi for all i.
+The columns of Φ are called principal components, and they specify
+the structure of the derived linear features. The vector zi is
+called the score of xi with respect to these components. The top
+component explains the most variance, the second captures the next
+most, and so on. Geometrically, the columns of Φ span a plane that
+approximates the data. The zi provide coordinates of points
+projected onto this plane.</p>
+  </li>
+  <li>
+    <p>In R, PCA can be conveniently implemented using the tidymodels
+package. The dataset below contains properties of a variety of
+cocktails, from the Boston Bartender’s guide. The first two columns
+are qualitative descriptors, while the rest give numerical
+ingredient information.</p>
+  </li>
+  <li>
+    <p>The <code class="language-plaintext highlighter-rouge">pca_rec</code> object below defines a tidymodels recipe for
+performing PCA. Computation of the lower-dimensional representation
+is deferred until prep() is called. This delineation between
+workflow definition and execution helps clarify the overall
+workflow, and it is typical of the tidymodels package.</p>
+  </li>
+  <li>
+    <p>We can tidy each element of the workflow object. Since PCA was the
+second step in the workflow, the PCA components can be obtained by
+calling tidy with the argument “2.” The scores of each sample with
+respect to these components can be extracted using juice. The amount
+of variance explained by each dimension is also given by tidy, but
+with the argument type = “variance”.</p>
+  </li>
+  <li>
+    <p>We can interpret components by looking at the linear coefficients of
+the variables used to define them. From the plot below, we see that
+the first PC mostly captures variation related to whether the drink
+is made with powdered sugar or simple syrup. Drinks with high values
+of PC1 are usually to be made from simple syrup, those with low
+values of PC1 are usually made from powdered sugar. From the two
+largest bars in PC2, we can see that it highlights the vermouth
+vs. non-vermouth distinction.</p>
+  </li>
+  <li>
+    <p>It is often easier read the components when the bars are sorted
+according to their magnitude. The usual ggplot approach to
+reordering axes labels, using either reorder() or releveling the
+associated factor, will reorder all the facets in the same way. If
+we want to reorder each facet on its own, we can use the
+<code class="language-plaintext highlighter-rouge">reorder_within</code> function coupled with <code class="language-plaintext highlighter-rouge">scale_*_reordered</code>, both
+from the tidytext package.</p>
+  </li>
+  <li>
+    <p>Next, we can visualize the scores of each sample with respect to
+these components. The plot below shows (zi1,zi2). Suppose that the
+columns of Φ are φ1,…,φK. Then, since xi≈φ1zi1+φ2zi2, the samples
+have large values for variables with large component values in the
+coordinate directions where zi is farther along.</p>
+  </li>
+  <li>
+    <p>We conclude with some characteristics of PCA, which can guide the
+choice between alternative dimensionality reduction methods.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Global structure: Since PCA is looking for high-variance overall, it tends
+ to focus on global structure.
+ * Linear: PCA can only consider linear combinations of the original features.
+ If we expect nonlinear features to be more meaningful, then another approach
+ should be considered.
+ * Interpretable features: The PCA components exactly specify how to construct
+ each of the derived features.
+ * Fast: Compared to most dimensionality reduction methods, PCA is quite fast.
+ Further, it is easy to implement approximate versions of PCA that scale to
+ very large datasets.
+ * Deterministic: Some embedding algorithms perform an optimization process,
+ which means there might be some variation in the results due to randomness in
+ the optimization. In contrast, PCA is deterministic, with the components being
+ unique up to sign (i.e., you could reflect the components across an axis, but
+ that is the most the results might change).
+</code></pre></div>    </div>
+  </li>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Linear dimensionality reduction with PCA]]></summary></entry><entry><title type="html">Uniform Manifold Approximation</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week11-3.html" rel="alternate" type="text/html" title="Uniform Manifold Approximation" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week11-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week11-3.html"><![CDATA[<p><em>Nonlinear dimensionality reduction with UMAP</em></p>
+
+<ol>
+  <li>
+    <p>Nonlinear dimension reduction methods can give a more faithful
+representation than PCA when the data don’t lie on a low-dimensional
+linear subspace. For example, suppose the data were shaped like
+this. There is no one-dimensional line through these data that
+separate the groups well. We will need an alternative approach to
+reducing dimensionality if we want to preserve nonlinear structure.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
+library(embed)
+
+moons &lt;- read_csv("https://uwmadison.box.com/shared/static/kdt9qqvonhcz2ssb599p1nqganrg1w6k.csv")
+ggplot(moons, aes(X, Y, col = Class)) +
+  geom_point() +
+  scale_color_brewer(palette = "Set2")
+</code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/weekX-Y/unnamed-chunk-2-1.png" alt="" /></p>
+  </li>
+  <li>
+    <p>From a high-level, the intuition behind UMAP is to (a) build a graph
+joining nearby neighbors in the original high-dimensional space, and
+then (b) layout the graph in a lower-dimensional space. For example,
+consider the 2-dimensional sine wave below. If we build a graph, we
+can try to layout the resulting nodes and edges on a 1-dimensional
+line in a way that approximately preserves the ordering.</p>
+  </li>
+  <li>
+    <p>A natural way to build a graph is to join each node to its K closest
+neighbors. The choice of K will influence the final reduction, and
+it is treated as a hyperparameter of UMAP. Larger values of K
+prioritize preservation of global structure, while smaller K will
+better reflect local differences. This property is not obvious a
+priori, but is suggested by the simulations described in the
+reading.</p>
+  </li>
+  <li>
+    <p>One detail in the graph construction: In UMAP, the edges are
+assigned weights depending on the distance they span, normalized by
+the distance to the closest neighbor. Neighbors that are close,
+relative to the nearest neighbors, are assigned higher weights than
+those that are far away, and points that are linked by high weight
+edges are pulled together with larger force in the final graph
+layout. This is what the authors mean by using a “fuzzy” nearest
+neighbor graph. The fuzziness allows the algorithm to distinguish
+neighbors that are very close from those that are far, even though
+they all lie within a K-nearest-neighborhood.</p>
+  </li>
+  <li>
+    <p>Once the graph is constructed, there is the question of how the
+graph layout should proceed. UMAP uses a variant of force-directed
+layout, and the global strength of the springs is another
+hyperparameter. Lower tension on the springs allow the points to
+spread out more loosely, higher tension forces points closer
+together. This is a second hyperparameter of UMAP.</p>
+  </li>
+  <li>
+    <p>In R, we can implement this using almost the same code as we used
+for PCA. The <code class="language-plaintext highlighter-rouge">step_umap</code> command is available through the embed
+package.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cocktails_df &lt;- read_csv("https://uwmadison.box.com/shared/static/qyqof2512qsek8fpnkqqiw3p1jb77acf.csv")
+umap_rec &lt;- recipe(~., data = cocktails_df) %&gt;%
+  update_role(name, category, new_role = "id") %&gt;%
+  step_normalize(all_predictors()) %&gt;%
+  step_umap(all_predictors(), neighbors = 20, min_dist = 0.1)
+umap_prep &lt;- prep(umap_rec)
+ggplot(juice(umap_prep), aes(UMAP1, UMAP2)) +
+  geom_point(aes(color = category), alpha = 0.7, size = 0.8) +
+  geom_text(aes(label = name), check_overlap = TRUE, size = 3, hjust = "inward")
+</code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/weekX-Y/unnamed-chunk-3-1.png" alt="" /></p>
+  </li>
+  <li>
+    <p>We can summarize the properties of UMAP,</p>
+
+    <ul>
+      <li>Global or local structure: The number of nearest neighbors K
+used during graph construction can be used modulate the emphasis
+of global vs. local structure.</li>
+      <li>Nonlinear: UMAP can reflect nonlinear structure in
+high-dimensions.</li>
+      <li>No interpretable features: UMAP only returns the map between
+points, and there is no analog of components to describe how the
+original features were used to construct the map.</li>
+      <li>Slower: While UMAP is much faster than comparable nonlinear
+dimensionality reduction algorithms, it is still slower than
+linear approaches.</li>
+      <li>Nondeterministic: The output from UMAP can change from run to
+run, due to randomness in the graph layout step. If exact
+reproducibility is required, a random seed should be set.</li>
+    </ul>
+  </li>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Nonlinear dimensionality reduction with UMAP]]></summary></entry><entry><title type="html">Interactivity in Dimensionality Reduction</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week11-4.html" rel="alternate" type="text/html" title="Interactivity in Dimensionality Reduction" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week11-4</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week11-4.html"><![CDATA[<p><em>Guiding dimensionality reduction through user inputs</em></p>
+
+<ol>
+  <li>
+    <p>In the academic literature, dimensionality reduction methods are
+presented purely algorithmically. However, in practice, there is
+often a strong human element in the application of these methods,
+since their value is often in the qualitative interpretations that
+they support.</p>
+  </li>
+  <li>
+    <p>With this in mind, we should try to understand how interactivity can
+be used in the dimensionality reduction context. Naturally, all of
+the techniques we’ve studied in this class for interacting with
+scatterplots (e.g., dynamic linking) apply to dimensionality
+reduction results.</p>
+  </li>
+  <li>
+    <p>For example, below, we give details about each sample that is
+selected, sorted from those with the smallest to largest values of
+PC 1.</p>
+  </li>
+  <li>
+    <p>A less obvious idea is that interactivity can guide the application
+or refinement of the dimensionality reduction itself.</p>
+  </li>
+  <li>
+    <p>For example, it can be used to filter the data that are input to the
+dimensionality reduction. More generally, the input data may be the
+result of a complex preprocessing pipeline, and parameters of that
+pipeline can be interactively adjusted. For example, in
+dimensionality reduction of temporal data, we may first want to
+compute a sliding window average over time, and the widths of the
+windows can be chosen interactively. For each choice of window
+width, the dimensionality reduction scatterplot can be regenerated.</p>
+  </li>
+  <li>
+    <p>Some systems allow users to interactively label observations into
+classes — this is especially common when the ultimate goal of the
+data science system is to support classification. Certain
+dimensionality reduction methods (though not the ones we discussed
+in class) can incorporate these class labels, and so can be
+recomputed each time the user labels a subset of points.</p>
+  </li>
+  <li>
+    <p>Rather than interacting with the observations, we can interact with
+the features. For example, the PCA loadings define derived features.
+By interactively adjusting the values of these loadings, we can
+examine how the dimensionality reduction would change when the
+derived features are manually refined.</p>
+  </li>
+  <li>
+    <p>It’s also possible to interactively select between several competing
+dimensionality reduction methods. This is most often done using
+together with a measure of dimensionality reduction quality, like
+the effectiveness with which known clusters are separated.</p>
+  </li>
+  <li>
+    <p>In most applications, users are expected to interact either directly
+with the visualization (selecting or marking points) or via UI
+inputs. It’s possible to have the interaction through external
+program controls or other more novel inputs (like speech, gestures,
+multitouch commands on tablets, …), but this is less commonly done.</p>
+  </li>
+  <li>
+    <p>Stepping back, it’s helpful to view visualization and data science
+algorithms holistically. In applications where interpretation and
+discovery are important, algorithms and interaction can work
+together to support complex reasoning.</p>
+  </li>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Guiding dimensionality reduction through user inputs]]></summary></entry><entry><title type="html">Introduction to Topic Modeling</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-1.html" rel="alternate" type="text/html" title="Introduction to Topic Modeling" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-1.html"><![CDATA[<p><em>Short description</em></p>
+
+<ol>
+  <li>
+    <p>Topic modeling is a type of dimensionality reduction method that is
+especially useful for high-dimensional count matrices. For example,
+it can be applied to,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Text data analysis, where each row is a document and each column is a word.
+ The ijth entry contains the count of the jth word in the ith document.
+ * Gene expression analysis, where each row is a biological sample and each
+ column is a gene. The $ij^{th}$ entry measures the amount of gene j expressed in
+ sample i.
+</code></pre></div>    </div>
+
+    <p>This week, we’ll specifically focus on the application to text data,
+since otherwise, we’ve covered relatively few visualization
+techniques that can be applied to this (very common) type of data.
+For the rest of these lectures, we’ll refer to samples as documents
+and features as words, even though these methods can be used more
+generally.</p>
+  </li>
+  <li>
+    <p>These models are useful to know about because they provide a
+compromise between clustering and PCA.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * In clustering, each document would have to be assigned to a single topic. In
+ contrast, topic models allow each document to partially belong to several
+ topics simultaneously. In this sense, they are more suitable when data do not
+ belong to distinct, clearly-defined clusters.
+ * PCA is also appropriate when the data vary continuously, but it does not
+ provide any notion of clusters. In contrast, topic models estimate K topics,
+ which are analogous to a cluster centroids (though documents are typically a
+ mix of several centroids).
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Without going into mathematical detail, topic models perform
+dimensionality reduction by supposing, (i) each document is a
+mixture of topics and (ii) each topic is a mixture of words. For
+(i), consider modeling a collection of newspaper articles. A set of
+articles might belong primarily to the “politics” topic, and others
+to the “business” topic. Articles that describe a monetary policy in
+the federal reserve might belong partially to both the “politics”
+and the “business” topic. For (ii), consider the difference in words
+that would appear in politics and business articles. Articles about
+politics might frequently include words like “congress” and “law,”
+but only rarely words like “stock” and “trade.”</p>
+  </li>
+  <li>
+    <p>A document is a mixture of topics, with more words coming from the
+topics that it is close to. More precisely, a document that is very
+close to a particular topic has a word distribution just like that
+topic. A document that is intermediate between two topics has a word
+distribution that mixes between both topics.</p>
+  </li>
+  <li>
+    <p>Let’s see how to fit a topic model in R. We will use LDA as
+implemented in the topicmodels package, which expects input to be
+structured as a DocumentTermMatrix, a special type of matrix that
+stores the counts of words (columns) across documents (rows). In
+practice, most of the effort required to fit a topic model goes into
+transforming the raw data into a suitable DocumentTermMatrix.</p>
+  </li>
+  <li>
+    <p>To illustrate this process, let’s consider the “Great Library Heist”
+example from the reading. We imagine that a thief has taken four
+books — Great Expectations, Twenty Thousand Leagues Under The Sea,
+War of the Worlds, and Pride &amp; Prejudice — and torn all the chapters
+out. We are left with pieces of isolated pieces of text and have to
+determine from which book they are from. The block below downloads
+all the books into an R object.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    titles &lt;- c("Twenty Thousand Leagues under the Sea",
+                "The War of the Worlds",
+                "Pride and Prejudice", 
+                "Great Expectations")
+    books &lt;- gutenberg_works(title %in% titles) %&gt;%
+      gutenberg_download(meta_fields = "title")
+    books
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Since we imagine that the word distributions are not equal across
+the books, topic modeling is a reasonable approach for discovering
+the books associated with each chapter. Let’s start by simulating
+the process of tearing the chapters out. We split the raw texts
+anytime the word “Chapter” appears. We will keep track of the book
+names for each chapter, but this information is not passed into the
+topic modeling algorithm.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    by_chapter &lt;- books %&gt;%
+      group_by(title) %&gt;%
+      mutate(
+        chapter = cumsum(str_detect(text, regex("chapter", ignore_case = TRUE)))
+      ) %&gt;%
+      group_by(title, chapter) %&gt;%
+      mutate(n = n()) %&gt;%
+      filter(n &gt; 5) %&gt;%
+      ungroup() %&gt;%
+      unite(document, title, chapter)
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>As it is, the text data are long character strings, giving actual
+text from the novels. To fit LDA, we only need counts of each word
+within each chapter – the algorithm throws away information related
+to word order. To derive word counts, we first split the raw text
+into separate words using the <code class="language-plaintext highlighter-rouge">unest_tokens</code> function in the
+tidytext package. Then, we can count the number of times each word
+appeared in each document using count, a shortcut for the usual
+<code class="language-plaintext highlighter-rouge">group_by</code> and <code class="language-plaintext highlighter-rouge">summarize(n = n())</code> pattern.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>word_counts &lt;- by_chapter %&gt;%
+  unnest_tokens(word, text) %&gt;%
+  anti_join(stop_words) %&gt;%
+  count(document, word)
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>These words counts are still not in a format compatible with
+conversion to a DocumentTermMatrix. The issue is that the
+DocumentTermMatrix expects words to be arranged along columns, but
+currently they are stored across rows. The line below converts the
+original “long” word counts into a “wide” DocumentTermMatrix in one
+step. Across these 4 books, we have 65 chapters and a vocabulary of
+size</p>
+  </li>
+  <li></li>
+</ol>
+
+<!-- -->
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```r
+    chapters_dtm &lt;- word_counts %&gt;%
+      cast_dtm(document, word, n)
+```
 </code></pre></div></div>
 
 <ol>
   <li>
-    <p>All Shiny apps are made up from the same few building blocks. These
-notes review the main types of blocks. When reading code from more
-complex apps, it can be helpful to try to classify pieces of the
-code into these types of blocks.</p>
-  </li>
-  <li>
-    <p>The highest level breakdown of Shiny app code is between <code class="language-plaintext highlighter-rouge">ui</code> and
-<code class="language-plaintext highlighter-rouge">server</code> components. The <code class="language-plaintext highlighter-rouge">ui</code> controls what the app <em>looks like</em>. It
-stands for “User Interface.” The <code class="language-plaintext highlighter-rouge">server</code> controls what the app
-<em>does</em>. For example, the app below defines a title and textbox where
-users can type. But it does not do anything, since the server is
-empty.</p>
+    <p>Once the data are in this format, we can use the LDA function to fit
+a topic model. We choose K=4 topics because we expect that each
+topic will match a book. Different hyperparameters can be set using
+the control argument. There are two types of outputs produced by the
+LDA model: the topic word distributions (for each topic, which words
+are common?) and the document-topic memberships (from which topics
+does a document come from?). For visualization, it will be easiest
+to extract these parameters using the tidy function, specifying
+whether we want the topics (beta) or memberships (gamma).</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chapters_lda &lt;- LDA(chapters_dtm, k = 4, control = list(seed = 1234))
+chapters_lda
 
-ui &lt;- fluidPage(
-  titlePanel("Hello!"),
-  textInput("name", "Enter your name")  # first arg is ID, second is label
-)
-
-server &lt;- function(input, output) {}
-app &lt;- shinyApp(ui, server)
+topics &lt;- tidy(chapters_lda, matrix = "beta")
+    memberships &lt;- tidy(chapters_lda, matrix = "gamma")
 </code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/43a4312c-a124-4b63-8228-23ba5375992b/" allowfullscreen="" data-external="1"></iframe>
   </li>
   <li>
-    <p>The UI elements can be further broken down into Inputs, Outputs, and
-Descriptors[1], all grouped together by an organizing layout
-function. Inputs are UI elements that users can manipulate to prompt
-certain types of computation. Outputs are parts of the interface
-that reflects the result of a <code class="language-plaintext highlighter-rouge">server</code> computation. Descriptors are
-parts of the page that aren’t involved in computation, but which
-provide narrative structure and guide the user.</p>
+    <p>This tidy approach is preferable to extracting the parameters
+directly from the fitted model (e.g., using <code class="language-plaintext highlighter-rouge">chapters_lda@gamma</code>)
+because it ensures the output is a tidy data.frame, rather than a
+matrix. Tidy data.frames are easier to visualize using ggplot2.</p>
 
-    <p>For example, in the toy app above, <code class="language-plaintext highlighter-rouge">titlePage</code> is a descriptor
-providing some title text. <code class="language-plaintext highlighter-rouge">textInput</code> is an input element allowing
-users to enter text. <code class="language-plaintext highlighter-rouge">fluidPage</code> is a layout function that arranges
-these elements on a continuous page (some other layout functions are
-<code class="language-plaintext highlighter-rouge">sidebarLayout</code>, <code class="language-plaintext highlighter-rouge">navbarPage</code>, <code class="language-plaintext highlighter-rouge">flowLayout</code>, …)</p>
-  </li>
-  <li>
-    <p>An important point is that all input and output elements must be
-given a unique ID. This is always the first argument of a <code class="language-plaintext highlighter-rouge">*Input</code>
-or <code class="language-plaintext highlighter-rouge">*Output</code> function defined in Shiny. The ID tags are how
-different parts of the application are able to refer to one another.
-For example, if we wanted to refer to the text the user entered in
-the application above, we could refer to the <code class="language-plaintext highlighter-rouge">name</code> ID.</p>
-  </li>
-  <li>
-    <p>Let’s see how to (1) make user inputs cause some sort of computation
-and (2) have the result of that computation appear to the user. For
-(1), we will add a <code class="language-plaintext highlighter-rouge">renderText</code> element to the <code class="language-plaintext highlighter-rouge">server</code>. All
-<code class="language-plaintext highlighter-rouge">render*</code> functions do two things,</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    # highest weight words per topic
+    topics %&gt;%
+      arrange(topic, -beta)
 
-    <ul>
-      <li>They make inputs from the <code class="language-plaintext highlighter-rouge">ui</code> available for computation.</li>
-      <li>They generate HTML code that allows the results of the
-computation to appear in a UI output.</li>
-    </ul>
-
-    <p>For (2), we will add a <code class="language-plaintext highlighter-rouge">textOutput</code> element to the <code class="language-plaintext highlighter-rouge">ui</code> layout
-defined above. Let’s look at the code,</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-
-ui &lt;- fluidPage(
-  titlePanel("Hello!"),
-  textInput("name", "Enter your name"),
-  textOutput("printed_name")
-)
-
-server &lt;- function(input, output) {
-  output$printed_name &lt;- renderText({
-    paste0("Welcome to shiny, ", input$name, "!")
-  })
-}
-
-app &lt;- shinyApp(ui, server)
+    # topic memberships per document
+    memberships %&gt;%
+      arrange(document, topic)
 </code></pre></div>    </div>
+  </li>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Short description]]></summary></entry><entry><title type="html">Interface Design and Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-3.html" rel="alternate" type="text/html" title="Interface Design and Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-3.html"><![CDATA[<p><em>Short description</em></p>
 
-    <iframe src="https://data-viz.it.wisc.edu/content/541af110-2ce1-46d1-b293-f38a96e125f3/" allowfullscreen="" data-external="1"></iframe>
+<ol>
+  <li>
+    <p>For most of the course, we have focused on visualizing the data
+directly. For the last few weeks, though, we have visualized the
+results of an initial modeling step, like fitting PCA or topic
+models. These kinds of models can help in creating abstractions, and
+reasoning effectively through abstraction is often a source of
+discovery.</p>
   </li>
   <li>
-    <p>There are a few points worth noting. First, the <code class="language-plaintext highlighter-rouge">renderText</code>
-component was able to refer to the value entered in the textbox
-using <code class="language-plaintext highlighter-rouge">input$name</code>. This was possible because <code class="language-plaintext highlighter-rouge">name</code> was the ID that
-we gave to the <code class="language-plaintext highlighter-rouge">textInput</code> component. It also would not have worked
-if we had used <code class="language-plaintext highlighter-rouge">input$text</code> outside of a <code class="language-plaintext highlighter-rouge">render*</code> function: this is
-what we mean by the <code class="language-plaintext highlighter-rouge">render*</code> functions making the UI inputs
-available for computation. Finally, we were able to refer to the
-rendered output in the UI by adding a <code class="language-plaintext highlighter-rouge">textOutput</code> component. By
-giving this component the id <code class="language-plaintext highlighter-rouge">printed_name</code>, we were able to tell it
-to look into the server for a rendered output named <code class="language-plaintext highlighter-rouge">printed_name</code>
-and fill it in.</p>
+    <p>The ideal is to apply modeling to lift concrete datasets into more
+meaningful abstractions, which can then be visualized to support
+high-level reasoning. Reality, however, is rarely as simple is that.
+In practice, models can go awry, visualizations can be misleading,
+and results can be misunderstood. Indeed, this complexity is one of
+the reasons data science training takes years.</p>
   </li>
   <li>
-    <p>An even deeper idea is that the code did not simply run linearly,
-from top of the script to the bottom. If that were all the code did,
-then it would have run once at the beginning, and it would never
-have updated when you entered your name. Instead, it ran <em>every time
-you typed into the textbox</em>. This is the “reactive programming”
-paradigm, and it is what makes interactive visualization possible.
-<code class="language-plaintext highlighter-rouge">renderText</code> knows to rerun every time something is entered into the
-<code class="language-plaintext highlighter-rouge">name</code> text input, because we told it to depend on <code class="language-plaintext highlighter-rouge">input$name</code>. We
-will explore the idea of reactivity in more depth in the next
-lecture, but for now, just remember that the order in which code is
-executed is not simply determined by the order of lines in a file.</p>
-  </li>
-  <li>
-    <p>Let’s look at a few more examples, just to get a feel for things.
-The app below updates a plot of random normal variables given a mean
-specified by the user. We’ve introduced a new type of input, a
-<code class="language-plaintext highlighter-rouge">numericInput</code>, which captures numbers. We’ve also added a new
-output, <code class="language-plaintext highlighter-rouge">plotOutput</code>, allowing with its accompanying renderer,
-<code class="language-plaintext highlighter-rouge">renderPlot</code> (remember, UI outputs are always paired with server
-renderers).</p>
+    <p>The authors of this week’s reading suggest a mnemonic: “interpret
+but verify.” This captures several principles,</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-library(tidyverse)
-
-ui &lt;- fluidPage(
-  titlePanel("Random Normals"),
-  numericInput("mean", "Enter the mean", 0), # 0 is the default
-  plotOutput("histogram")
-)
-
-server &lt;- function(input, output) {
-  output$histogram &lt;- renderPlot({
-    data.frame(values = rnorm(100, input$mean)) %&gt;%
-      ggplot() +
-        geom_histogram(aes(values))
-  })
-}
-
-app &lt;- shinyApp(ui, server)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Interpret: Models and visualizations should be designed in such a way that
+ users can draw inferences that are relevant to their understanding of a
+ domain.
+ * Verify: It is the designer’s responsibility that these inferences be
+ accurate.
 </code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/2cc8cc90-7c51-493c-81e1-a6b8919cd6a6/" allowfullscreen="" data-external="1" height="535" width="600"></iframe>
-  </li>
-  <li>
-    <p>We can make the plot depend on several inputs. The code below allows
-the user to change the total number of data points and the variance,
-this time using slider inputs. I recommend taking a look at
-different inputs on the shiny
-<a href="https://shiny.rstudio.com/images/shiny-cheatsheet.pdf">cheatsheet</a>,
-though be aware that there are many
-<a href="https://github.com/nanxstats/awesome-shiny-extensions">extensions</a>
-built by the community.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-library(tidyverse)
-
-ui &lt;- fluidPage(
-  titlePanel("Random Normals"),
-  numericInput("mean", "Enter the mean", 0),
-  sliderInput("n", "Enter the number of samples", 500, min=1, max=2000),
-  sliderInput("sigma", "Enter the standard deviation", 1, min=.1, max=5),
-  plotOutput("histogram")
-)
-
-server &lt;- function(input, output) {
-  output$histogram &lt;- renderPlot({
-    data.frame(values = rnorm(input$n, input$mean, input$sigma)) %&gt;%
-      ggplot() +
-        geom_histogram(aes(values), bins = 100) +
-        xlim(-10, 10)
-  })
-}
-
-app &lt;- shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/3d0d8a20-446a-438a-b373-bd06206f178f/" allowfullscreen="" data-external="1" height="735" width="600"></iframe>
-  </li>
-  <li>
-    <p>We can also make the app return several outputs, not just a plot.
-The code below attempts to print the data along in addition to the
-histogram, but it makes a crucial mistake (can you spot it?).</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-library(tidyverse)
-
-ui &lt;- fluidPage(
-  titlePanel("Random Normals"),
-  numericInput("mean", "Enter the mean", 0),
-  sliderInput("n", "Enter the number of samples", 500, min=1, max=2000),
-  sliderInput("sigma", "Enter the standard deviation", 1, min=.1, max=5),
-  plotOutput("histogram"),
-  dataTableOutput("dt")
-)
-
-server &lt;- function(input, output) {
-  output$histogram &lt;- renderPlot({
-    data.frame(values = rnorm(input$n, input$mean, input$sigma)) %&gt;%
-      ggplot() +
-        geom_histogram(aes(values), bins = 100) +
-        xlim(-10, 10)
-  })
-
-  output$dt &lt;- renderDataTable({
-    data.frame(values = rnorm(input$n, input$mean, input$sigma))
-  })
-}
-
-app &lt;- shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/15f7837a-64b6-4f73-9b4a-13f2ca168daa/" allowfullscreen="" data-external="1" height="935" width="600"></iframe>
-  </li>
-  <li>
-    <p>The issue is that this code reruns <code class="language-plaintext highlighter-rouge">rnorm</code> for each output. So, even
-though the interfaces suggests that the printed samples are the same
-as the ones in the histogram, they are actually different. To
-resolve this, we need a way of storing an intermediate computation
-which (1) depends on the inputs but (2) feeds into several outputs.
-Whenever we encounter this need, we can use a reactive expression.
-It is a type of server element that depends on the input and can be
-referred to directly by outputs, which call the reactive expression
-like a function. For example, the code below generates the random
-normal samples a single time, using the <code class="language-plaintext highlighter-rouge">samples()</code> reactive
-expression.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-library(tidyverse)
-
-ui &lt;- fluidPage(
-  titlePanel("Random Normals"),
-  numericInput("mean", "Enter the mean", 0),
-  sliderInput("n", "Enter the number of samples", 500, min=1, max=2000),
-  sliderInput("sigma", "Enter the standard deviation", 1, min=.1, max=5),
-  plotOutput("histogram"),
-  dataTableOutput("dt")
-)
-
-server &lt;- function(input, output) {
-  samples &lt;- reactive({
-    data.frame(values = rnorm(input$n, input$mean, input$sigma))
-  })
-
-  output$histogram &lt;- renderPlot({
-      ggplot(samples()) +
-        geom_histogram(aes(values), bins = 100) +
-        xlim(-10, 10)
-  })
-
-  output$dt &lt;- renderDataTable(samples())
-}
-
-app &lt;- shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/3e53bb63-a19a-4ded-8ab6-5ffbc9447c8f/" allowfullscreen="" data-external="1" height="935" width="600"></iframe>
-  </li>
-  <li>
-    <p>Finally, a good practice is to move as much non-app related code to
-separate functions. This makes the flow of the app more transparent.
-The clearer the delineation between “computation required for
-individual app components” and “relationship across components,” the
-easier the code will be to understand and extend.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-library(tidyverse)
-
-### Functions within app components
-generate_data &lt;- function(n, mean, sigma) {
-  data.frame(values = rnorm(n, mean, sigma))
-}
-
-histogram_fun &lt;- function(df) {
-  ggplot(df) +
-    geom_histogram(aes(values), bins = 100) +
-    xlim(-10, 10)
-}
-
-### Defines the app
-ui &lt;- fluidPage(
-  titlePanel("Random Normals"),
-  numericInput("mean", "Enter the mean", 0),
-  sliderInput("n", "Enter the number of samples", 500, min=1, max=2000),
-  sliderInput("sigma", "Enter the standard deviation", 1, min=.1, max=5),
-  plotOutput("histogram"),
-  dataTableOutput("dt")
-)
-
-server &lt;- function(input, output) {
-  samples &lt;- reactive({
-    generate_data(input$n, input$mean, input$sigma)
-  })
-  output$histogram &lt;- renderPlot(histogram_fun(samples()))
-  output$dt &lt;- renderDataTable(samples())
-}
-
-app &lt;- shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/fe220e82-becf-4cc6-891c-7fa1c69ba850/" allowfullscreen="" data-external="1" height="935" width="600"></iframe>
   </li>
 </ol>
 
-<p>[1] I like to use these names to keep everything organized, but they are
-not official, and you do not need to memorize this.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[Vocabulary used by R Shiny Library, and a few example apps.]]></summary></entry><entry><title type="html">Introduction to Reactivity</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week2-2.html" rel="alternate" type="text/html" title="Introduction to Reactivity" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week2-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week2-2.html"><![CDATA[<p><em>Viewing shiny code execution as a graph</em></p>
+<h4 id="stanford-dissertation-browser">Stanford Dissertation Browser</h4>
 
 <ol>
   <li>
-    <p>These notes will explore the idea of reactivity in more depth.
-Recall that reactivity refers to the fact that Shiny app code is not
-run from top to bottom, like an ordinary R script. Instead, it runs
-reactively, depending on inputs that the user has provided. This can
-make writing Shiny code a bit unintuitive at first, but there are a
-few higher-level concepts that can help when writing reactive code.</p>
+    <p>The authors ground their discussion by considering a specific design
+project: The Stanford Dissertation Browser. For this project,
+university leadership wanted to discover ways to promote effective,
+interdisciplinary research. Topic models helped transform the the
+raw dissertation text data into higher-levels of abstraction.
+Research themes were reflected in topics, and the interdisciplinary
+reach of certain PhD theses was reflected in their
+mixed-memberships.</p>
   </li>
   <li>
-    <p>The most important of these concepts is that reactive code can be
-viewed as a graph. The <code class="language-plaintext highlighter-rouge">ui</code> and <code class="language-plaintext highlighter-rouge">server</code> define an explicit
-dependency structure for how components depend on one another. The
-<code class="language-plaintext highlighter-rouge">input$</code>’s within <code class="language-plaintext highlighter-rouge">render*</code> functions in the server specify how UI
-inputs affect server computations. The IDs within the <code class="language-plaintext highlighter-rouge">*Output</code>
-elements in the <code class="language-plaintext highlighter-rouge">ui</code> specify which of the rendered <code class="language-plaintext highlighter-rouge">output$</code>’s in
-the server should be used to populate the visible interface.</p>
+    <p>In several initial implementations of their interface, it was easy
+to draw incorrect inferences. For example, in some
+dimensionality-reduction outputs, it seemed that petroleum
+engineering had become closer to biology over time, but this turned
+out to be an artifact of the reduction and was not visible when
+using the original distances. Another example — some words were used
+in neurobiology (voltage, current, …) led to theses in this
+department to appear very close to electrical engineering, when they
+really had more in common with those in other biology departments.</p>
+
+    <p>[Show the petroleum engineering example]</p>
   </li>
   <li>
-    <p>For example, our first “Hello” app has the following (simple)
-reactivity graph. Note that I’ve drawn input and output nodes
-differently, to emphasize the flow of computation. I’ve also copied
-the code from the original app for reference.</p>
+    <p>The authors carefully tracked and manually verified inferences made
+by a group of test users. Based on this qualitative evaluation, they
+were able to refine their modeling and visualization approach. For
+example, they used a supervised variant of topics models, and they
+replaced their original dimensionality reduction scatterplot with a
+visualization of topic-derived inter-department similarities.</p>
 
-    <p><img src="https://raw.githubusercontent.com/krisrs1128/stat479_s22/main/_posts/2022-02-10-week04-02/figures/names.png" alt="" /></p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-
-ui &lt;- fluidPage(
-  titlePanel("Hello!"),
-  textInput("name", "Enter your name"),
-  textOutput("printed_name")
-)
-
-server &lt;- function(input, output) {
-  output$printed_name &lt;- renderText({
-    paste0("Welcome to shiny, ", input$name, "!")
-  })
-}
-
-app &lt;- shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/43a4312c-a124-4b63-8228-23ba5375992b/" allowfullscreen="" data-external="1"></iframe>
+    <p>[Show the updated dimensionality reduction for petroleum
+engineering]</p>
   </li>
-  <li>
-    <p>Even though the graph is simple, note that the outputs will be
-recomputed each time that the input is changed. For more general
-graphs, all downstream nodes will be re-executed whenever an
-upstream source is changed (typically by a user input, though it’s
-possible to trigger changes automatically).</p>
-  </li>
-  <li>
-    <p>Reactive expressions provide a special kind of node that live
-between inputs and outputs. They depend on inputs, and they feed
-into outputs, but they are never made directly visible to the user.
-This is why we’ve drawn them as a kind of special intermediate node.
-Below, I’ve drawn the graph for our random normal plotter, with the
-reactive <code class="language-plaintext highlighter-rouge">samples()</code> expression.</p>
+</ol>
 
-    <p><img src="https://raw.githubusercontent.com/krisrs1128/stat479_s22/main/_posts/2022-02-10-week04-02/figures/reactive_histo.png" alt="" /></p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-library(tidyverse)
-
-### Functions within app components
-generate_data &lt;- function(n, mean, sigma) {
-  data.frame(values = rnorm(n, mean, sigma))
-}
-
-histogram_fun &lt;- function(df) {
-  ggplot(df) +
-    geom_histogram(aes(values), bins = 100) +
-    xlim(-10, 10)
-}
-
-### Defines the app
-ui &lt;- fluidPage(
-  titlePanel("Random Normals"),
-  numericInput("mean", "Enter the mean", 0),
-  sliderInput("n", "Enter the number of samples", 500, min=1, max=2000),
-  sliderInput("sigma", "Enter the standard deviation", 1, min=.1, max=5),
-  plotOutput("histogram"),
-  dataTableOutput("dt")
-)
-
-server &lt;- function(input, output) {
-  samples &lt;- reactive({
-    generate_data(input$n, input$mean, input$sigma)
-  })
-  output$histogram &lt;- renderPlot(histogram_fun(samples()))
-  output$dt &lt;- renderDataTable(samples())
-}
-
-app &lt;- shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/6063856c-2c50-4bb2-b272-b1c41b30f574/" allowfullscreen="" data-external="1" height="935" width="600"></iframe>
-  </li>
-  <li>
-    <p>A useful perspective is to think of reactive expressions as
-simplifying the overall reactivity graph. Specifically, by adding a
-reactive node, it’s possible to trim away many edges. For example,
-our initial implementation of the random normal plotter (which
-didn’t use the reactive expression) has a much more complicated
-graph, since many inputs feed directly into outputs.</p>
-
-    <p><img src="https://raw.githubusercontent.com/krisrs1128/stat479_s22/main/_posts/2022-02-10-week04-02/figures/nonreactive_histo.png" alt="" /></p>
-  </li>
-  <li>
-    <p>Let’s see these principles in action for a similar, but more complex
-app. The app below can be used for power analysis. It simulates two
-groups of samples, both from normal distributions, but with
-different (user specified) means. We’ve used a reactive expression
-to generate the samples, so that both the histogram and hypothesis
-test result outputs can refer to the same intermediate simulated
-data.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-library(tidyverse)
-library(broom)
-
-### Functions within app components
-generate_data &lt;- function(n, mean1, mean2, sigma) {
-  data.frame(
-    values = c(rnorm(n, mean1, sigma), rnorm(n, mean2, sigma)),
-    group = rep(c("A", "B"), each = n)
-  )
-}
-
-histogram_fun &lt;- function(df) {
-  ggplot(df) +
-    geom_histogram(
-      aes(values, fill = group), 
-      bins = 100, position = "identity",
-      alpha = 0.8
-    ) +
-    xlim(-10, 10)
-}
-
-test_fun &lt;- function(df) {
-  t.test(values ~ group, data = df) %&gt;%
-    tidy() %&gt;%
-    select(p.value, conf.low, conf.high)
-}
-
-### Defines the app
-ui &lt;- fluidPage(
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput("mean1", "Mean (Group 1)", 0, min = -10.0, max = 10.0, step = 0.1),
-      sliderInput("mean2", "Mean (Group 2)", 0, min = -10, max = 10, step = 0.1),
-      sliderInput("sigma", "Enter the standard deviation", 1, min=.1, max=5),
-      sliderInput("n", "Enter the number of samples", 500, min=1, max=2000),
-    ),
-    mainPanel(
-      plotOutput("histogram"),
-      dataTableOutput("test_result")
-    )
-  )
-)
-
-server &lt;- function(input, output) {
-  samples &lt;- reactive({
-    generate_data(input$n, input$mean1, input$mean2, input$sigma)
-  })
-  output$histogram &lt;- renderPlot(histogram_fun(generate_data(input$n, input$mean1, input$mean2, input$sigma)))
-  output$test_result &lt;- renderDataTable(test_fun(generate_data(input$n, input$mean1, input$mean2, input$sigma)))
-}
-
-app &lt;- shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/1f5cecd2-a4c7-46bd-a2ea-07443b009687/" allowfullscreen="" data-external="1" height="935" width="600"></iframe>
-
-    <p>Other than that, the only difference is that I’ve saved output from
-the <code class="language-plaintext highlighter-rouge">t.test</code> using <code class="language-plaintext highlighter-rouge">test_result</code>. Notice the use of the <code class="language-plaintext highlighter-rouge">broom</code>
-package, which helps format the test output into a <code class="language-plaintext highlighter-rouge">data.frame</code>.</p>
-  </li>
-  <li>
-    <p>So far, all of our reactive code has lived within the <code class="language-plaintext highlighter-rouge">render*</code> or
-<code class="language-plaintext highlighter-rouge">reactive()</code> sets of functions. However, there is a another kind
-that is often useful, especially in more advanced applications:
-<code class="language-plaintext highlighter-rouge">observers</code>. An observer is a computation that is done every time
-certain inputs are changed, but which don’t affect downstream UI
-outputs through a <code class="language-plaintext highlighter-rouge">render*</code> function. For example, below, we’ve
-added a block (under <code class="language-plaintext highlighter-rouge">observeEvent</code>) that prints to the console
-every time either of the means are changed. I realize it is a bit of
-a mystery why these functions would ever be useful, but we will see
-them in more realistic contexts next week.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-library(tidyverse)
-library(broom)
-
-### Functions within app components
-generate_data &lt;- function(n, mean1, mean2, sigma) {
-  data.frame(
-    values = c(rnorm(n, mean1, sigma), rnorm(n, mean2, sigma)),
-    group = rep(c("A", "B"), each = n)
-  )
-}
-
-histogram_fun &lt;- function(df) {
-  ggplot(df) +
-    geom_histogram(
-      aes(values, fill = group), 
-      bins = 100, position = "identity",
-      alpha = 0.8
-    ) +
-    xlim(-10, 10)
-}
-
-test_fun &lt;- function(df) {
-  t.test(values ~ group, data = df) %&gt;%
-    tidy() %&gt;%
-    select(p.value, conf.low, conf.high)
-}
-
-### Defines the app
-ui &lt;- fluidPage(
-  sidebarLayout(
-    sidebarPanel(
-      sliderInput("mean1", "Mean (Group 1)", 0, min = -10.0, max = 10.0, step = 0.1),
-      sliderInput("mean2", "Mean (Group 2)", 0, min = -10, max = 10, step = 0.1),
-      sliderInput("sigma", "Enter the standard deviation", 1, min=.1, max=5),
-      sliderInput("n", "Enter the number of samples", 500, min=1, max=2000),
-    ),
-    mainPanel(
-      plotOutput("histogram"),
-      dataTableOutput("test_result")
-    )
-  )
-)
-
-server &lt;- function(input, output) {
-  samples &lt;- reactive({
-    generate_data(input$n, input$mean1, input$mean2, input$sigma)
-  })
-  output$histogram &lt;- renderPlot(histogram_fun(samples()))
-  output$test_result &lt;- renderDataTable(test_fun(samples()))
-  observeEvent(input$mean1 | input$mean2, {
-    message("group 1 mean is now: ", input$mean1)
-    message("group 2 mean is now: ", input$mean2)
-  })
-}
-
-app &lt;- shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/752b80de-5c75-4dd9-b7fe-2d399c3ea3da/" allowfullscreen="" data-external="1" height="935" width="600"></iframe>
-  </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Viewing shiny code execution as a graph]]></summary></entry><entry><title type="html">IMDB Shiny Application</title><link href="http://localhost:4000/stat679_notes/2022/06/01/week2-3.html" rel="alternate" type="text/html" title="IMDB Shiny Application" /><published>2022-06-01T00:00:00-05:00</published><updated>2022-06-01T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/01/week2-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/01/week2-3.html"><![CDATA[<p><em>Using Shiny to explore a movies dataset</em></p>
+<h4 id="overall-strategy">Overall Strategy</h4>
 
 <ol>
   <li>
-    <p>So far, all of our Shiny applications have been based on toy
-simulated data. In this set of notes, we’ll use Shiny to explore a
-real dataset, illustrating the general development workflow in the
-process. Before diving into code, let’s consider the role of
-interactivity in data analysis.</p>
-  </li>
-  <li>
-    <p>A major difference between doing visualization on paper and on
-computers is that visualization on computers can make use of
-interactivity. An interactive visualization is one that changes in
-response to user cues. This allows a display to update in a way that
-provides a visual comparison that was not available in a previous
-view. In this way, interactive visualization allows users to answer
-a sequence of questions.</p>
-  </li>
-  <li>
-    <p>Selection, both of observations and of attributes, is fundamental to
-interactive visualization. This is because it precedes other
-interactive operations: you can select a subset of observations to
-filter down to or attributes to coordinate across multiple displays
-(we consider both types of interactivity in later lectures).</p>
-  </li>
-  <li>
-    <p>The code below selects movies to highlight based on Genre. We use a
-<code class="language-plaintext highlighter-rouge">selectInput</code> to create the dropdown menu. A reactive expression
-creates a new column (<code class="language-plaintext highlighter-rouge">selected</code>) in the <code class="language-plaintext highlighter-rouge">movies</code> dataset
-specifiying whether the current movie is selected. The reactive
-graph structure means that the ggplot2 figure is recreated each time
-the selection is changed, and the <code class="language-plaintext highlighter-rouge">selected</code> column is used to shade
-in the points. This process of changing the visual encoding of
-graphical marks depending on user selections is called “conditional
-encoding.”</p>
+    <p>To implement the “interpret but verify” idea, the authors recommend,</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-library(tidyverse)
-library(lubridate)
-
-movies &lt;- read_csv("https://raw.githubusercontent.com/krisrs1128/stat479_s22/main/_posts/2022-02-10-week04-03/apps/data/movies.csv") %&gt;%
-  mutate(
-    date = as_date(Release_Date, format = "%b %d %Y"),
-    year = year(date),
-    Major_Genre = fct_explicit_na(Major_Genre),
-    MPAA_Rating = fct_explicit_na(MPAA_Rating),
-  )
-
-genres &lt;- pull(movies, Major_Genre) %&gt;%
-  unique() %&gt;%
-  na.omit()
-
-### functions used in app
-scatterplot &lt;- function(df) {
-  ggplot(df) +
-    geom_point(
-      aes(Rotten_Tomatoes_Rating, IMDB_Rating, size = selected, alpha = selected)
-    ) +
-    scale_size(limits = c(0, 1), range = c(.5, 2), guide = "none") +
-    scale_alpha(limits = c(0, 1), range = c(.1, 1), guide = "none")
-}
-
-### definition of app
-ui &lt;- fluidPage(
-  titlePanel("IMDB Analysis"),
-  selectInput("genres", "Genre", genres),
-  plotOutput("ratings_scatter")
-)
-
-server &lt;- function(input, output) {
-  movies_subset &lt;- reactive({
-    movies %&gt;%
-      mutate(selected = 1 * (Major_Genre %in% input$genres))
-  })
-
-  output$ratings_scatter &lt;- renderPlot({
-    scatterplot(movies_subset())
-  })
-}
-
-app &lt;- shinyApp(ui, server)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Align the analysis, visualization, and models along appropriate “units of
+ analysis.”
+ * Verify that the modeling results in abstractions / concepts that are
+ relevant to the analysis, and modify accordingly.
+ * Progressively disclose data to support reasoning at multiple levels of
+ abstraction.
 </code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/02971f81-3af5-4fdb-89d7-84a663778546/" allowfullscreen="" data-external="1" height="550" width="600"></iframe>
-
-    <p><img src="/https://raw.githubusercontent.com/krisrs1128/stat479_s22/main/_posts/2022-02-10-week04-03/figures/initial_imdb.png" alt="" /></p>
   </li>
   <li>
-    <p>We can extend this further. Let’s allow the user to filter by year
-and MPAA rating. Notice that there are some years in the future! We
-also find that there are systematic differences in IMDB and Rotten
-Tomatoes ratings as a function of these variables.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-library(tidyverse)
-library(lubridate)
-
-movies &lt;- read_csv("https://raw.githubusercontent.com/krisrs1128/stat479_s22/main/_posts/2022-02-10-week04-03/apps/data/movies.csv") %&gt;%
-  mutate(
-    date = as_date(Release_Date, format = "%b %d %Y"),
-    year = year(date),
-    Major_Genre = fct_explicit_na(Major_Genre),
-    MPAA_Rating = fct_explicit_na(MPAA_Rating),
-  )
-
-genres &lt;- pull(movies, Major_Genre) %&gt;%
-  unique() %&gt;%
-  na.omit()
-ratings &lt;- pull(movies, MPAA_Rating) %&gt;%
-  unique() %&gt;%
-  na.omit()
-
-### functions used in app
-scatterplot &lt;- function(df) {
-  ggplot(df) +
-    geom_point(
-      aes(Rotten_Tomatoes_Rating, IMDB_Rating, size = selected, alpha = selected)
-    ) +
-    scale_size(limits = c(0, 1), range = c(.5, 2), guide = "none") +
-    scale_alpha(limits = c(0, 1), range = c(.1, 1), guide = "none")
-}
-
-### definition of app
-ui &lt;- fluidPage(
-  titlePanel("IMDB Analysis"),
-  selectInput("genres", "Genre", genres, multiple = TRUE),
-  checkboxGroupInput("mpaa", "MPAA Rating", ratings, ratings),
-  sliderInput("year", "Year", min = min(movies$year), max = max(movies$year), c(1928, 2020), sep = ""),
-  plotOutput("ratings_scatter")
-)
-
-server &lt;- function(input, output) {
-  movies_subset &lt;- reactive({
-    movies %&gt;%
-      mutate(selected = 1 * (
-        (Major_Genre %in% input$genres) &amp;
-        (MPAA_Rating %in% input$mpaa) &amp;
-        (year &gt;= input$year[1]) &amp;
-        (year &lt;= input$year[2])
-      ))
-  })
-
-  output$ratings_scatter &lt;- renderPlot({
-    scatterplot(movies_subset())
-  })
-}
-
-app &lt;- shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/9036974c-176a-4e9b-963d-c25eb45f5635/" allowfullscreen="" data-external="1" height="900" width="600"></iframe>
-
-    <p><img src="/https://raw.githubusercontent.com/krisrs1128/stat479_s22/main/_posts/2022-02-10-week04-03/figures/final_imdb.png" alt="" /></p>
+    <p>The units of analysis in the dissertation browser were departments
+and theses. In general, these are the “entities, relationships, and
+concepts” of interest, and they can often linked to existing
+metadata.</p>
   </li>
   <li>
-    <p>We’ll include a final version of this plot which additionally shows
-the movie name when points are hovered. To accomplish this, we can
-no longer use <code class="language-plaintext highlighter-rouge">ggplot2</code> on its own – it has to be linked with a
-plotting library that renders web-based visualizations (not just
-static image files). This is what the <code class="language-plaintext highlighter-rouge">ggplotly()</code> call does in the
-updated version of the app. The mouseover text is added through the
-<code class="language-plaintext highlighter-rouge">tooltip</code> argument.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(shiny)
-library(tidyverse)
-library(lubridate)
-library(plotly)
-
-movies &lt;- read_csv("https://raw.githubusercontent.com/krisrs1128/stat479_s22/main/_posts/2022-02-10-week04-03/apps/data/movies.csv") %&gt;%
-  mutate(
-    date = as_date(Release_Date, format = "%b %d %Y"),
-    year = year(date),
-    Major_Genre = fct_explicit_na(Major_Genre),
-    MPAA_Rating = fct_explicit_na(MPAA_Rating),
-  )
-
-genres &lt;- pull(movies, Major_Genre) %&gt;%
-  unique() %&gt;%
-  na.omit()
-ratings &lt;- pull(movies, MPAA_Rating) %&gt;%
-  unique() %&gt;%
-  na.omit()
-
-### functions used in app
-scatterplot &lt;- function(df) {
-  p &lt;- ggplot(mapping = aes(Rotten_Tomatoes_Rating, IMDB_Rating)) +
-    geom_point(data = df %&gt;% filter(selected),  aes(text = Title), size = 2, alpha = 1) +
-    geom_point(data = df %&gt;% filter(!selected),  size = .5, alpha = .1)
-  ggplotly(p, tooltip = "Title") %&gt;%
-    style(hoveron = "fill")
-}
-
-### definition of app
-ui &lt;- fluidPage(
-  titlePanel("IMDB Analysis"),
-  selectInput("genres", "Genre", genres),
-  checkboxGroupInput("mpaa", "MPAA Rating", ratings, ratings),
-  sliderInput("year", "Year", min = min(movies$year), max = max(movies$year), c(1928, 2020), sep = ""),
-  plotlyOutput("ratings_scatter")
-)
-
-server &lt;- function(input, output) {
-  movies_subset &lt;- reactive({
-    movies %&gt;%
-      mutate(selected = (
-        (Major_Genre %in% input$genres) &amp;
-        (MPAA_Rating %in% input$mpaa) &amp;
-        (year &gt;= input$year[1]) &amp;
-        (year &lt;= input$year[2])
-      ))
-  })
-
-  output$ratings_scatter &lt;- renderPlotly({
-    scatterplot(movies_subset())
-  })
-}
-
-app &lt;- shinyApp(ui, server)
-</code></pre></div>    </div>
-
-    <iframe src="https://data-viz.it.wisc.edu/content/2151742d-4b80-4200-9b91-55dda592a9f6/" allowfullscreen="" data-external="1" height="900" width="600"></iframe>
+    <p>Verification can be guided both by quantitative metrics (e.g., test
+error) and qualitative evaluation (e.g., user studies). For revising
+models, it can be possible to refit parameters, add labels, modify
+model structure, or simply override the model with user-provided
+values.</p>
   </li>
   <li>
-    <p>These visualizations are an instance of the more general idea of
-using filtering to reduce complexity in data. Filtering is an
-especially powerful technique in the interactive paradigm, where it
-is possible to easily reverse (or compare) filtering choices.</p>
+    <p>Progressive disclosure allows the user to go up and down the ladder
+of abstraction. It makes it possible to navigate large-scale data
+while supporting verification through specific examples.</p>
   </li>
   <li>
-    <p>Conceptually, what we are doing falls under the name of “Dynamic
-Querying,” which refers more generally to updating a visualization
-based on user queries. There are several ways to think about these
-dynamic queries,</p>
-
-    <ul>
-      <li>Interpretation 1: Dynamic queries create the visual analog of a
-database interaction. Rather than using a programming-based
-interface to filter elements or select attributes, we can design
-interactive visual equivalents.</li>
-      <li>Interpretation 2: Dynamic queries allow rapid evaluation of
-conditional probabilities. The visualization above was designed
-to answer: What is the joint distribution of movie ratings,
-conditional on being a drama?</li>
-    </ul>
+    <p>In the dissertation browser, this is implemented through semantic
+zooming (from departmental to dissertation views) and linked
+highlighting (revealing the dissertation abstract on mouseover).</p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Using Shiny to explore a movies dataset]]></summary></entry></feed>
+  <li>
+    <p>The question of how to effectively weave together model building
+with visual design is still one that is actively explored in
+research today. If you enjoyed reading about this project, you may
+enjoy other papers on visualization for topic models or in machine
+learning more generally.</p>
+  </li>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Short description]]></summary></entry></feed>
