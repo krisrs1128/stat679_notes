@@ -25,6 +25,7 @@ description: >- # this means to ignore newlines until "baseurl:"
 baseurl: "/stat679_notes" # the subpath of your site, e.g. /blog
 relative_url: "/stat679_notes"
 github_username:  krisrs1128
+markdown: kramdown
 theme_setting:
   code: true
   math: true
