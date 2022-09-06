@@ -1,12 +1,7 @@
----
-title: A Vocabulary of Marks
-layout: post
-output: 
-  md_document:
-    preserve_yaml: true
----
-
 *Encodings available in ggplot2.*
+
+[Recording](https://mediaspace.wisc.edu/media/Week+1+-+3A+A+Vocabulary+of+Marks/1_ke20cnja),
+[Code](https://github.com/krisrs1128/stat679_code/blob/main/notes/week1-3.Rmd)
 
     library(tidyverse)
     library(scales)
@@ -49,7 +44,7 @@ output:
 2.  This plot can be improved. The grid lines and tick marks associated
     with each bar are distracting and the axis labels are all running
     over one another. We resolve this by changing the theme and turning
-    the bars on their side[1]
+    the bars on their side\[1\]
 
             ggplot(gap2000) +
               geom_col(aes(pop, country)) +
@@ -165,7 +160,7 @@ output:
 
         ggplot(population_sums) +
           geom_area(aes(year, total_pop, fill = cluster)) +
-          scale_y_continuous(expand = c(0, 0, .1, .1), label = label_number(cut_short_scale())) +
+          scale_y_continuous(expand = c(0, 0, .1, .1), label = label_number_si()) +
           scale_x_continuous(expand = c(0, 0)) +
           scale_fill_manual(values = cols)
 
@@ -191,6 +186,6 @@ output:
 
     ![](/stat679_notes/assets/week1-3/unnamed-chunk-12-1.png)
 
-[1] An alternative is to turn rotate the labels by 90 degrees. I prefer
-to turn the whole plot this, because this way, readers don’t have to
-tilt their heads to read the country names.
+\[1\] An alternative is to turn rotate the labels by 90 degrees. I
+prefer to turn the whole plot this, because this way, readers don’t have
+to tilt their heads to read the country names.
