@@ -35,6 +35,9 @@
     <div class="post__content content">
       <p><em>Vocabulary used by R Shiny Library, and a few example apps.</em></p>
 
+<p><a href="https://mediaspace.wisc.edu/media/Week+2+-+1A+Elements+of+a+Shiny+App/1_rlzn96xp">Recording</a>,
+<a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week2-1.Rmd">Code</a></p>
+
 <ol>
   <li>
     <p>All Shiny apps are made up from the same few building blocks. These
@@ -124,14 +127,14 @@ app &lt;- shinyApp(ui, server)
     <p>There are a few points worth noting. First, the <code class="language-plaintext highlighter-rouge">renderText</code>
 component was able to refer to the value entered in the textbox
 using <code class="language-plaintext highlighter-rouge">input$name</code>. This was possible because <code class="language-plaintext highlighter-rouge">name</code> was the ID that
-we gave to the <code class="language-plaintext highlighter-rouge">textInput</code> component. It also would not have worked
-if we had used <code class="language-plaintext highlighter-rouge">input$text</code> outside of a <code class="language-plaintext highlighter-rouge">render*</code> function: this is
-what we mean by the <code class="language-plaintext highlighter-rouge">render*</code> functions making the UI inputs
-available for computation. Finally, we were able to refer to the
-rendered output in the UI by adding a <code class="language-plaintext highlighter-rouge">textOutput</code> component. By
-giving this component the id <code class="language-plaintext highlighter-rouge">printed_name</code>, we were able to tell it
-to look into the server for a rendered output named <code class="language-plaintext highlighter-rouge">printed_name</code>
-and fill it in.</p>
+we gave to the <code class="language-plaintext highlighter-rouge">textInput</code> component. It would not have worked if we
+had used <code class="language-plaintext highlighter-rouge">input$text</code> outside of a <code class="language-plaintext highlighter-rouge">render*</code> function: this is what
+we mean by the <code class="language-plaintext highlighter-rouge">render*</code> functions making the UI inputs available
+for computation. Finally, we were able to refer to the rendered
+output in the UI by adding a <code class="language-plaintext highlighter-rouge">textOutput</code> component. By giving this
+component the id <code class="language-plaintext highlighter-rouge">printed_name</code>, we were able to tell it to look
+into the server for a rendered output named <code class="language-plaintext highlighter-rouge">printed_name</code> and fill
+it in.</p>
   </li>
   <li>
     <p>An even deeper idea is that the code did not simply run linearly,

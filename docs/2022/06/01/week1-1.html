@@ -35,6 +35,9 @@
     <div class="post__content content">
       <p><em>Design principles from the grammar of graphics.</em></p>
 
+<p><a href="https://mediaspace.wisc.edu/media/Week+1-+1A+Introduction+to+ggplot2/1_x4qfp03g">Recording</a>,
+<a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week1-1.Rmd">Code</a></p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
 library(ggrepel)
 library(scales)
@@ -118,7 +121,7 @@ ggplot2. A typical plot will compose a chain of layers on top of a
 dataset,</p>
 
     <blockquote>
-      <p>ggplot(data) + [layer 1] + [layer 2] + …</p>
+      <p>ggplot(data) + [layer 1] + [layer 2]</p>
     </blockquote>
   </li>
   <li>
@@ -161,8 +164,8 @@ back to the data.frame in ggplot(murders).</p>
     <p><img src="/stat679_notes/assets/week1-2/unnamed-chunk-7-1.png" alt="" /></p>
   </li>
   <li>
-    <p>The original plot used a log-scale. To transform the x and y axes,
-we can use scales.</p>
+    <p>The plot at the start of these notes used a log-scale. To transform
+the x and y axes, we can use scales.</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(murders) +
   geom_point(aes(x = population, y = total, col = region)) +
@@ -268,7 +271,7 @@ be used by calling a different color scale.</li>
   <li>
     <p>Putting all these modifications together yields</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>r &lt;- murders %&gt;% 
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>r &lt;- murders %&gt;%
   summarize(rate = sum(total) /  sum(population)) %&gt;%
   pull(rate)
 
