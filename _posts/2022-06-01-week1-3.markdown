@@ -1,3 +1,11 @@
+---
+title: A Vocabulary of Marks
+layout: post
+output:
+  md_document:
+    preserve_yaml: true
+---
+
 *Encodings available in ggplot2.*
 
 [Recording](https://mediaspace.wisc.edu/media/Week+1+-+3A+A+Vocabulary+of+Marks/1_ke20cnja),
