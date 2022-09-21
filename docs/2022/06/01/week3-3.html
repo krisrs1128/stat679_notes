@@ -54,9 +54,7 @@ whenever the <code class="language-plaintext highlighter-rouge">reactiveVal</cod
   </li>
   <li>
     <p>The first example implements linked brushing on the movie ratings
-dataset presented
-<a href="https://krisrs1128.github.io/stat479_s22/posts/2022-02-10-week04-03/">earlier</a>.
-Before we had graphical queries, we used a slider to select movies
+dataset presented earlier. Before we used a slider to select movies
 within a user-specified time range. Our graphical alternative is to
 allow selections over a histogram of movie release dates within the
 dataset. Specifically, we will create an interactive version of the
@@ -93,7 +91,7 @@ earlier, slider-based implementation.</p>
   </li>
   <li>
     <p>Viewed more abstractly, we are going to use a brush to linking the
-histogram and the scatterplot views. We will be able to evaluate the
+histogram and scatterplot views. We will be able to evaluate the
 change in a visualization (the scatterplot) after “conditioning” on
 a subset defined by a complementary view (the histogram). This is
 analogous to the penguins dataset example – only the form of the
@@ -135,8 +133,8 @@ server &lt;- function(input, output) {
     <p>We haven’t included the full code for <code class="language-plaintext highlighter-rouge">histogram</code>, <code class="language-plaintext highlighter-rouge">scatterplot</code>,
 and <code class="language-plaintext highlighter-rouge">data_table</code>, since they in and of themselves don’t require any
 logic for interactivity. You can try out the full code
-<a href="https://github.com/krisrs1128/stat479_s22/blob/main/_posts/2022-02-16-week05-03/apps/app1.R">here</a>
-tinker with the interface below.</p>
+<a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week3/3-3/3-3-1/app.R">here</a>
+and tinker with the interface below.</p>
 
     <iframe src="https://data-viz.it.wisc.edu/content/1014c0e9-cf88-4b8d-93a6-52fd77669c23/" allowfullscreen="" data-external="1" height="700" width="600"></iframe>
   </li>
@@ -208,7 +206,7 @@ with one corresponding only to the first 500 movies in the dataset.</p>
   </li>
   <li>
     <p>Combining these ideas leads to the app
-<a href="https://github.com/krisrs1128/stat479_s22/blob/main/_posts/2022-02-16-week05-03/apps/app2.R">here</a>
+<a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week3/3-3/3-3-2/app.R">here</a>
 and included below. Try brushing on both the scatterplot and the
 histogram. The especially interesting thing about this approach is
 that, without introducing any new screen elements, we’ve widened the
@@ -276,13 +274,13 @@ time, which is then used to update overlays on each.</p>
 below. The <code class="language-plaintext highlighter-rouge">bar_plot</code> function draws two bar plots over one another,
 one referring to a global <code class="language-plaintext highlighter-rouge">counts</code> object of unchanging histogram
 bar heights. The second refers to the bar heights for the
-continually updated overlays. Notice that we use <code class="language-plaintext highlighter-rouge">aes_string</code> to use
+continually updated overlays. Notice that we use <code class="language-plaintext highlighter-rouge">.data[[v]]</code> to use
 variable names encoded in strings. The <code class="language-plaintext highlighter-rouge">plot_overlay</code> function
 provides the histogram bar heights for variable <code class="language-plaintext highlighter-rouge">v</code> after brushing
-over the movies in <code class="language-plaintext highlighter-rouge">selected_</code>.</p>
+over the flights in <code class="language-plaintext highlighter-rouge">selected_</code>.</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bar_plot &lt;- function(sub_flights, v) {
-  ggplot(counts[[v]], aes_string(v, "n")) +
+  ggplot(counts[[v]], aes(.data[[v]], n)) +
     geom_bar(fill = "#d3d3d3", stat = "identity") +
     geom_bar(data = sub_flights, stat = "identity")
 }
@@ -297,7 +295,7 @@ plot_overlay &lt;- function(selected_, v) {
   </li>
   <li>
     <p>Code for the full application is linked
-<a href="https://github.com/krisrs1128/stat479_s22/blob/main/_posts/2022-02-16-week05-03/apps/app3.R">here</a>.
+<a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week3/3-3/3-3-3/app.R">here</a>.
 Thanks to shiny’s <code class="language-plaintext highlighter-rouge">reactiveVal</code> and <code class="language-plaintext highlighter-rouge">brushedPoints</code> definitions,
 implementing interactivity only requires about 20 lines (starting
 from <code class="language-plaintext highlighter-rouge">ui &lt;- ...</code> to the end). The rest of the code is used to draw

@@ -1,20 +1,20 @@
 ---
-title: Shiny Layouts and Customization
+title: Shiny Themes 
 layout: post
 output: 
   md_document:
     preserve_yaml: true
 ---
 
-**More flexible designs in Shiny**
+*Custom styling in Shiny.*
 
 1.  Even if each of its component visualizations were beautifully
     designed, if we stick to using the default Shiny styling, it is hard
     to make our work look professional. In this set of notes, we’ll
     discuss how to customize the overall appearance of a Shiny app using
-    the `bslib` library. We’ll work with the Old Faithful app, which is
-    the default app created when we use Rstudio to create a new Shiny
-    app.
+    the `bslib` library. We’ll work with the Old Faithful dataset. I’ve
+    added some filler text to the bottom of the app so that we can see
+    what effect alternative stylings will have on it.
 
         library(shiny)
 
@@ -32,7 +32,7 @@ output:
 
         server <- function(input, output) {
             output$distPlot <- renderPlot({
-                x    <- faithful[, 2]
+                x <- faithful[, 2]
                 bins <- seq(min(x), max(x), length.out = input$bins + 1)
                 hist(x, breaks = bins, col = 'darkgray', border = 'white',
                      xlab = 'Waiting time to next eruption (in mins)',
@@ -49,13 +49,13 @@ output:
     such a way that its color palettes, font choices, and UI elements
     (e.g., the shape of buttons) work well together.
 
-3.  The main way to interface to this library in `Shiny` is to use the
-    `bs_theme` function within the `theme` argument of of `fluidPage`
-    (it actually works for a variety of UI objects, like `navbarPage` or
-    `fixedPage`). The simplest way to customize a page’s theme is to set
-    the `bootswatch` argument, which globally changes the theme to
-    reflect one of a set of predefined `bootswatch` themes — you can see
-    the choices [here](https://bootswatch.com/).
+3.  The main function in this library is `bs_theme`. The simplest way to
+    customize a page’s theme is to set the `bootswatch` argument of
+    `bs_theme`, which globally changes the theme to reflect one of a set
+    of predefined `bootswatch` themes — you can see choices
+    [here](https://bootswatch.com/).
+
+        library(bslib)
 
         ui <- fluidPage(
           theme = bs_theme(bootswatch = "simplex"),
@@ -66,7 +66,7 @@ output:
 
 4.  Sometimes we want finer-grained control than simply applying a
     `bootswatch` theme. Fortunately, `bs_theme` also provides arguments
-    that allow us to customize a variety of color and font options.
+    that allow us to customize a variety of options.
 
 5.  For example, if we want to change the background and foreground
     colors of our application, we can use the `bg` and `fg` arguments.
@@ -91,13 +91,8 @@ output:
 6.  Similarly, if we want to change the fonts used for headers, main
     text, and code, we can set the corresponding themer arguments. It’s
     possible to define fonts directly from font objects, but it’s
-    usually easiest to use an existing link with Google fonts.
-
-7.  A nice trick is that we can customize the appearance of our site
-    interactively by using the `bs_theme_preview()` function. It will
-    open up our app with menus for modifying app appearance in
-    real-time. Once we choose a styling that we like, we can retrieve
-    the corresponding `bs_theme()` arguments from the R console.
+    usually easiest to use an existing link with [Google
+    fonts](https://fonts.google.com/).
 
         ui <- fluidPage(
           theme = bs_theme(
@@ -107,6 +102,12 @@ output:
           ),
 
     <iframe src="https://data-viz.it.wisc.edu/content/e37843db-0cf7-43aa-b204-e26e1fddfa08/" allowfullscreen="" data-external="1" height=700 width=600></iframe>
+
+7.  A nice trick is that we can customize the appearance of our site
+    interactively by using the `bs_theme_preview()` function. It will
+    open up our app with menus for modifying app appearance in
+    real-time. Once we choose a styling that we like, we can retrieve
+    the corresponding `bs_theme()` arguments from the R console.
 
 8.  Just to illustrate the power of bslib, here is an egregious
     application of bslib to create an NES-themed Shiny interface.
