@@ -9,10 +9,7 @@ output:
 *An introduction to brush events in Shiny*
 
 [Code](https://github.com/krisrs1128/stat679_code/blob/main/notes/week3-2.Rmd),
-[Recording]()
-
-[Recording](),
-[Rmarkdown](https://github.com/krisrs1128/stat679_code/blob/main/notes/week3-2.Rmd)
+[Recording](https://mediaspace.wisc.edu/media/Week%203%20-%202%3A%20Graphical%20Queries%20-%20Brush%20Events/1_y2dyjzbd)
 
 1.  Click events are useful for referring to individual samples.
     However, they are not ideal for referring to groups of samples. In
