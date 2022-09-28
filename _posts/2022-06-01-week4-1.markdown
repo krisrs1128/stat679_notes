@@ -6,41 +6,51 @@ output:
     preserve_yaml: true
 ---
 
-__A tour of the parts of an HTML page__
+_A tour of the parts of an HTML page_
 
 1. Behind the scenes, interactive visualizations in d3 are just webpages. For
 this reason, it will be important to learn at least the basics of HTML web
 programming. These notes give a brief overview.
 
-2. The most basic HTML page looks like this,
-  ```
-  <!DOCTYPE html>
-  <html>
-    <head>
-    </head>
-    <body>
-    </body>
-  </html>
-  ```
+1. The most basic HTML page looks like this,
 
-	If you copy this into a textfile with the suffix `.html` and then open it in a browser, you will see a completely blank webpage. Different sections of the webpage are opened and closed with paired tags, like `<tag>` and `</tag>`, respectively. Every page has a `<head></head>` section which  loads the necessary resources and a `<body></body>` section that contains the main content of the webpage.
+    ```
+    <!DOCTYPE html>
+    <html>
+      <head>
+      </head>
+      <body>
+      </body>
+    </html>
+    ```
 
-3. For example, we can load the d3 library by adding a `script` tag in the page `head`,
-  ```
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <script src="https://d3js.org/d3.v7.min.js"></script>
-    </head>
-    <body>
-    </body>
-  </html>
-  ```
+	If you copy this into a textfile with the suffix `.html` and then open it in a
+	browser, you will see a [completely blank
+	webpage](https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/blank_page.html).
+	Different sections of the webpage are opened and closed with paired tags, like
+	`<tag>` and `</tag>`, respectively. Every page has a `<head></head>` section
+	which  loads the necessary resources and a `<body></body>` section that
+	contains the main content of the webpage.
 
-	This is the HTML equivalent of `library(packageName)` in R. For now though, we won’t be using this library.
+1. For example, we can load the d3 library by adding a `script` tag in the page `head`,
 
-4. We can add content by including tags in the body. For example, to create a
-header with some text under it, we can use the header and paragraph tags,
+    ```
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+      </head>
+      <body>
+      </body>
+    </html>
+    ```
+
+	This is the HTML equivalent of `library(packageName)` in R. For now though, we
+	won’t be using this library.
+
+1. We can add content by including tags in the body. For example, to create a
+header with some text under it, we can use the header and paragraph tags
+
   ```
   <!DOCTYPE html>
   <html>
@@ -53,27 +63,34 @@ header with some text under it, we can use the header and paragraph tags,
   </html>
   ```
 
-6. We can create groups of related tags using the `<g/>` tag. This gives every
-DOM page a tree structure.
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/example_headings.html" data-external="1" height=120 width=600></iframe>
+
+5. We can create groups of related tags using the `<g/>` tag. This gives every
+DOM page a tree structure,
+
   ```
-	<!DOCTYPE html>
-	<html>
-	  <head>
-	  </head>
-	  <body>
-		<h1>Header</h1>
-	    <g>
-			<h2>Subheader</h2>
-			<p>Example text</p>
-		</g>
-		<g>
-			<h2>Subheader 2</h2>
-			<p>More text</p>
-	  </body>
-	</html>
+  <!DOCTYPE html>
+  <html>
+  <head>
+  </head>
+    <body>
+    <h1>Header</h1>
+    <g>
+      <h2>Subheader</h2>
+      <p>Example text</p>
+    </g>
+    <g>
+      <h2>Subheader 2</h2>
+      <p>More text</p>
+    </g>
+    </body>
+  </html>
   ```
 
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/groups.html" height=160 data-external="1"></iframe>
+
 7. Most of the d3 visualizations we create in this course will be made using Scalable Vector Graphics (SVG). This is a way for drawing different shapes in the browser by declaring specific tags. For example, we can draw a rectangle, a circle, and a line,
+
   ```
   <!DOCTYPE html>
   <html>
@@ -88,15 +105,15 @@ DOM page a tree structure.
     </body>
   </html>
   ```
-
-	Notice that we had to enclose all the SVG objects within the `svg` tags.
-	Otherwise, it wouldn’t know how to render these shapes. The attributes
-	appearing within the tags give details about how to draw the associated SVG
-	element. Each type of element comes with its own configurable attributes. Can
-	you guess what `cx` and `cy` control for the circle? Check by modifying the
-	code and seeing how the page changes. For the purpose of the class, there will
-	only ever be a few attributes that we modify (positions, sizes, and colors),
-	and we will introduce them as we go along.
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/svg.html"></iframe>
+  Notice that we had to enclose all the SVG objects within the `svg` tags.
+  Otherwise, it wouldn’t know how to render these shapes. The attributes
+  appearing within the tags give details about how to draw the associated SVG
+  element. Each type of element comes with its own configurable attributes. Can
+  you guess what `cx` and `cy` control for the circle? Check by modifying the
+  code and seeing how the page changes. For the purpose of the class, there will
+  only ever be a few attributes that we modify (positions, sizes, and colors),
+  and we will introduce them as we go along.
 
 7. In fact, we can set attributes for any tag on an HTML page. It’s most common
 to set “id” and “class” attributes for unique and groups of similar tags,
@@ -108,17 +125,16 @@ we want to modify its style. This can be done by using a stylesheet. For
 example, if we want to change the color and font for the header, we can create a
 class for the header (“fancyheader”) and then refer to it in a separate file
 (style.css) which looks like this,
-  ```
-	@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-	.fancyheader {
-		stroke: "red";
-		font: 'Press Start 2P'
-	}
-  ```
+    ```
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-	(notice the `.` before the class name). Then, we modify our HTML header so that this style file is correctly loaded.
-
+    .fancyheader {
+      color: #ff4500;
+      font-family: "Press Start 2P";
+    }
+    ```
+  	(notice the `.` before the class name). Then, we modify our HTML header so that this style file is correctly loaded.
   ```
 	<!DOCTYPE html>
 	<html>
@@ -132,19 +148,26 @@ class for the header (“fancyheader”) and then refer to it in a separate file
 	</html>
   ```
 
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/styles.html"></iframe>
+
 9. The same type of manipulation can be done for IDs, though an ID should only be applied to one tag on the page. The only difference in the code is how the reference is made within the css file,
-  ```
+
+    CSS file (notice the `#` in this version of the css)
+    ```
 	@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-	#fancyheader {
-		stroke: "red";
-		font: 'Press Start 2P'
-	}
-	(notice the `#` in this version of the css)
+    #fancyheader {
+      color: #ff4500;
+      font-family: "Press Start 2P";
+    }
+    ```
+
+    HTML file
+  ```
 	<!DOCTYPE html>
 	<html>
 	  <head>
-	    <link rel="stylesheet" href="styles.css">
+	    <link rel="stylesheet" href="styles2.css">
 	  </head>
 	  <body>
 		<h1 id="fancyheader">This is a Header</h1>
@@ -153,11 +176,15 @@ class for the header (“fancyheader”) and then refer to it in a separate file
 	</html>
   ```
 
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/styles2.html"></iframe>
+
 10. Most modern browsers give a way of inspecting the HTML that defines each
 webpage. For example, in Chrome, you can enter the “Developer Tools” using Cmd +
 Shift + J. The “Elements” tab shows the overall structure of the webpage.
 
-11. For doing short visualization exercises, I always start with the template below.
+11. For most of the visualization examples used in this course, I always start
+with the template below.
+
   ```
 	<!DOCTYPE html>
 	<html>
@@ -169,13 +196,13 @@ Shift + J. The “Elements” tab shows the overall structure of the webpage.
 	  <body>
 	    <svg height=500 width=900></svg>
 	  </body>
-	  <script src="example.js"></script>
+	  <script src="template.js"></script>
 	</html>
   ```
-	and I use this so often that I have created a “snippet” to create it from just a few keystrokes.
 
 12. A final conceptual point: These pages can be thought of as a tree, because
 all tags are nested within a parent. For example, the template above has the
 following tree structure.
 
-	Since HTML follows something called the Document Object Model (DOM), this tree is sometimes referred to as the “DOM tree.”
+    Since HTML follows something called the Document Object Model (DOM), this
+    tree is sometimes referred to as the “DOM tree.”
