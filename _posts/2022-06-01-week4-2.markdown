@@ -8,7 +8,7 @@ output:
 
 _Data structures and control flow_
 
-[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week4/week4-2), [Recording]()
+[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week4/week4-2), [Recording](https://mediaspace.wisc.edu/media/Week+4+-+2A+Manipulating+Javascript+Objects/1_9zs1tsyy)
 
 1. Javascript is a programming language that can be run within HTML pages. D3 is
 a library within this language which will allow us to programmatically
