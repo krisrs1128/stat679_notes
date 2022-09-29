@@ -210,5 +210,7 @@ template below.
 all tags are nested within a parent. For example, the template above has the
 following tree structure.
 
+<img src="tree.png"/>
+
     Since HTML follows something called the Document Object Model (DOM), this
     tree is sometimes referred to as the “DOM tree.”
