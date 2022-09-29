@@ -8,7 +8,7 @@ output:
 
 _A tour of the parts of an HTML page_
 
-1. Behind the scenes, interactive visualizations in d3 are just webpages. For
+1. Behind the scenes, interactive visualizations in D3 are just webpages. For
 this reason, it will be important to learn at least the basics of HTML web
 programming. These notes give a brief overview.
 
@@ -32,7 +32,7 @@ programming. These notes give a brief overview.
 	which  loads the necessary resources and a `<body></body>` section that
 	contains the main content of the webpage.
 
-1. For example, we can load the d3 library by adding a `script` tag in the page `head`,
+1. For example, we can load the D3 library by adding a `script` tag in the page `head`,
 
     ```
     <!DOCTYPE html>
@@ -65,7 +65,7 @@ header with some text under it, we can use the header and paragraph tags
 
 <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/example_headings.html" data-external="1" height=120 width=600></iframe>
 
-5. We can create groups of related tags using the `<g/>` tag. This gives every
+5. We can create groups of related tags using the `<g>` tag. This gives every
 DOM page a tree structure,
 
   ```
@@ -87,9 +87,12 @@ DOM page a tree structure,
   </html>
   ```
 
-  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/groups.html" height=160 data-external="1"></iframe>
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/groups.html" height=220 data-external="1"></iframe>
 
-7. Most of the d3 visualizations we create in this course will be made using Scalable Vector Graphics (SVG). This is a way for drawing different shapes in the browser by declaring specific tags. For example, we can draw a rectangle, a circle, and a line,
+7. Most of the D3 visualizations we create in this course will be made using
+Scalable Vector Graphics (SVG). This is a way for drawing different shapes in
+the browser by declaring specific tags. For example, we can draw a rectangle, a
+circle, and a line,
 
   ```
   <!DOCTYPE html>
@@ -105,7 +108,7 @@ DOM page a tree structure,
     </body>
   </html>
   ```
-  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/svg.html"></iframe>
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/svg.html" height=500></iframe>
   Notice that we had to enclose all the SVG objects within the `svg` tags.
   Otherwise, it wouldn’t know how to render these shapes. The attributes
   appearing within the tags give details about how to draw the associated SVG
@@ -124,7 +127,7 @@ the webpage.
 we want to modify its style. This can be done by using a stylesheet. For
 example, if we want to change the color and font for the header, we can create a
 class for the header (“fancyheader”) and then refer to it in a separate file
-(style.css) which looks like this,
+(`style.css`) which looks like this,
 
     ```
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -150,9 +153,12 @@ class for the header (“fancyheader”) and then refer to it in a separate file
 
   <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/styles.html"></iframe>
 
-9. The same type of manipulation can be done for IDs, though an ID should only be applied to one tag on the page. The only difference in the code is how the reference is made within the css file,
+9. The same type of manipulation can be done for IDs, though an ID should only
+be applied to one tag on the page. The only difference in the code is how the
+reference is made within the css file,
 
-    CSS file (notice the `#` in this version of the css)
+    `.css` file (notice the `#` in this version, which refers to tags instead of
+    classes)
     ```
 	@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -162,7 +168,7 @@ class for the header (“fancyheader”) and then refer to it in a separate file
     }
     ```
 
-    HTML file
+    `.html` file
   ```
 	<!DOCTYPE html>
 	<html>
@@ -182,8 +188,8 @@ class for the header (“fancyheader”) and then refer to it in a separate file
 webpage. For example, in Chrome, you can enter the “Developer Tools” using Cmd +
 Shift + J. The “Elements” tab shows the overall structure of the webpage.
 
-11. For most of the visualization examples used in this course, I always start
-with the template below.
+11. For most of the visualization examples used in this course, I start with the
+template below.
 
   ```
 	<!DOCTYPE html>
@@ -196,7 +202,7 @@ with the template below.
 	  <body>
 	    <svg height=500 width=900></svg>
 	  </body>
-	  <script src="template.js"></script>
+	  <script src="example.js"></script>
 	</html>
   ```
 

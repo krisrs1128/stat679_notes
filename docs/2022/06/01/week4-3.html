@@ -37,9 +37,18 @@
 
 <ol>
   <li>
-    <p>In D3, interactive visualizations work by rearranging the appearance and layout of a web elements (usually SVG objects) in response to user queries. For example, when a hovers over a circle element in a scatterplot, we might want to change its color and update a text description accompanying it. D3 accomplishes these sorts of modifications through a simple but powerful mechanism — the selection.</p>
+    <p>In D3, interactive visualizations work by rearranging the appearance and
+layout of a web elements (usually SVG objects) in response to user queries. For
+example, when a hovers over a circle element in a scatterplot, we might want to
+change its color and update a text description accompanying it. D3 accomplishes
+these sorts of modifications through a simple but powerful mechanism — the
+selection.</p>
   </li>
-  <li>The two key functions for managing selections are <code class="language-plaintext highlighter-rouge">d3.select()</code> and <code class="language-plaintext highlighter-rouge">d3.selectAll()</code>. Both functions take as arguments strings that referring to parts of the webpage and return either the first matching tag (<code class="language-plaintext highlighter-rouge">d3.select()</code>) or all matching tags (<code class="language-plaintext highlighter-rouge">d3.selectAll()</code>). There are three ways to refer to parts of the webpage.
+  <li>The two key functions for managing selections are <code class="language-plaintext highlighter-rouge">d3.select()</code> and
+<code class="language-plaintext highlighter-rouge">d3.selectAll()</code>. Both functions take as arguments strings that referring to
+parts of the webpage and return either the first matching tag (<code class="language-plaintext highlighter-rouge">d3.select()</code>) or
+all matching tags (<code class="language-plaintext highlighter-rouge">d3.selectAll()</code>). There are three ways to refer to parts of
+the webpage.
     <ul>
       <li>Element IDs: Use the <code class="language-plaintext highlighter-rouge">#</code> symbol followed by the ID of interest to select the item with that ID. For example, <code class="language-plaintext highlighter-rouge">d3.select("#test")</code> will return a selection for a tag with the an <code class="language-plaintext highlighter-rouge">id='test'</code> attribute.</li>
       <li>Element classes: Use a <code class="language-plaintext highlighter-rouge">.</code> symbol followed by the class of interest to select all items with that class. For example, <code class="language-plaintext highlighter-rouge">d3.select(".highlighted")</code> will select all elements with class set to <code class="language-plaintext highlighter-rouge">highlight</code>.</li>
@@ -47,7 +56,10 @@
     </ul>
   </li>
   <li>
-    <p>We can build nested queries by (1) combining the above strategies, (2) restricting to elements with specific IDs, and (3) chaining several selections in sequence. For example, here are three ways to select the set of highlighted circles on a webpage. Here are examples of each of the three strategies,</p>
+    <p>We can build nested queries by (1) combining the above strategies, (2)
+restricting to elements with specific IDs, and (3) chaining several selections
+in sequence. For example, here are three ways to select the set of highlighted
+circles on a webpage. Here are examples of each of the three strategies,</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> // strategy (1) to get all circles with class = "higlight."
  d3.selectAll("circle .higlighted")
@@ -60,12 +72,17 @@
    .selectAll("text")
 </code></pre></div>    </div>
   </li>
-  <li>Note that a selection can be stored in a variable. For example, an equivalent way of selecting the third example is to write,
+  <li>Note that a selection can be stored in a variable. For example, an equivalent
+way of selecting in the third example is to write,
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let button = d3.select("#button1")
 button.selectAll("text")
 </code></pre></div>    </div>
   </li>
-  <li>Once we have an object in our selection, we can modify its attributes. This is done using the <code class="language-plaintext highlighter-rouge">attr()</code> or <code class="language-plaintext highlighter-rouge">attrs()</code> functions, for one or multiple attributes, respectively. For example, suppose we want to change the color for the <code class="language-plaintext highlighter-rouge">#changeme</code> circle and the width for the path elements (make  them narrow or wide, depending on the class label) on the DOM below.
+  <li>Once we have an object in our selection, we can modify its attributes. This
+is done using the <code class="language-plaintext highlighter-rouge">attr()</code> or <code class="language-plaintext highlighter-rouge">attrs()</code> functions, for one or multiple
+attributes, respectively. For example, suppose we want to change the color for
+the <code class="language-plaintext highlighter-rouge">#changeme</code> circle and the width for the path elements (make  them narrow or
+wide, depending on the class label) on the DOM below.
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;!DOCTYPE html&gt;
  &lt;html&gt;
    &lt;head&gt;
@@ -88,7 +105,8 @@ button.selectAll("text")
  &lt;/html&gt;
 </code></pre></div>    </div>
   </li>
-  <li>We can accomplish this using the javascript code below, which we called in <code class="language-plaintext highlighter-rouge">modifySelection.js</code> at the bottom of the previous page.
+  <li>We can accomplish this using the D3 code below, which we called in
+<code class="language-plaintext highlighter-rouge">modifySelection.js</code> at the bottom of the previous page.
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> d3.select("#changeme")
    .attr("fill", "#e34234");
 
@@ -104,7 +122,10 @@ button.selectAll("text")
 <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-3/modifySelection.html" width="500" height="400"></iframe>
 
 <ol>
-  <li>If you ran the previous example in the browser, the circle already seemed to be red when you opened the browser. This is because the code executed so quickly, you didn’t notice the change. We can slow down the change using a <code class="language-plaintext highlighter-rouge">transition()</code> (covered more next week).
+  <li>If you ran the previous example in the browser, the circle already seemed to
+be red when you opened the browser. This is because the code executed so
+quickly, you didn’t notice the change. We can slow down the change using a
+<code class="language-plaintext highlighter-rouge">transition()</code> (covered more next week).
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> let transition_length = 2000;
 
  d3.select("#changeme")
@@ -125,8 +146,10 @@ button.selectAll("text")
 
     <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-3/modifySelection-transition.html" width="500" height="400"></iframe>
   </li>
-  <li>A special type of modification can be done for text elements. Instead of changing the attributes of the element, we can change the text that appears between the open and closing tags using the <code class="language-plaintext highlighter-rouge">.text()</code> function.
- The source html page,</li>
+  <li>A special type of modification can be done for text elements. Instead of
+changing the attributes of the element, we can change the text that appears
+between the open and closing tags using the <code class="language-plaintext highlighter-rouge">.text()</code> function. The source html
+page,</li>
 </ol>
 
 <p><code class="language-plaintext highlighter-rouge">textChange.html</code>:</p>
@@ -165,7 +188,8 @@ h1 {
 <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-3/textChange.html" width="500" height="400"></iframe>
 
 <ol>
-  <li>We can remove all elements in a selection using <code class="language-plaintext highlighter-rouge">.exit()</code>. For example, this removes the circle in our first example.
+  <li>We can remove all elements in a selection using <code class="language-plaintext highlighter-rouge">.exit()</code>. For example, this
+removes the circle in our first example.
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#changeme").exit()
 </code></pre></div>    </div>
   </li>
@@ -191,7 +215,10 @@ stroke specified by its class (<code class="language-plaintext highlighter-rouge
 <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-3/modifySelection-append.html" width="500" height="500"></iframe>
 
 <ol>
-  <li>A common trick is to have fade an element in by appending it invisible and then transitioning to visible. The first <code class="language-plaintext highlighter-rouge">.attrs()</code> call below creates an invisible (width = 0) path at the correct location, the second call increases the wide and sets the class (to make the line purple).
+  <li>A common trick is to fade an element in by appending it invisibly and then
+transitioning to visible. The first <code class="language-plaintext highlighter-rouge">.attrs()</code> call below creates an invisible
+(<code class="language-plaintext highlighter-rouge">width = 0</code>) path at the correct location, the second call increases the wide
+and sets the class (to make the line purple).
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("g")
   .append("path")
   .attrs({

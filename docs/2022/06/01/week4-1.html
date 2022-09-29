@@ -37,7 +37,7 @@
 
 <ol>
   <li>
-    <p>Behind the scenes, interactive visualizations in d3 are just webpages. For
+    <p>Behind the scenes, interactive visualizations in D3 are just webpages. For
 this reason, it will be important to learn at least the basics of HTML web
 programming. These notes give a brief overview.</p>
   </li>
@@ -62,7 +62,7 @@ programming. These notes give a brief overview.</p>
  contains the main content of the webpage.</p>
   </li>
   <li>
-    <p>For example, we can load the d3 library by adding a <code class="language-plaintext highlighter-rouge">script</code> tag in the page <code class="language-plaintext highlighter-rouge">head</code>,</p>
+    <p>For example, we can load the D3 library by adding a <code class="language-plaintext highlighter-rouge">script</code> tag in the page <code class="language-plaintext highlighter-rouge">head</code>,</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;!DOCTYPE html&gt;
  &lt;html&gt;
@@ -97,7 +97,7 @@ header with some text under it, we can use the header and paragraph tags</p>
 <iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/example_headings.html" data-external="1" height="120" width="600"></iframe>
 
 <ol>
-  <li>We can create groups of related tags using the <code class="language-plaintext highlighter-rouge">&lt;g/&gt;</code> tag. This gives every
+  <li>We can create groups of related tags using the <code class="language-plaintext highlighter-rouge">&lt;g&gt;</code> tag. This gives every
 DOM page a tree structure,</li>
 </ol>
 
@@ -119,10 +119,13 @@ DOM page a tree structure,</li>
   &lt;/html&gt;
 </code></pre></div></div>
 
-<iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/groups.html" height="160" data-external="1"></iframe>
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/groups.html" height="220" data-external="1"></iframe>
 
 <ol>
-  <li>Most of the d3 visualizations we create in this course will be made using Scalable Vector Graphics (SVG). This is a way for drawing different shapes in the browser by declaring specific tags. For example, we can draw a rectangle, a circle, and a line,</li>
+  <li>Most of the D3 visualizations we create in this course will be made using
+Scalable Vector Graphics (SVG). This is a way for drawing different shapes in
+the browser by declaring specific tags. For example, we can draw a rectangle, a
+circle, and a line,</li>
 </ol>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;!DOCTYPE html&gt;
@@ -138,7 +141,7 @@ DOM page a tree structure,</li>
     &lt;/body&gt;
   &lt;/html&gt;
 </code></pre></div></div>
-<iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/svg.html"></iframe>
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week4/week4-1/svg.html" height="500"></iframe>
 <p>Notice that we had to enclose all the SVG objects within the <code class="language-plaintext highlighter-rouge">svg</code> tags.
   Otherwise, it wouldn’t know how to render these shapes. The attributes
   appearing within the tags give details about how to draw the associated SVG
@@ -160,7 +163,7 @@ the webpage.</p>
 we want to modify its style. This can be done by using a stylesheet. For
 example, if we want to change the color and font for the header, we can create a
 class for the header (“fancyheader”) and then refer to it in a separate file
-(style.css) which looks like this,</p>
+(<code class="language-plaintext highlighter-rouge">style.css</code>) which looks like this,</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap');
 
@@ -188,9 +191,12 @@ class for the header (“fancyheader”) and then refer to it in a separate file
 
 <ol>
   <li>
-    <p>The same type of manipulation can be done for IDs, though an ID should only be applied to one tag on the page. The only difference in the code is how the reference is made within the css file,</p>
+    <p>The same type of manipulation can be done for IDs, though an ID should only
+be applied to one tag on the page. The only difference in the code is how the
+reference is made within the css file,</p>
 
-    <p>CSS file (notice the <code class="language-plaintext highlighter-rouge">#</code> in this version of the css)</p>
+    <p><code class="language-plaintext highlighter-rouge">.css</code> file (notice the <code class="language-plaintext highlighter-rouge">#</code> in this version, which refers to tags instead of
+ classes)</p>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap');
 
  #fancyheader {
@@ -199,7 +205,7 @@ class for the header (“fancyheader”) and then refer to it in a separate file
  }
 </code></pre></div>    </div>
 
-    <p>HTML file</p>
+    <p><code class="language-plaintext highlighter-rouge">.html</code> file</p>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &lt;!DOCTYPE html&gt;
  &lt;html&gt;
    &lt;head&gt;
@@ -223,8 +229,8 @@ webpage. For example, in Chrome, you can enter the “Developer Tools” using C
 Shift + J. The “Elements” tab shows the overall structure of the webpage.</p>
   </li>
   <li>
-    <p>For most of the visualization examples used in this course, I always start
-with the template below.</p>
+    <p>For most of the visualization examples used in this course, I start with the
+template below.</p>
   </li>
 </ol>
 
@@ -238,7 +244,7 @@ with the template below.</p>
 	  &lt;body&gt;
 	    &lt;svg height=500 width=900&gt;&lt;/svg&gt;
 	  &lt;/body&gt;
-	  &lt;script src="template.js"&gt;&lt;/script&gt;
+	  &lt;script src="example.js"&gt;&lt;/script&gt;
 	&lt;/html&gt;
 </code></pre></div></div>
 
