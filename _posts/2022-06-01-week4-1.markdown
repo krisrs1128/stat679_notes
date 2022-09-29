@@ -8,6 +8,8 @@ output:
 
 _A tour of the parts of an HTML page_
 
+[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week4/week4-1), [Recording](https://mediaspace.wisc.edu/media/Week+4+-+1A+HTML+Webpage+Structure/1_8dixel51)
+
 1. Behind the scenes, interactive visualizations in D3 are just webpages. For
 this reason, it will be important to learn at least the basics of HTML web
 programming. These notes give a brief overview.
@@ -102,8 +104,8 @@ circle, and a line,
     <body>
   	<svg width=500 height=500>
   	<rect width=100 height=100 fill="red"/>
-  	<circle cx=250 cy=300 r=10/>
-  	<path d = "M 20 20 L 5 5 L 10 10"/>
+    <circle cx=250 cy=300 r=10 />
+  	<path d = "M 150 150 L 180 180 L 210 150" stroke="blue" fill="none"/>
   	</svg>
     </body>
   </html>
@@ -210,7 +212,7 @@ template below.
 all tags are nested within a parent. For example, the template above has the
 following tree structure.
 
-<img src="tree.png"/>
+<img src="https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week4/week4-1/tree.png"/>
 
-    Since HTML follows something called the Document Object Model (DOM), this
+  Since HTML follows something called the Document Object Model (DOM), this
     tree is sometimes referred to as the “DOM tree.”

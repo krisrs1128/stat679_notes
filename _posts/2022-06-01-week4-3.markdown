@@ -6,7 +6,9 @@ output:
     preserve_yaml: true
 ---
 
-*Techniques for referring to DOM elements.*
+_Techniques for referring to DOM elements_
+
+[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week4/week4-3), [Recording]()
 
 1. In D3, interactive visualizations work by rearranging the appearance and
 layout of a web elements (usually SVG objects) in response to user queries. For

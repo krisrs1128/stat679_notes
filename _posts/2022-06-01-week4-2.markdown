@@ -6,13 +6,15 @@ output:
     preserve_yaml: true
 ---
 
-*Data structures and control flow*
+_Data structures and control flow_
+
+[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week4/week4-2), [Recording]()
 
 1. Javascript is a programming language that can be run within HTML pages. D3 is
 a library within this language which will allow us to programmatically
 manipulating the tags appearing on any page (both adding / removing them and
 changing their attributes). This is the topic of the next set of notes — for
-now, let’s study the basic data structure and control flow patterns in this
+now, let’s study the basic data structures and control flow patterns in this
 language.
 
 2. We can store numbers and strings in either arrays or objects. We use `let` to
@@ -73,10 +75,9 @@ example, here is how to write for and if statements.
         for (let i = 0; i < mountains.length; i++) {
           let cur_height = mountains[i]["height"]
           if (cur_height > 20000) {
-              console.log(cur_height + " feet is high")
-            } else {
-              console.log(cur_height + " feet is not high")
-            }
+            console.log(cur_height + " feet is high")
+          } else {
+            console.log(cur_height + " feet is not high")
           }
         }
 
