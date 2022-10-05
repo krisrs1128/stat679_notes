@@ -33,15 +33,16 @@
       </div>
     </header>
     <div class="post__content content">
-      <p><strong>Neverending enters, updates, and exits…</strong></p>
+      <p><em>Creating animations and using ID functions</em></p>
 
 <ol>
-  <li>
-    <p>In these notes, we consider a slightly more advanced example of d3’s general
-update pattern. We’ll first look at how this pattern is used in this animation,</p>
+  <li>In these notes, we consider a slightly more advanced example of d3’s general
+update pattern. We’ll first look at how this pattern is used in this animation,</li>
+</ol>
 
-    <p>(iframe to the final version)</p>
-  </li>
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-2/rain.html" height="200" width="800"></iframe>
+
+<ol>
   <li>
     <p>Consider the animation above. Since circles are continually being added,
 modified, and removed, we know we will want to use the general update pattern.</p>
@@ -54,23 +55,23 @@ encoding its radius will be changed from step to the next.</p>
   <li>Let’s consider the logic for creating and updating this data array, before we
 consider how exactly we would visualize it. The code block below creates a
 single javascript object parametrizing one circle.
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> function new_point(width, height, max_radius) {
-   let generator = d3.randomUniform();
-   return {
-  		x: width * generator(),
-  		y: height * generator(),
-  		r: 2,
-  		max_radius: max_radius * generator(),
-  		rate: 1 + 0.1 * generator()
-   }
- }
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// example use new_point(200, 200, 50)
+function new_point(width, height, max_radius) {
+ let generator = d3.randomUniform();
+ return {
+   x: width * generator(),
+   y: height * generator(),
+   r: 2,
+   max_radius: max_radius * generator(),
+   rate: 1 + 0.1 * generator()
+  }
+  }
 </code></pre></div>    </div>
-
     <p>The <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> positions are uniformly chosen across the window. All circles
- start with a radius of two pixels, but some are allowed to grow larger than
- others (<code class="language-plaintext highlighter-rouge">max_radius</code>). Finally, the rate at which their size increases is
- itself random, given by <code class="language-plaintext highlighter-rouge">rate</code>, a number distributed uniformly from 1 (no
- increase across frames) to 1.1 (10% increase with each frame).</p>
+  start with a radius of two pixels, but some are allowed to grow larger than
+  others (<code class="language-plaintext highlighter-rouge">max_radius</code>). Finally, the rate at which their size increases is
+  itself random, given by <code class="language-plaintext highlighter-rouge">rate</code>, a number distributed uniformly from 1 (no
+  increase across frames) to 1.1 (10% increase with each frame).</p>
   </li>
   <li>We store the data as an array of these objects. With each frame, we add a
 single new circle to the array using the function above. Any circles that are
@@ -103,19 +104,21 @@ way. Let’s create a selection and bind the <code class="language-plaintext hig
 </code></pre></div>    </div>
   </li>
   <li>If there is a new element in the array relative to the previous frame, we
-need to append a new circle that represents it,
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> circ.enter()
-   .append("circle")
-   .attrs({ cx: d =&gt; d.x,  cy: d.y})
-</code></pre></div>    </div>
-    <p>and since the radius for all elements in the array will have been changed,
- since the previous frame, we need to update the radius property across the
- entire selection,</p>
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> circ.attr("r", d =&gt; d.r)
-</code></pre></div>    </div>
-    <p>Finally, since some circles will have been filtered out (their radius got too
- large), we need to exit their corresponding tags.</p>
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> circ.exit().remove();
+need to append a new circle that represents it, and since the radius for all
+elements in the array will have been changed, since the previous frame, we need
+to update the radius property across the entire selection. Finally, since some
+circles will have been filtered out (their radius got too large), we need to
+exit their corresponding tags. All of this logic is captured by the <code class="language-plaintext highlighter-rouge">.join()</code>
+call below,
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let circ = d3.select("svg")
+  .selectAll("circle")
+  .data(rain)
+  .join(
+     enter =&gt; enter.append("circle")
+                   .attrs({ cx: d =&gt; d.x, cy: d =&gt; d.y }),
+     update =&gt; update.attr("r", d =&gt; d.r),
+     exit =&gt; exit.remove()
+  )
 </code></pre></div>    </div>
   </li>
   <li>We can capture the entire general update pattern within a function. Using the
@@ -124,14 +127,14 @@ of the <code class="language-plaintext highlighter-rouge">rain</code> array.
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> function update_vis() {
    rain = update_data(rain);
    let circ = d3.select("svg")
-  		.selectAll("circle")
-  		.data(rain)
-
-   circ.enter()
-  		.append("circle")
-  		.attrs({ cx: d =&gt; d.x,  cy: d.y})
-   circ.attr("r", d =&gt; d.r)
-   circ.exit().remove();
+     .selectAll("circle")
+     .data(rain)
+     .join(
+       enter =&gt; enter.append("circle")
+         .attrs({ cx: d =&gt; d.x, cy: d =&gt; d.y }),
+       update =&gt; update.attr("r", d =&gt; d.r),
+       exit =&gt; exit.remove()
+     )
  }
 
  d3.interval(update_vis, 100);
@@ -143,26 +146,34 @@ issue is that sometimes a circle in the middle of the array will have its radius
 grow too large, and it will be filtered away. But our data bind only knows that
 the array has gotten shorter, so it just exits the very last circle tag, even if
 that wasn’t the one that should be removed. This issue is illustrated in the
-sketch below.</p>
+sketch below,</p>
+
+    <p>This bug leads to the choppy appearance in this version of the animation.</p>
   </li>
+</ol>
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-2/rain-v0.html" height="200" width="800"></iframe>
+
+<ol>
   <li>
     <p>To fix this, we can use a data bind with an ID function. if we give an ID to
 every circle that is ever appended (this is called below, we can tell d3 to
 remove elements from the DOM matching those IDs which have disappeared from the
 array.</p>
   </li>
-  <li>In our case, we create a <code class="language-plaintext highlighter-rouge">id</code> attribute for each circle (we guarantee its
-uniqueness with an <code class="language-plaintext highlighter-rouge">id</code> global variable).
+  <li>
+    <p>In our case, we create a <code class="language-plaintext highlighter-rouge">id</code> attribute for each circle (we guarantee its
+uniqueness with an <code class="language-plaintext highlighter-rouge">id</code> global variable).</p>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function new_point(width, height, max_radius) {
   let generator = d3.randomUniform();
   id += 1;
   return {
-  		x: width * generator(),
-  		y: height * generator(),
-  		r: 2,
-  		max_radius: max_radius * generator(),
-  		rate: 1 + 0.1 * generator(),
-  		id: id
+    id: id // this is the line that we added
+    x: width * generator(),
+    y: height * generator(),
+    r: 2,
+    max_radius: max_radius * generator(),
+    rate: 1 + 0.1 * generator(),
   }
 }
 </code></pre></div>    </div>

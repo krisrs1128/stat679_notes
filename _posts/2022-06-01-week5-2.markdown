@@ -6,12 +6,12 @@ output:
     preserve_yaml: true
 ---
 
-__Neverending enters, updates, and exits...__
+_Creating animations and using ID functions_
 
 1. In these notes, we consider a slightly more advanced example of d3’s general
 update pattern. We’ll first look at how this pattern is used in this animation,
 
-	(iframe to the final version)
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-2/rain.html" height=200 width=800></iframe>
 
 2. Consider the animation above. Since circles are continually being added,
 modified, and removed, we know we will want to use the general update pattern.
@@ -24,23 +24,23 @@ encoding its radius will be changed from step to the next.
 consider how exactly we would visualize it. The code block below creates a
 single javascript object parametrizing one circle.
   ```
-	function new_point(width, height, max_radius) {
-	  let generator = d3.randomUniform();
-	  return {
-  		x: width * generator(),
-  		y: height * generator(),
-  		r: 2,
-  		max_radius: max_radius * generator(),
-  		rate: 1 + 0.1 * generator()
-	  }
-	}
+// example use new_point(200, 200, 50)
+function new_point(width, height, max_radius) {
+    let generator = d3.randomUniform();
+    return {
+      x: width * generator(),
+      y: height * generator(),
+      r: 2,
+      max_radius: max_radius * generator(),
+      rate: 1 + 0.1 * generator()
+     }
+  }
   ```
-
-	The `x` and `y` positions are uniformly chosen across the window. All circles
-	start with a radius of two pixels, but some are allowed to grow larger than
-	others (`max_radius`). Finally, the rate at which their size increases is
-	itself random, given by `rate`, a number distributed uniformly from 1 (no
-	increase across frames) to 1.1 (10% increase with each frame).
+  The `x` and `y` positions are uniformly chosen across the window. All circles
+  start with a radius of two pixels, but some are allowed to grow larger than
+  others (`max_radius`). Finally, the rate at which their size increases is
+  itself random, given by `rate`, a number distributed uniformly from 1 (no
+  increase across frames) to 1.1 (10% increase with each frame).
 
 5. We store the data as an array of these objects. With each frame, we add a
 single new circle to the array using the function above. Any circles that are
@@ -76,50 +76,54 @@ way. Let’s create a selection and bind the `rain` array to it,
   ```
 
 8. If there is a new element in the array relative to the previous frame, we
-need to append a new circle that represents it,
+need to append a new circle that represents it, and since the radius for all
+elements in the array will have been changed, since the previous frame, we need
+to update the radius property across the entire selection. Finally, since some
+circles will have been filtered out (their radius got too large), we need to
+exit their corresponding tags. All of this logic is captured by the `.join()`
+call below,
   ```
-	circ.enter()
-	  .append("circle")
-	  .attrs({ cx: d => d.x,  cy: d.y})
-  ```
-	and since the radius for all elements in the array will have been changed,
-	since the previous frame, we need to update the radius property across the
-	entire selection,
-  ```
-	circ.attr("r", d => d.r)
-  ```
-	Finally, since some circles will have been filtered out (their radius got too
-	large), we need to exit their corresponding tags.
-  ```
-	circ.exit().remove();
+let circ = d3.select("svg")
+  .selectAll("circle")
+  .data(rain)
+  .join(
+        enter => enter.append("circle")
+                      .attrs({ cx: d => d.x, cy: d => d.y }),
+        update => update.attr("r", d => d.r),
+        exit => exit.remove()
+     )
   ```
 
 9. We can capture the entire general update pattern within a function. Using the
 `d3.timer()` function to call it every 100 milliseconds, we get an animated view
 of the `rain` array.
-  ```
-	function update_vis() {
-	  rain = update_data(rain);
-	  let circ = d3.select("svg")
-  		.selectAll("circle")
-  		.data(rain)
+    ```
+    function update_vis() {
+      rain = update_data(rain);
+      let circ = d3.select("svg")
+        .selectAll("circle")
+        .data(rain)
+        .join(
+          enter => enter.append("circle")
+            .attrs({ cx: d => d.x, cy: d => d.y }),
+          update => update.attr("r", d => d.r),
+          exit => exit.remove()
+        )
+    }
 
-	  circ.enter()
-  		.append("circle")
-  		.attrs({ cx: d => d.x,  cy: d.y})
-	  circ.attr("r", d => d.r)
-	  circ.exit().remove();
-	}
-
-	d3.interval(update_vis, 100);
-  ```
+    d3.interval(update_vis, 100);
+    ```
 
 10. There is a subtle bug in this implementation. Can you see what it is? The
 issue is that sometimes a circle in the middle of the array will have its radius
 grow too large, and it will be filtered away. But our data bind only knows that
 the array has gotten shorter, so it just exits the very last circle tag, even if
 that wasn’t the one that should be removed. This issue is illustrated in the
-sketch below.
+sketch below,
+
+    This bug leads to the choppy appearance in this version of the animation.
+
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-2/rain-v0.html" height=200 width=800></iframe>
 
 11. To fix this, we can use a data bind with an ID function. if we give an ID to
 every circle that is ever appended (this is called below, we can tell d3 to
@@ -133,13 +137,13 @@ uniqueness with an `id` global variable).
 	  let generator = d3.randomUniform();
 	  id += 1;
 	  return {
-  		x: width * generator(),
-  		y: height * generator(),
-  		r: 2,
-  		max_radius: max_radius * generator(),
-  		rate: 1 + 0.1 * generator(),
-  		id: id
-	  }
+        id: id // this is the line that we added
+        x: width * generator(),
+        y: height * generator(),
+        r: 2,
+        max_radius: max_radius * generator(),
+        rate: 1 + 0.1 * generator(),
+      }
 	}
  ```     
 

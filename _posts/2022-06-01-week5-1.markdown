@@ -39,18 +39,20 @@ parent SVG. The circles’ x-coordinates are determined by the number in the
 array. So far, there are no enters / exits / updates to consider.
 
   ```
-	let circles = d3.range(10);
+  let circles = d3.range(10);
 
-	d3.select("svg")
-	  .selectAll("circle")
-	  .data(circles).enter()
-	  .append("circle")
-	  .attrs({
-  		r: 10,
-  		cx: d => (d + 1) * 50,
-  		cy: 100,
-	  })
+  d3.select("svg")
+    .selectAll("circle")
+    .data(circles).enter()
+    .append("circle")
+    .attrs({
+      r: 10,
+      cx: d => (d + 1) * 50,
+      cy: 100,
+    })
   ```
+
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-1/circleSequence-1.html" width=800></iframe>
 
 5. Now, suppose we add three additional elements to the circles array.
   ```
@@ -61,17 +63,19 @@ array. So far, there are no enters / exits / updates to consider.
 	different color, so you can see that it’s not just redrawing all the circles.
 
   ```
-	d3.select("svg")
-	  .selectAll("circle")
-	  .data(circles).enter()
-	  .append("circle")
-	  .attrs({
-  		r: 10,
-  		cx: d => (d + 1) * 50,
-  		cy: 100,
-  		fill: "red"
-	  })
+  d3.select("svg")
+    .selectAll("circle")
+    .data(circles).enter()
+    .append("circle")
+    .attrs({
+    	r: 10,
+    	cx: d => (d + 1) * 50,
+    	cy: 100,
+    	fill: "red"
+    })
   ```
+
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-1/circleSequence-2.html" width=800></iframe>
 
 6. Similar logic works for exits. Suppose that instead of adding three elements,
 we had removed three.
@@ -88,6 +92,8 @@ we had removed three.
 	  .attr("fill", "blue")
   ```
 
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-1/circleSequence-3.html" width=800></iframe>
+
 7. Notice that the logic of `enter` and `exit` is tied closely with the indices
 of the arrays given to `.data()`. These functions simply check the lengths of
 arrays across data binds, always associating the first tag on the page with the
@@ -99,22 +105,25 @@ rather than simply their index.
 for smoother fade in / out. For example, if we want to smoothly fade in the
 entered red circles, we first append them with radius 0 and then increase their
 size following a transition.
+
   ```
-	circles = circles.concat([10, 11, 12])
-	d3.select("svg")
-	  .selectAll("circle")
-	  .data(circles).enter()
-	  .append("circle")
-	  .attrs({                  // append circles at
-  		cx: d => (d + 1) * 50,  // right position, but
-  		cy: 100,                // invisibly
-  		r: 0,
-  		fill: "red"
-	  })
-	  .transition()
-	  .duration(2000)
-	  .attr("r", 10)            // grow the circles
+  circles = circles.concat([10, 11, 12])
+  d3.select("svg")
+    .selectAll("circle")
+    .data(circles).enter()
+    .append("circle")
+    .attrs({                  // append circles at
+          cx: d => (d + 1) * 50,  // right position, but
+          cy: 100,                // invisibly
+          r: 0,
+          fill: "red"
+    })
+    .transition()
+    .duration(2000)
+    .attr("r", 10)            // grow the circles
   ```
+
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-1/circleSequence-4.html" width=800></iframe>
 
 9. Alternatively, if we want to gradually shrink the circles before they
 disappear, we can change their radius attribute and then call `.remove()` to
@@ -130,41 +139,36 @@ remove the tags from the DOM.
 	  .remove()
   ```
 
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-1/circleSequence-5.html" width=800></iframe>
+
 10. What if want to change attributes for all tags, and not just those that were
 entered / exited? There are several strategies. The simplest is to reselect all
 matching items. For example, if we want all circles to be red, not just those
 that were entered, we could use
-  ```
-	circles = circles.concat([10, 11, 12])
-	d3.select("svg")
-	  .selectAll("circle")
-	  .data(circles).enter()
-	  .append("circle")
-	  .attrs({
-  		cx: d => (d + 1) * 50,
-  		cy: 100,
-  		r: 10,
-  		fill: "red"
-	  })
 
-	d3.select("svg")
-	  .selectAll("circle")
-	  .attrs({ fill: "red" })
   ```
-	but this is inefficient, because it will change attributes even for the entered elements, which we already know have the correct attributes. An alternative is to store the “update” selection (those that were present in both data binds) in a variable and then handle the enter and update changes separately.
-  ```
-	let circ = d3.select("svg")
-	  .selectAll("circle")
-	  .data(circles)
+  circles = circles.concat([10, 11, 12])
+  d3.select("svg")
+    .selectAll("circle")
+    .data(circles).enter()
+    .append("circle")
+    .attrs({
+      cx: d => (d + 1) * 50,
+      cy: 100,
+      r: 10,
+      fill: "red"
+    })
 
-	circ.enter()
-	  .append("circle")
-	  .attrs({
-  		cx: d => (d + 1) * 50,
-  		cy: 100,
-  		r: 10,
-  		fill: "red"
-	  })
-
-	circ.attrs({ fill: "red" })
+  d3.select("svg")
+    .selectAll("circle")
+    .attrs({ fill: "red" })
   ```
+
+  <iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-1/circleSequence-6.html" width=800></iframe>
+
+but this is inefficient, because it will change attributes even for the
+entered elements, which we already know have the correct attributes.
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-1/circleSequence-7.html" width=800></iframe>
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-1/circleSequence-8.html" width=800></iframe>

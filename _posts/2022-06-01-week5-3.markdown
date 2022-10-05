@@ -6,7 +6,7 @@ output:
     preserve_yaml: true
 ---
 
-__Reading CSV files into javascript objects__
+_Reading CSV files into javascript objects_
 
 
 1. These notes give an introduction to reading data into d3 scripts. The process is a bit different than `read_csv` in R, but the pattern described here can be used in many places.
