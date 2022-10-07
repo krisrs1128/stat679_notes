@@ -141,32 +141,25 @@ of the <code class="language-plaintext highlighter-rouge">rain</code> array.
 </code></pre></div>    </div>
   </li>
   <li>There is a subtle bug in this implementation. Can you see what it is? The
-issue is that sometimes a circle in the middle of the array will have its radius
-grow too large, and it will be filtered away. But our data bind only knows that
-the array has gotten shorter, so it just exits the very last circle tag, even if
-that wasn’t the one that should be removed. This issue is illustrated in the
-sketch below,</li>
+issue is that sometimes circles in the middle of the array will have their radii
+grow too large, and they will be filtered away. But our data bind only knows that
+the array has gotten shorter, so it just exits the last circle tags, even if
+those weren’t the ones that should be removed. This issue is illustrated in the
+sketch below,
+  <img src="https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week5/week5-2/figure/incorrect_bind.svg" width="800" />
+  This bug leads to the choppy appearance in this version of the animation.</li>
 </ol>
-
-<p><img src="https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week5/week5-2/figure/correct_bind.svg" width="800" />&lt;/img&gt;</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>This bug leads to the choppy appearance in this version of the animation.
-</code></pre></div></div>
 
 <iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-2/rain-v0.html" height="200" width="800"></iframe>
 
 <ol>
-  <li>To fix this, we can use a data bind with an ID function. If we give an ID to
-every circle that is ever appended (this is called below, we can tell D3 to
-remove elements from the DOM matching those IDs which have disappeared from the
-array. Conceptually, we can change the earlier sketch to the corrected version below.</li>
-</ol>
-
-<p><img src="https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week5/week5-2/figure/correct_bind.svg" width="800" />&lt;/img&gt;</p>
-
-<ol>
-  <li>In our case, we create a <code class="language-plaintext highlighter-rouge">id</code> attribute for each circle (we guarantee its
-uniqueness with an <code class="language-plaintext highlighter-rouge">id</code> global variable).
+  <li>
+    <p>To fix this, we can use a data bind with an ID function. This associates each appended circle with a specific ID, which D3 can then use to remove the element on the DOM that matches the array element that has actually been removed. Conceptually, we can change the earlier sketch to the corrected version below.
+  <img src="https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week5/week5-2/figure/correct_bind.svg" width="800" /></p>
+  </li>
+  <li>
+    <p>In our case, we create a <code class="language-plaintext highlighter-rouge">id</code> attribute for each circle (we guarantee its
+uniqueness with an <code class="language-plaintext highlighter-rouge">id</code> global variable).</p>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function new_point(width, height, max_radius) {
   let generator = d3.randomUniform();
   id += 1;
