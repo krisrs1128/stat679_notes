@@ -2,7 +2,7 @@
 <html lang="en"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content=""><title>Time Series (1) | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+  <meta name="author" content=""><title>Types of Interactivity in D3 | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/r.min.js"></script>
 <script>hljs.highlightAll();</script>
@@ -27,76 +27,106 @@
   </div>
   <article class="post">
     <header class="post__header">
-      <h1 class="post__title">Time Series (1)</h1>
+      <h1 class="post__title">Types of Interactivity in D3</h1>
       <div class="post__meta">
         <time>2022-06-01 00:00</time>
       </div>
     </header>
     <div class="post__content content">
       <ol>
-  <li>
-    <p>Time often has a special role in many datasets. In the next few notes, we’ll study some of the types of time-related questions that can be answered through visualizations. We’ll also tour both some familiar (as well as some more obscure) visualizations strategies. Throughout, we’ll restrict attention to static views — next week, we’ll consider some interactive approaches to understanding temporal data.</p>
+  <li>Any HTML page can support text, numeric, button, select, and slider inputs,
+just like in Shiny. In fact, behind the scenes, Shiny inputs are simply R
+wrappers of plain HTML input elements. For example, the HTML code below creates
+an example of each of these inputs.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  &lt;input type="text"&gt; Enter Something&lt;/input&gt;
+  &lt;button type="button"&gt;Click Me&lt;/button&gt;
+  &lt;label for="dropdown"&gt;Select an option...&lt;/label&gt;
+  &lt;select name="Select an Option" id="dropdown"&gt;
+ &lt;option value="optA"&gt;Option A&lt;/option&gt;
+ &lt;option value="optB"&gt;Option B&lt;/option&gt;
+ &lt;option value="optC"&gt;Option C&lt;/option&gt;
+  &lt;/select&gt;
+  &lt;input type="range" min="0", max="1" step="0.1"&gt;This is a slider&lt;/input&gt;
+</code></pre></div>    </div>
+    <p>This is what the page looks like,</p>
   </li>
-  <li>When we get into the details, there is no single type of time series visualization — all designs should be tailored to the specifics of both the data and the purpose at hand. For example, the data can vary across these characteristics,
-    <ul>
-      <li>Is there one series of interest? Or are there multiple series moving together?
-        <ul>
-          <li>How is time recorded? Is it qualitative (e.g., early, middle, late) or quantitative (specific hour timestamp)?</li>
-        </ul>
-      </li>
-      <li>What types of variables are measured at each timepoint? E.g., are they categorical, quantitative, geographic?
-        <ul>
-          <li>Are the data measured at regular temporal frequencies, or is it available on an unevenly spaced grid?</li>
-          <li>Are the data expected to include strong cyclic or seasonal patterns?</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li>In addition to variation across datasets, there is variation across tasks. The most basic questions are direct lookups,
-    <ul>
-      <li>Identification: Given a timepoint of interest, what was the value of some variable?</li>
-      <li>Localization: Given the value of some variable, which timepoints achieved it?</li>
-    </ul>
-  </li>
-  <li>
-    <p>Instead of a direct lookup, we may instead be interested in comparison. This can include comparison of multiple variables at a fixed timepoint or comparison of multiple timepoints / ranges for a fixed variable. Further, we might be interested in more than queries for specific values, we might want a “synoptic” view of the time series, looking for higher-level trends or patterns that aren’t visible when restricting attention to any narrow range of timepoints or variable values.</p>
-  </li>
-  <li>
-    <p>In fact, there have been several efforts to systematically taxonomize the types of queries that time series visualizations have been used for. See for example: <a href="https://drive.google.com/file/d/1AIxHHlZqmzP4W8AT25dMmlX8vkJRk0oe/view?usp=sharing">https://drive.google.com/file/d/1AIxHHlZqmzP4W8AT25dMmlX8vkJRk0oe/view?usp=sharing</a></p>
-  </li>
-  <li>
-    <p>It can be useful to have this theory in mind, if only because it helps clarify the wide range of design decisions that are implicitly made anytime we make a time series visualization. An approach that streamlines one type of lookup / comparison might come at the cost of another — it’s helpful to have language to express the trade-offs involved.</p>
-  </li>
-  <li>
-    <p>That said, this will be enough theory for now. Let’s make some plots. First, we begin with the simple line plot. A notable aspect of this approach is that it highlights change. Our eyes immediately pick up the steepness, shallowness, or roughness of different parts of the curve.</p>
-  </li>
-  <li>
-    <p>For example, in the figure below, we’re showing the amount of trade in Canadian Lynx pelts near the beginning of the 20th century. We can immediately recognize the seasonal structure.</p>
-  </li>
-  <li>
-    <p>We were able to make this figure using the <code class="language-plaintext highlighter-rouge">geom_line</code> geometry in ggplot2. The <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> arguments are used to encode time and trade volume, respectively.</p>
-  </li>
-  <li>
-    <p>Alternatively, we can emphasize the fact that these are amounts (they must be nonnegative) by drawing this as an area plot. This uses the <code class="language-plaintext highlighter-rouge">geom_area</code> mark.</p>
-  </li>
-  <li>
-    <p>What if we had a larger collection of time series? For example, the dataset below includes the number of tourists in different states in Australia, measured quarterly by (bureau of tourism?). We are interested in questions like, which destinations are more popular, and when? Have there been periods when one (or several) regions were especially popular / avoided? Is there any strong seasonal structure or are there (upward or downward) trends?</p>
-  </li>
-  <li>To approach these questions, we can try some simple modifications of the lineplot. A first attempt is to include all the lines in one frame, with color used to distinguish each state. The result is almost impossible to read, though.
-    <ul>
-      <li>Aside: If we hadn’t included color in our mapping, the figure would look like this. This happens because each timepoint has multiple y-values. To tell ggplot2 to create separate lines for each state, we have to use the <code class="language-plaintext highlighter-rouge">group</code> argument.</li>
-    </ul>
-  </li>
-  <li>
-    <p>Another variation on the line plot is to use faceting. This works better, but it takes up quite a bit of space. One downside of this approach is that it’s hard to exactly compare the y-values for pairs of series, since they no longer share the same y-axis. Also, as soon as we have to start scrolling up and down to compare different states, the value of the small multiples starts dropping.</p>
-  </li>
-  <li>
-    <p>To address this, we could consider dropping line plots entirely. The approach below uses a heatmap, with each state on its own line. This approach is very compact and relatively accessible, but we no longer see trends so clearly: differences in color are harder to evaluate than differences in y-position.</p>
-  </li>
-  <li>
-    <p>We can accomplish this using the <code class="language-plaintext highlighter-rouge">geom_tile</code> argument. Notice that we gave values for both the fill and color arguments — without color, there would be small gaps along the borders of each tile.</p>
-  </li>
-  <li>These notes have reviewed the more familiar approaches to time series visualization. In the next lecture, we’ll consider some more obscure (but often useful) approaches.</li>
+</ol>
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-1/inputs.html"></iframe>
+<p>The default styling for input elements are not that attractive. Fortunately,
+  many people have come up with CSS rules to create more attractive components.
+  For example, by applying classes defined in Bootstrap (the same library behind
+  <code class="language-plaintext highlighter-rouge">bslib</code>), almost the same HTML code as above yields the page below.</p>
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-1/inputs-bs.html"></iframe>
+
+<ol>
+  <li>An aside about <code class="language-plaintext highlighter-rouge">select</code> inputs: we can define the selection options using a
+data bind. Contrast this implementation
+[<a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week6/week6-1/manual-select.html">1</a>,
+<a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week6/week6-1/manual-select.js">2</a>]
+of the gapminder visualization that manually enters the selection options with
+this alternative
+[<a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week6/week6-1/d3-select.html">3</a>,
+<a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week6/week6-1/d3-select.js">4</a>]
+that uses the function <code class="language-plaintext highlighter-rouge">setup_inputs</code> to create input elements based on an array
+of continent names.</li>
+  <li>In addition to these separate interface elements, we can “listen” for
+specific kinds of user interactions. In web programming, objects that register
+specific types of user interactions are called event listeners. Compared to
+Shiny, D3 has enriched click and brush events. It also has a brand new type of
+listener which registers hover events (i.e., when the mouse moves over a
+specific HTML element). Let’s look at very basic versions of these events on a
+canvas with just a few randomly located circles.</li>
+</ol>
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-1/svg-inputs.html"></iframe>
+
+<ol>
+  <li>Click events are defined using an <code class="language-plaintext highlighter-rouge">.on(“click”, function)</code> added to a D3
+selection. For example, this will print to the console every time the second
+circle is clicked.
+  ```
+  function f2() {
+ console.log(“Clicked!”)
+  }</li>
+</ol>
+
+<p>d3.select(“#circle2”)
+    .on(“click”, f2)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  Note that, if we wanted to print whenever any element from a selection was
+  clicked, we simply add `.on("click", function)` to a selection applying to the
+  full selection. In general, all the `.on(..., function)` event listeners can
+  be made to apply to full D3 selections.
+
+7. If we just want to detect whether the user’s mouse has moved over an element,
+we can use `.on("mousemove", function)`. We can also keep track of the user’s
+mouse position using `d3.pointer(event)`, where `event` refers to an event
+object that we pass into the function within the listener,
+</code></pre></div></div>
+<p>function f4(event) {
+    console.log(d3.pointer(event))
+  }</p>
+
+<p>d3.select(“#circle4”)
+    .on(“mousemove”, e =&gt; f4(e))</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+8. We can even distinguish between when the mouse has just entered or exited an
+SVG element using `on("mouseover", ...)` and `.on(“mouseout”, ...)`.
+9. Brushes are defined using `d3.brush()`. They can be applied to a `&lt;g&gt;`
+element using `.call()` applied to the group (otherwise, they will not appear).
+</code></pre></div></div>
+<p>let brush = d3.brush().on(“brush”, f)
+  d3.select(“.brush”).call(brush) // the <g> element was given class "brush"
+  ```</g></p>
+<ol>
+  <li>The <code class="language-plaintext highlighter-rouge">.on("brush", f)</code> element at the end of the brush definition will make
+sure to call <code class="language-plaintext highlighter-rouge">f</code> every time the brush is moved. Like hover events, we can
+distinguish between when brushes have been just moved or whether the user has
+lifted their mouse up. In Shiny, we were only able to update a brush selection
+after the users’ mouse had moved, so this is going to allow us to create
+smoother visualizations.</li>
+  <li>Finally, we can create <a href="http://bl.ocks.org/ludwigschubert/0236fa8594c4b02711b2606a8f95f605">multiple
+brushes</a>
+simultaneously, which had been impossible in Shiny. This is handy for sketching
+out complex shapes in time series, like in the <a href="https://hci.stanford.edu/courses/cs448b/papers/Hocheiser_TimeSearcher_2002-06.pdf">Time Searcher</a>.</li>
 </ol>
 
     </div>
