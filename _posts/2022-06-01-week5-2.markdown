@@ -8,21 +8,25 @@ output:
 
 _Creating animations and using ID functions_
 
-1. In these notes, we consider a slightly more advanced example of d3’s general
-update pattern. We’ll first look at how this pattern is used in this animation,
+1. In these notes, we consider a more advanced example of D3’s general update
+pattern. We’ll first look at how this pattern is used in the animation below.
+Note that since circles are continually being added, modified, and removed, we
+will have to use enter, update, and exit selections.
 
   <iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-2/rain.html" height=200 width=800></iframe>
 
-2. Consider the animation above. Since circles are continually being added,
-modified, and removed, we know we will want to use the general update pattern.
-
-3. To use this pattern, we need to keep track of a continually evolving data
-array. Each array element will be associated with one circle, and the value
-encoding its radius will be changed from step to the next.
+3. Before we can use the general update pattern, we need to keep track of a
+continually evolving data array. Each array element will be associated with one
+circle, and the value encoding its radius will be changed from step to the next.
+  ```
+  [{x:..., y: ..., r: ..., and other circle characteristics},
+      {x: ...}
+  ]
+  ```
 
 4. Let’s consider the logic for creating and updating this data array, before we
-consider how exactly we would visualize it. The code block below creates a
-single javascript object parametrizing one circle.
+discuss how exactly we would visualize it. The code block below creates a single
+javascript object parametrizing one circle.
   ```
 // example use new_point(200, 200, 50)
 function new_point(width, height, max_radius) {
@@ -34,7 +38,7 @@ function new_point(width, height, max_radius) {
       max_radius: max_radius * generator(),
       rate: 1 + 0.1 * generator()
      }
-  }
+}
   ```
   The `x` and `y` positions are uniformly chosen across the window. All circles
   start with a radius of two pixels, but some are allowed to grow larger than
@@ -50,7 +54,7 @@ the function below.
   ```
 	function update_data(rain) {
 	  rain = rain.concat(new_point(900, 200, 50));
-	  rain = rain.map(d => { d.r *= d.rate;	return d});
+	  rain = rain.map(d => { d.r *= d.rate;  return d});
 	  return rain.filter(d => d.r < d.max_radius);
 	}
   ```
@@ -77,11 +81,12 @@ way. Let’s create a selection and bind the `rain` array to it,
 
 8. If there is a new element in the array relative to the previous frame, we
 need to append a new circle that represents it, and since the radius for all
-elements in the array will have been changed, since the previous frame, we need
-to update the radius property across the entire selection. Finally, since some
-circles will have been filtered out (their radius got too large), we need to
-exit their corresponding tags. All of this logic is captured by the `.join()`
-call below,
+elements in the array will have been changed, we need to update the radius
+property across the entire selection. Finally, since some circles will have been
+filtered out (their radius got too large), we need to exit their corresponding
+tags. This is concisely captured by the `.join()` call below, though we could
+also have used `.enter()`, `.exit()`, and full `d3.selectAll()` selections
+instead.
   ```
 let circ = d3.select("svg")
   .selectAll("circle")
@@ -116,10 +121,10 @@ of the `rain` array.
 
 10. There is a subtle bug in this implementation. Can you see what it is? The
 issue is that sometimes circles in the middle of the array will have their radii
-grow too large, and they will be filtered away. But our data bind only knows that
-the array has gotten shorter, so it just exits the last circle tags, even if
-those weren't the ones that should be removed. This issue is illustrated in the
-sketch below,
+grow too large, and they will be filtered away. However, our data bind only
+knows that the array has gotten shorter, so it exits the last circle tags, even
+if those weren't the ones that should be removed. This issue is illustrated in
+the sketch below,
   <img src="https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week5/week5-2/figure/incorrect_bind.svg" width=800/>
   This bug leads to the choppy appearance in this version of the animation.
 

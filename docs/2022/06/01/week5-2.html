@@ -36,25 +36,26 @@
       <p><em>Creating animations and using ID functions</em></p>
 
 <ol>
-  <li>In these notes, we consider a slightly more advanced example of d3’s general
-update pattern. We’ll first look at how this pattern is used in this animation,</li>
+  <li>In these notes, we consider a more advanced example of D3’s general update
+pattern. We’ll first look at how this pattern is used in the animation below.
+Note that since circles are continually being added, modified, and removed, we
+will have to use enter, update, and exit selections.</li>
 </ol>
 
 <iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-2/rain.html" height="200" width="800"></iframe>
 
 <ol>
-  <li>
-    <p>Consider the animation above. Since circles are continually being added,
-modified, and removed, we know we will want to use the general update pattern.</p>
-  </li>
-  <li>
-    <p>To use this pattern, we need to keep track of a continually evolving data
-array. Each array element will be associated with one circle, and the value
-encoding its radius will be changed from step to the next.</p>
+  <li>Before we can use the general update pattern, we need to keep track of a
+continually evolving data array. Each array element will be associated with one
+circle, and the value encoding its radius will be changed from step to the next.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  [{x:..., y: ..., r: ..., and other circle characteristics},
+   {x: ...}
+  ]
+</code></pre></div>    </div>
   </li>
   <li>Let’s consider the logic for creating and updating this data array, before we
-consider how exactly we would visualize it. The code block below creates a
-single javascript object parametrizing one circle.
+discuss how exactly we would visualize it. The code block below creates a single
+javascript object parametrizing one circle.
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// example use new_point(200, 200, 50)
 function new_point(width, height, max_radius) {
  let generator = d3.randomUniform();
@@ -65,7 +66,7 @@ function new_point(width, height, max_radius) {
    max_radius: max_radius * generator(),
    rate: 1 + 0.1 * generator()
   }
-  }
+}
 </code></pre></div>    </div>
     <p>The <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> positions are uniformly chosen across the window. All circles
   start with a radius of two pixels, but some are allowed to grow larger than
@@ -80,7 +81,7 @@ already on the screen have their radius increased, and if it grows beyond
 the function below.
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> function update_data(rain) {
    rain = rain.concat(new_point(900, 200, 50));
-   rain = rain.map(d =&gt; { d.r *= d.rate;	return d});
+   rain = rain.map(d =&gt; { d.r *= d.rate;  return d});
    return rain.filter(d =&gt; d.r &lt; d.max_radius);
  }
 </code></pre></div>    </div>
@@ -105,11 +106,12 @@ way. Let’s create a selection and bind the <code class="language-plaintext hig
   </li>
   <li>If there is a new element in the array relative to the previous frame, we
 need to append a new circle that represents it, and since the radius for all
-elements in the array will have been changed, since the previous frame, we need
-to update the radius property across the entire selection. Finally, since some
-circles will have been filtered out (their radius got too large), we need to
-exit their corresponding tags. All of this logic is captured by the <code class="language-plaintext highlighter-rouge">.join()</code>
-call below,
+elements in the array will have been changed, we need to update the radius
+property across the entire selection. Finally, since some circles will have been
+filtered out (their radius got too large), we need to exit their corresponding
+tags. This is concisely captured by the <code class="language-plaintext highlighter-rouge">.join()</code> call below, though we could
+also have used <code class="language-plaintext highlighter-rouge">.enter()</code>, <code class="language-plaintext highlighter-rouge">.exit()</code>, and full <code class="language-plaintext highlighter-rouge">d3.selectAll()</code> selections
+instead.
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let circ = d3.select("svg")
   .selectAll("circle")
   .data(rain)
@@ -142,10 +144,10 @@ of the <code class="language-plaintext highlighter-rouge">rain</code> array.
   </li>
   <li>There is a subtle bug in this implementation. Can you see what it is? The
 issue is that sometimes circles in the middle of the array will have their radii
-grow too large, and they will be filtered away. But our data bind only knows that
-the array has gotten shorter, so it just exits the last circle tags, even if
-those weren’t the ones that should be removed. This issue is illustrated in the
-sketch below,
+grow too large, and they will be filtered away. However, our data bind only
+knows that the array has gotten shorter, so it exits the last circle tags, even
+if those weren’t the ones that should be removed. This issue is illustrated in
+the sketch below,
   <img src="https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week5/week5-2/figure/incorrect_bind.svg" width="800" />
   This bug leads to the choppy appearance in this version of the animation.</li>
 </ol>
