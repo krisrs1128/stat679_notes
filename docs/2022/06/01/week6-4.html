@@ -2,7 +2,7 @@
 <html lang="en"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content=""><title>Geospatial (2) | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+  <meta name="author" content=""><title>Brush Interaction in D3 | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/r.min.js"></script>
 <script>hljs.highlightAll();</script>
@@ -27,53 +27,28 @@
   </div>
   <article class="post">
     <header class="post__header">
-      <h1 class="post__title">Geospatial (2)</h1>
+      <h1 class="post__title">Brush Interaction in D3</h1>
       <div class="post__meta">
         <time>2022-06-01 00:00</time>
       </div>
     </header>
     <div class="post__content content">
       <ol>
-  <li>The previous lecture outlined general methods available for visualizing spatial and raster datasets. Those methods are used in almost every spatial data visualization problem. In contrast, these notes are more like a grab bag of tricks — often useful, but don’t expect to use them in every problem.</li>
-</ol>
-
-<h3 id="trick-1-natural-earch">Trick 1: Natural Earch</h3>
-
-<ol>
   <li>
-    <p>What if we have data with geographic information (e.g., state names), but which are not explicitly georeferenced? In this case, we may be able to link the data.frame with a public vector dataset. The Natural Earth project provides a rich catalog of vector data searchable by region, and the <code class="language-plaintext highlighter-rouge">rnaturalearth</code> package provides a direct interface to R.</p>
+    <p>When we are interactively defining a graphical query, it’s often useful to be able to specify a range of values of interest.For example, brushes can be used for dynamically linking two plots, like in these linked scatterplots,</p>
+
+    <p>or this linked time series plot.</p>
+
+    <p>Brushing can also be used to implement the focus + context principle through a zoom widget,</p>
+  </li>
+  <li>We learned how to create a brush in these notes. How can we use the brush to define a query? Unfortunately, unlike in Shiny, there is no function that returns the indices of the samples lying under the brush. Instead, the brush only returns the pixel coordinates of the brush corners.</li>
+  <li>
+    <p>To use these pixel coordinates to define a queries, we have to map our original data values into pixel coordinates. If the mapped values are within the region specified by the brush, we can say that they have been selected. For example, to find the penguins whose beak length and depth lie within the range specified by a brush, we used the following code,</p>
   </li>
   <li>
-    <p>For example, we can find the polygon boundaries for all the counties in Wisconsin using ….</p>
+    <p>We use almost the same trick for the dynamically linked time series. For each time series, we check whether <em>any</em> of the points that define it lies within the bounds created by the brush.</p>
   </li>
-</ol>
-
-<h3 id="trick-2-transforming-crs">Trick 2: Transforming CRS</h3>
-
-<ol>
-  <li>
-    <p>An important subtlety of geographic data visualization is that all our maps are in 2D, but earth is 3D. The process of associating points on the earth with 2D coordinates is called “projection.” All projections introduce some level of distortion, and there is no universal, ideal projection.</p>
-  </li>
-  <li>
-    <p>A common source of bugs is to use two different projections for the same analysis. In this class, we will always use the EPSG:4326 projection, which is what is used in most online maps. But in your own projects, you should always check that the projections are consistent across data sources. If you find an inconsistency, it will be important to “reproject” the data into the same CRS. Both <code class="language-plaintext highlighter-rouge">sf</code> and <code class="language-plaintext highlighter-rouge">terra</code> have utilities for supporting this.</p>
-  </li>
-</ol>
-
-<h3 id="trick-3-bivariate-choropleths">Trick 3: Bivariate Choropleths</h3>
-
-<ol>
-  <li>
-    <p>Choropleths are useful for encoding one data feature across a collection of polygons. If we have more than one feature of interest, there is often little we can do besides create several choropleths side-by-side, each with its own color scales. An important special case is when there are exactly two continuous variables of interest.</p>
-  </li>
-  <li>
-    <p>In this case, we can use something called a bivariate choropleth. This creates a two-dimensional color palette by blending a pair of color scales. Polygons are then encoded using this scheme. For example, in the example below, we can see <em>__</em></p>
-  </li>
-</ol>
-
-<h3 id="trick-4-spatiotemporal-vis">Trick 4: Spatiotemporal Vis</h3>
-
-<ol>
-  <li>What if we have the spatial data measured over time? It is common to use faceting, with one facet per timepoint. However, this approach does not scale well when there are many timepoints of interest. Some have advocated for the use of “time cubes,” where a 2D map is repeated along a third time axis. In this class though, we will steer away from 3D visualization. Instead, we will focus on approaches that leverage interactivity, specifically using animation or linked views. We’ll review some approaches next week.</li>
+  <li>We can compose brush queries in original ways. For example, in the example below, we’re highlighting points if they lie within both brush selections (not the union, like in our previous example).</li>
 </ol>
 
     </div>
