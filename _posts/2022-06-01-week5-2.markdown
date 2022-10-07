@@ -121,14 +121,18 @@ the array has gotten shorter, so it just exits the very last circle tag, even if
 that wasn’t the one that should be removed. This issue is illustrated in the
 sketch below,
 
+  <img src="https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week5/week5-2/figure/correct_bind.svg" width=800></img>
+
     This bug leads to the choppy appearance in this version of the animation.
 
   <iframe src="https://krisrs1128.github.io/stat679_code/examples/week5/week5-2/rain-v0.html" height=200 width=800></iframe>
 
-11. To fix this, we can use a data bind with an ID function. if we give an ID to
-every circle that is ever appended (this is called below, we can tell d3 to
+11. To fix this, we can use a data bind with an ID function. If we give an ID to
+every circle that is ever appended (this is called below, we can tell D3 to
 remove elements from the DOM matching those IDs which have disappeared from the
-array.
+array. Conceptually, we can change the earlier sketch to the corrected version below.
+
+<img src="https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week5/week5-2/figure/correct_bind.svg" width=800></img>
 
 12. In our case, we create a `id` attribute for each circle (we guarantee its
 uniqueness with an `id` global variable).
