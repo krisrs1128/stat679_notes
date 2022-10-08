@@ -8,6 +8,7 @@ output:
 
 _Modifying the DOM with data_
 
+[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week5/week5-1), [Recording]()
 
 1. In interactive visualization, we often need to add or remove elements from
 the previous static view. Alternatively, we may choose to modify visual
