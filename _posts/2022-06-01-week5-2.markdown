@@ -8,7 +8,7 @@ output:
 
 _Creating animations and using ID functions_
 
-[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week5/week5-2), [Recording]()
+[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week5/week5-2), [Recording](https://mediaspace.wisc.edu/media/Week+5+-+2A+General+Update+Pattern+and+Animation/1_dz7a507l)
 
 1. In these notes, we consider a more advanced example of D3’s general update
 pattern. We’ll first look at how this pattern is used in the animation below.

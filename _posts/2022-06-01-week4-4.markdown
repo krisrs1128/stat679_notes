@@ -8,7 +8,7 @@ output:
 
 *A first look at visual encoding in D3*
 
-[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week4/week4-4), [Recording]()
+[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week4/week4-4), [Recording](https://mediaspace.wisc.edu/media/Week+4+-+4A+Binding+data/1_10r7ssbu)
 
 1.  If we only had D3 selections, we would be able to do a fair bit of HTML
 manipulation, but it would be tedious to work with datasets, because we would
