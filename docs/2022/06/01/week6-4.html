@@ -34,22 +34,130 @@
     </header>
     <div class="post__content content">
       <ol>
-  <li>
-    <p>When we are interactively defining a graphical query, it’s often useful to be able to specify a range of values of interest.For example, brushes can be used for dynamically linking two plots, like in these linked scatterplots,</p>
-
-    <p>or this linked time series plot.</p>
-
-    <p>Brushing can also be used to implement the focus + context principle through a zoom widget,</p>
-  </li>
-  <li>We learned how to create a brush in these notes. How can we use the brush to define a query? Unfortunately, unlike in Shiny, there is no function that returns the indices of the samples lying under the brush. Instead, the brush only returns the pixel coordinates of the brush corners.</li>
-  <li>
-    <p>To use these pixel coordinates to define a queries, we have to map our original data values into pixel coordinates. If the mapped values are within the region specified by the brush, we can say that they have been selected. For example, to find the penguins whose beak length and depth lie within the range specified by a brush, we used the following code,</p>
-  </li>
-  <li>
-    <p>We use almost the same trick for the dynamically linked time series. For each time series, we check whether <em>any</em> of the points that define it lies within the bounds created by the brush.</p>
-  </li>
-  <li>We can compose brush queries in original ways. For example, in the example below, we’re highlighting points if they lie within both brush selections (not the union, like in our previous example).</li>
+  <li>When we are interactively defining a graphical query, it’s often useful to be able to specify a range of values of interest.For example, brushes can be used for dynamically linking two plots, like in these linked scatterplots,</li>
 </ol>
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-4/penguins.html" width="800" height="500"></iframe>
+
+<p>or this linked time series plot,</p>
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-4/bike.html" width="800" height="310"></iframe>
+
+<p>Brushing can also be used to implement the focus + context principle through a zoom widget,</p>
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-4/zoom.html" width="800" height="500"></iframe>
+
+<ol>
+  <li>We learned how to create a brush in these <a href="https://krisrs1128.github.io/stat679_notes/2022/06/01/week6-1.html">earlier notes</a>, but
+we never discussed how to use a brush to define a query. Unfortunately, unlike
+Shiny, D3 has no function to return the indices of the samples lying under the
+brush. Instead, we will manually extract the pixel coordinates of the associated
+brush and then relate them to the original data values. To access these
+underlying brush coordinates, we can use the brush event’s <code class="language-plaintext highlighter-rouge">selection</code>
+attribute, which is the approach in the <code class="language-plaintext highlighter-rouge">bike.js</code> time series example above,</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let brush = d3.brush()
+  .extent([[0, 0], [300, 300]])
+  .on("brush", ev =&gt; brush_update(ev, data, scales));
+
+function brush_update(ev, data, scales) {
+  let dates = filter_dates(ev, data, scales);
+  ...
+
+function filter_dates(ev, data, scales) {
+  let [[x0, y0], [x1, y1]] = ev.selection;
+</code></pre></div></div>
+
+<p>or we can use the <code class="language-plaintext highlighter-rouge">d3.brushSelection</code> function to operate directly on the brush
+object, which is the approach in the <code class="language-plaintext highlighter-rouge">penguins.js</code> linked scatterplot example,
+since there were several brushes to handle simultaneously,</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// get selection in current brush b
+let node = d3.select(`#brush${b}`).node()
+let [[x0, y0], [x1, y1]] = d3.brushSelection(node)
+</code></pre></div></div>
+
+<ol>
+  <li>To use these pixel coordinates to define a queries, we have to relate our
+original data values with pixel coordinates. Fortunately, continuous scales are
+associated with an <code class="language-plaintext highlighter-rouge">.invert()</code> method which maps pixel coordinates back to the
+original data domain. For example, in the bike example, we get <code class="language-plaintext highlighter-rouge">[[x0, y0], [x1, y1]]</code>
+coordinates specifying the brush’s bounding box in the original temperature and
+humidity dimensions. We then loop over every point in the dataset to see whether
+it is contained within these bounds.</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function filter_dates(ev, data, scales) {
+  // relate pixel with original data coordinates
+  let [[x0, y0], [x1, y1]] = ev.selection;
+  x0 = scales.x.invert(x0);
+  y0 = scales.y.invert(y0);
+  x1 = scales.x.invert(x1);
+  y1 = scales.y.invert(y1);
+
+  // check which time series belong within the scatterplot range
+  let dates = [];
+  for (let i = 0; i &lt; data.scatter.length; i++) {
+    let di = data.scatter[i]
+    if (di.temp &gt; x0 &amp;&amp; di.hum &lt; y0 &amp;&amp; di.temp &lt; x1 &amp;&amp; di.hum &gt; y1) {
+      dates.push(di.dteday)
+    }
+  }
+  return dates
+}
+</code></pre></div></div>
+<p>The same inversion trick is used in the penguins example (see lines 54 - 67).</p>
+
+<ol>
+  <li>We can compose brush queries in original ways. For example, in the example
+below, we’re highlighting points if they lie within both brush selections (not
+the either brush, like in our previous example). This is implemented by looping
+over datapoints and checking whether they lie in the data ranges specified by
+both brushes (lines 53 - 71 in <a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week6/week6-4/penguins2.js">penguins2.js</a>).</li>
+</ol>
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-4/penguins2.html" width="800" height="400"></iframe>
+
+<ol>
+  <li>For our zooming example, we use a slightly different approach from either of
+the previous two. Rather than defining arrays describing which points have been
+selected, we use the brush to redefine the scales that define the main
+scatterplot. Specifically, recall that every scale has to map a domain in the
+data space to a range in the pixel space.  By changing which data values we
+consider the upper and lower limits of the domain, we can map smaller (or
+larger) zones of the data space to the same range in the pixel space. This is
+done by finding the current brush extent in the data space,
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function brush_update(ev, scales) {
+ let [[x0, y0], [x1, y1]] = ev.selection;
+ x0 = scales.x_zoom.invert(x0)
+ y0 = scales.y_zoom.invert(y0)
+ x1 = scales.x_zoom.invert(x1)
+ y1 = scales.y_zoom.invert(y1)
+ ...
+</code></pre></div>    </div>
+    <p>and then regenerating the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> scales to have a domain reflecting the
+  brush selection,</p>
+  </li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  function brush_update(ev, scales) {
+    // update the scales
+    let new_scale = make_scales([[x0, y0], [x1, y1]])
+
+    // update the circle positions using the new scales
+    update(new_scale)
+...
+
+function make_scales(extent) {
+  return {
+    x: d3.scaleLinear()
+      .domain([extent[0][0], extent[1][0]]) // updates domain using brush X
+      .range([0, width]),
+    y: d3.scaleLinear()
+      .domain([extent[0][1], extent[1][1]]) // updates domain using brush Y
+      .range([0, height]),
+  ...
+</code></pre></div></div>
 
     </div>
   </article></main><script>hljs.initHighlightingOnLoad();</script><footer class="site-footer">
