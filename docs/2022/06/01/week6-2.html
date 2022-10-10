@@ -37,48 +37,165 @@
   <li>In the previous notes, we saw how user can supply interactions using D3 event
 listeners. Here, we’ll see how to design interactive visualizations that respond
 to mouse click and hover events.</li>
-  <li>We’ll work with the movie ratings dataset, which we previously used when
-introducing interactivity in Shiny. The code here makes a static scatterplot for
-these data, without implementing any interactivity.</li>
+  <li>We’ll work with the movie ratings dataset, which we <a href="https://krisrs1128.github.io/stat679_notes/2022/06/01/week2-3.html">previously used</a> when
+introducing interactivity in Shiny. The code at these links [1, 2] makes a
+static scatterplot for these data, without implementing any interactivity. The scatterplot points are appended using a data bind,
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#circles")
+ .selectAll("circle")
+ .data(data, d =&gt; d.Title).enter()
+ .append("circle")
+ .attrs({
+   class: "plain",
+   cx: d =&gt; scales.x(d.IMDB_Rating),
+   cy: d =&gt; scales.y(d.Rotten_Tomatoes_Rating),
+   fill: d =&gt; scales.fill(d.genre)
+ })
+</code></pre></div>    </div>
+    <p>and the axes are created using <code class="language-plaintext highlighter-rouge">d3.axisLeft</code> and <code class="language-plaintext highlighter-rouge">d3.axisBottom</code> applied to the scales,</p>
+  </li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  [g element onto which to append the x-axes]
+    .call(d3.axisBottom(scales.x).ticks(4))
+
+  [g element onto which to append the y-axes]
+    .call(d3.axisLeft(scales.y).ticks(4))
+</code></pre></div></div>
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-2/imdb-static.html" height="400" width="700"></iframe>
+
+<ol>
   <li>Let’s first consider how to implement a tooltip using hover events. A
 tooltip provides “detailed-on-demand” when the user indicates interest in a
 specific elements of a visualization. In our application, we’ll display the
 movie name whenever the user hovers over a point in the scatterplot. However, in
 principle, any pieces of information could be revealed.</li>
+</ol>
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-2/imdb-tooltip.html" height="400" width="700"></iframe>
+
+<ol>
   <li>To implement this type of interactivity, we first listen for anytime the user
-hovers over a movie.</li>
-  <li>Next, we create the text that will contain the movie names. Whenever a hover
+hovers over a movie.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#circles")
+ .selectAll("circle")
+ .data(data, d =&gt; d.Title).enter()
+ ... everything the same as before until...
+ .on("mouseover", (ev, d) =&gt; mouseover(ev, d))
+</code></pre></div>    </div>
+    <p>The anonymous function <code class="language-plaintext highlighter-rouge">(ev, d) =&gt; mouseover(ev, d)</code> makes sure that we pass
+  both properties of the event (<code class="language-plaintext highlighter-rouge">ev</code>) and the underlying data associated with
+  the HTML element under consideration (<code class="language-plaintext highlighter-rouge">d</code>).</p>
+  </li>
+  <li>
+    <p>Next, we update the text that will contain the movie names. Whenever a hover
 event occurs, we will need to (i) change the text of the tooltip and (ii) move
-the tooltip to the location of the current point.</li>
-  <li>To change the text of the tooltip, we can apply <code class="language-plaintext highlighter-rouge">.text()</code> to the current data
-selection. We move the tooltip using a translation of the parent <code class="language-plaintext highlighter-rouge">div</code> element.</li>
+the tooltip to the location of the current point. Note that we have already
+created an initial <code class="language-plaintext highlighter-rouge">&lt;div&gt;</code> element with <code class="language-plaintext highlighter-rouge">id="tooltip"</code> on the HTML page within
+which we can append the movie title.</p>
+  </li>
+  <li>To change the text of the tooltip, we apply <code class="language-plaintext highlighter-rouge">.text()</code> to the current data
+selection. We move the tooltip using a translation of the parent <code class="language-plaintext highlighter-rouge">div</code> element.
+We also change the circle to class <code class="language-plaintext highlighter-rouge">highlighted</code> so that it appears larger than
+the surrounding circles.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  function mouseover(ev, d) {
+ d3.select("#tooltip")
+   .attr("transform", `translate(${ev.pageX}, ${ev.pageY})`)
+   .select("text")
+   .text(d.Title)
+
+ d3.select(ev.target).attr("class", "highlighted")
+  }
+</code></pre></div>    </div>
+  </li>
   <li>If we want to display much more information about an item using hover events,
-it can be useful to link the hovered item with a table.</li>
-  <li>This can be accomplished using a mechanism similar to a tooltip. We again
-track hover events and update text in a predefined HTML element (a <code class="language-plaintext highlighter-rouge">&lt;table&gt;</code> in
-this case). In a way, this implementation is even simpler, because we don’t have
-to move the text to user’s mouse location.</li>
+it can be useful to link the hovered item with a table. This can be accomplished
+using a mechanism similar to a tooltip. We again track hover events and update
+text in a predefined HTML element (a <code class="language-plaintext highlighter-rouge">&lt;table&gt;</code> in this case). We’ve given IDs
+within the table that will allow us to quickly substitute titles, genres, etc.
+within it. In a way, this implementation is even simpler, because we don’t have
+to move the text to user’s mouse location.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  function mouseover(ev, d) {
+ d3.select("#title").text(d.title)
+ d3.select("#genre").text(d.genre)
+ d3.select("#year").text(d.year)
+ d3.select("#gross").text(d.gross)
+ d3.select(ev.target).attr("class", "highlighted")
+  }
+</code></pre></div>    </div>
+  </li>
   <li>Next, let’s consider click events. Imagine we wanted to allow select movie
 genres by clicking elements of the legend, like in the visualization below,</li>
-  <li>To implement this, we’ll use the same array-based logic as in our earlier
-select-input-based gapminder visualization. That is, we’ll keep track of an
-array of the currently selected genres and we’ll enter and exit datapoints
-accordingly each time the array is changed.</li>
-  <li>The main differences are that (i) we need to update the array based on
-clicks on the rectangles that form the legend and (ii) when a rectangle is
-clicked, we need to update not just the original plot, but also the legend that
-defines it.</li>
-  <li>To this end, we bind click listeners to these rectangles. At the start, all
-the legend elements are considered selected, and the associated selection array
-includes every genre. Whenever a rectangle is clicked, we modify the array,</li>
-  <li>
-    <p>After the array is modified, we then filter the data that defines the
-scatterplot,</p>
+</ol>
 
-    <p>exiting scatterplot circles accordingly. We also change the encoding of the
-associated legend rectangle, to let the user know that the associated genre
-has been deselected,</p>
-  </li>
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-3/imdb-legend-click.html" width="700" height="600"></iframe>
+
+<ol>
+  <li>To implement this, we’ll use the same array-based logic as in our <a href="https://krisrs1128.github.io/stat679_notes/2022/06/01/week6-1.html">earlier
+select-input-based gapminder visualization</a>. That is, we’ll keep track of an
+array of the currently selected genres and will enter and exit datapoints each
+time the array is changed.</li>
+  <li>The main differences with what we implemented with the tooltip are that (i)
+we need to update the array based on clicks on the rectangles that form the
+legend and (ii) when a rectangle is clicked, we need to update not just the
+original plot, but also the appearance legend that defines it.</li>
+  <li>To this end, we bind click listeners to the rectangles in the legend. At the
+start, all the legend elements are considered selected, and the associated
+selection array includes every genre. Whenever a rectangle is clicked, we modify
+the array,</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#legend .legendCells")
+  .selectAll(".cell") // creates selection of the legend rectangles
+  .on("click", (ev, d) =&gt; toggle_selection(ev, d))
+
+...
+
+function toggle_selection(ev, d) {
+  let ix = selected.indexOf(d)
+  if (ix == -1) {
+    selected.push(d); // adds genre to the selected list
+  } else {
+    selected.splice(ix, 1) // removes genre from the selected list
+  }
+  update_view()
+}
+</code></pre></div></div>
+
+<ol>
+  <li>After the array is modified, we then update the opacity and size of the
+scatterplot circles to reflect the selection,</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function update_view() {
+  d3.select("#circles")
+    .selectAll("circle")
+    .transition()
+    .duration(500)
+    .attrs({
+      opacity: d =&gt; selected.indexOf(d.Genre) == -1 ? 0.4 : 1,
+      r: d =&gt; selected.indexOf(d.Genre) == -1 ? 1 : 2
+    })
+  ...
+
+</code></pre></div></div>
+
+<ol>
+  <li>We also change the encoding of the associated legend rectangle and text, to
+let the user know that the associated genre has been added / removed from teh selection,</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select(".legendCells")
+  .selectAll("rect")
+  .attr("opacity", (d) =&gt; selected.indexOf(d) == -1 ? 0.4 : 1)
+d3.select(".legendCells")
+  .selectAll("text")
+  .attr("opacity", (d) =&gt; selected.indexOf(d) == -1 ? 0.4 : 1)
+</code></pre></div></div>
+
+<ol>
+  <li>The full implementation of this example can be found here [<a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week6/week6-3/imdb-legend-click.js">1</a>,
+<a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week6/week6-3/imdb-legend-click.html">2</a>].</li>
 </ol>
 
     </div>
