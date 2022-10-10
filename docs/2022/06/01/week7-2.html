@@ -33,7 +33,24 @@
       </div>
     </header>
     <div class="post__content content">
-      <p><strong>Specialized representations for time series problems</strong></p>
+      <p><em>Specialized representations for time series problems</em></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
+library(tsibble)
+library(tsibbledata)
+library(ggHoriPlot)
+library(ggstream)
+library(colorspace)
+library(ggalluvial)
+library(scales)
+
+theme679 &lt;- theme_bw() +
+  theme(
+    panel.background = element_rect(fill = "#f7f7f7"),
+    panel.grid.minor = element_blank()
+  )
+theme_set(theme679)
+</code></pre></div></div>
 
 <ol>
   <li>
@@ -61,8 +78,34 @@ in the realized y-values, the amount of space needed to display them
 all is relatively small. We’re able to decide which overall band we
 are in (and hence the overall value of y) based on color.</p>
   </li>
+</ol>
+
+<!-- -->
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tourism &lt;- tourism %&gt;%
+  filter(Purpose == "Holiday")
+
+region_totals &lt;- tourism %&gt;%
+  as_tibble() %&gt;%
+  group_by(Region) %&gt;%
+  summarise(total = sum(Trips)) %&gt;%
+  arrange(-total)
+
+cutpoints &lt;- seq(0, 1000, by = 101)
+tourism %&gt;%
+  filter(Region %in% region_totals$Region[1:16]) %&gt;%
+  ggplot() +
+  geom_horizon(aes(Quarter, Trips, fill = ..Cutpoints..), origin = 350, horizonscale = cutpoints) +
+  scale_fill_hcl(palette = 'RdBu') +
+  facet_grid(reorder(Region, -Trips) ~ .) +
+  theme(strip.text.y = element_text(angle = 0))
+</code></pre></div></div>
+
+<p><img src="/stat679_notes/assets/week7-2/unnamed-chunk-3-1.png" alt="" /></p>
+
+<ol>
   <li>
-    <p>We created the figure above using the <code class="language-plaintext highlighter-rouge">gghorizon</code> package. We have
+    <p>We created the figure above using the <code class="language-plaintext highlighter-rouge">ggHoriPlot</code> package. We have
 to specify both the horizon line (<code class="language-plaintext highlighter-rouge">origin</code>) and the cutoffs that
 separate the bands (<code class="language-plaintext highlighter-rouge">scales</code>). Using the <code class="language-plaintext highlighter-rouge">cutoffs</code> argument creates
 the color legend.</p>
@@ -82,24 +125,79 @@ values divided by total) across a collection? A few approaches make
 it especially easy to answer these types of queries.</p>
   </li>
   <li>
-    <p>We’ll consider the X-men appearances dataset. This includes the
-number of times each character appeared on the page across all the
-issues of the comic (as well as whether they were dressed normally
-or as superheroes during each appearance). We’ve filtered down to
-just the most common characters, to make comparison easier.</p>
+    <p>To illustrate, we’ll consider the X-men appearances dataset. This
+includes the number of times each character appeared on the page
+across all the issues of the comic (as well as whether they were
+dressed normally or as superheroes during each appearance). We’ve
+filtered down to just the most common characters, to make comparison
+easier.</p>
   </li>
-  <li>
-    <p>One way to visualize how the total number and composition of
+</ol>
+
+<!-- -->
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>xmen &lt;- read_csv("https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week7/week7-1/x-men.csv")
+head(xmen)
+
+## # A tibble: 6 × 6
+##   character             char_popular costume issue  rank depicted
+##   &lt;chr&gt;                 &lt;chr&gt;        &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Gambit = Name Unknown Gambit       Costume    97     4        0
+## 2 Gambit = Name Unknown Gambit       Costume    98     4        0
+## 3 Gambit = Name Unknown Gambit       Costume    99     4        0
+## 4 Gambit = Name Unknown Gambit       Costume   100     4        0
+## 5 Gambit = Name Unknown Gambit       Costume   101     4        0
+## 6 Gambit = Name Unknown Gambit       Costume   102     4        0
+</code></pre></div></div>
+
+<ol>
+  <li>One way to visualize how the total number and composition of
 character appearances change over issues is to use a stacked area
 plot. This is the analog of an area plot, but where multiple areas
-are stacked on top of one another.</p>
-  </li>
-  <li>
-    <p>An alternative is the stream graph (also sometimes called “Theme
+are stacked on top of one another.</li>
+</ol>
+
+<!-- -->
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># custom color palette
+pal &lt;- c(
+  "#8E038E", lighten("#8E038E", .2, space = "HLS"),
+  "#C20008", lighten("#C20008", .2, space = "HLS"),
+  "#13AFEF", lighten("#13AFEF", .25, space = "HLS"),
+  "#595A52", lighten("#595A52", .15, space = "HLS"),
+  "#FFB400", lighten("#FFB400", .25, space = "HLS")
+)
+
+ggplot(xmen) +
+  geom_area(aes(issue, depicted, col = interaction(costume, char_popular), fill = interaction(costume, char_popular))) +
+  scale_fill_manual(values = pal) +
+  scale_color_manual(values = pal) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0, 0.1, 0)) +
+  theme(legend.position = "bottom")
+</code></pre></div></div>
+
+<p><img src="/stat679_notes/assets/week7-2/unnamed-chunk-5-1.png" alt="" /></p>
+
+<ol>
+  <li>An alternative is the stream graph (also sometimes called “Theme
 River”). It is like a stacked area chart, but oriented around a
 central (rather than base) line. These are also almost always
-smoothed slightly, so that the transitions are not too jarring.</p>
-  </li>
+smoothed slightly, so that the transitions are not too jarring.</li>
+</ol>
+
+<!-- -->
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(xmen) +
+  geom_stream(aes(issue, depicted, col = interaction(costume, char_popular), fill = interaction(costume, char_popular)), bw = 0.4) +
+  scale_fill_manual(values = pal) +
+  scale_color_manual(values = pal) +
+  theme(legend.position = "bottom")
+</code></pre></div></div>
+
+<p><img src="/stat679_notes/assets/week7-2/unnamed-chunk-6-1.png" alt="" /></p>
+
+<ol>
   <li>
     <p>There has been a debate about whether approaches like streamgraphs
 are actually more effective than area plots. Broadly speaking, one
@@ -124,15 +222,36 @@ and 2010. The stacked area graph shows that there was a clear
 increase in refugees from Iraq starting in 2004, but it’s unclear
 whether this overtook Afghanistan.</p>
   </li>
-  <li>
-    <p>If we want to explicitly rank the groups, we can use an alluvial
+</ol>
+
+<!-- -->
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>refugees &lt;- read_csv("https://raw.githubusercontent.com/krisrs1128/stat679_code/main/examples/week7/week7-1/refugees.csv")
+ggplot(refugees) +
+  geom_stream(aes(year, refugees, fill = country), bw = 1) +
+  facet_wrap(~ region, scale = "free_y")
+</code></pre></div></div>
+
+<p><img src="/stat679_notes/assets/week7-2/unnamed-chunk-7-1.png" alt="" /></p>
+
+<ol>
+  <li>If we want to explicitly rank the groups, we can use an alluvial
 plot. It is a hybrid between a bump chart and streamgraph. It is
 read like a stream graph, but at each timepoint, the groups are
 sorted from largest to smallest contribution. Applying it to the
 dataset above shows that Iraq did indeed become the largest source
-of refugees within the Mideast starting around 2004.</p>
-  </li>
+of refugees within the Mideast starting around 2004.</li>
 </ol>
+
+<!-- -->
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(refugees) +
+  geom_alluvium(aes(year, refugees, fill = country, alluvium = country), decreasing = FALSE, alpha = 0.9) +
+  facet_wrap(~ region, scale = "free_y") +
+  scale_y_continuous(labels = label_number(scale_cut = cut_long_scale()))
+</code></pre></div></div>
+
+<p><img src="/stat679_notes/assets/week7-2/unnamed-chunk-8-1.png" alt="" /></p>
 
     </div>
   </article></main><script>hljs.initHighlightingOnLoad();</script><footer class="site-footer">

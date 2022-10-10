@@ -1,5 +1,5 @@
 ---
-title: Click and Hover Interaction in D3 (Part 3)
+title: Click and Hover Interaction in D3 (Part 2)
 layout: post
 output:
   md_document:
