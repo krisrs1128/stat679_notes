@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content=""><title>Temporal Interaction | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/r.min.js"></script>
+<script>hljs.highlightAll();</script>
+
+  <meta name="keywords" content="">
+  <meta name="description" content=""><link rel="stylesheet" href="/stat679_notes/assets/main.css?v=0.3.3" />
+<script src="/stat679_notes/assets/main.js?v=0.3.3" defer></script><link rel="stylesheet" href="/stat679_notes/assets/css/tomorrow.css" />
+<script src="/stat679_notes/assets/js/highlight.js"></script><script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script><script src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js" defer></script></head>
+<body class="body-post">
+    <a href="/stat679_notes/" class="logo"><h1>Statistical Data Visualization</h1>
+</a><main class="post__wrapper"><div class="post__top_navs clearfix">
+    <nav class="post__archive_path"><a href="" id="archiveBtn">
+        <div class="post__archive_icon">
+          <svg width="40" height="40">
+            <circle class="circle-progress" r="18" cy="20" cx="20"  stroke-linejoin="round" stroke-linecap="round" />
+          </svg>
+          <span class="post__archive_icon"></span>
+        </div>
+        Statistical Data Visualization
+      </a>
+    </nav>
+  </div>
+  <article class="post">
+    <header class="post__header">
+      <h1 class="post__title">Temporal Interaction</h1>
+      <div class="post__meta">
+        <time>2022-06-01 00:00</time>
+      </div>
+    </header>
+    <div class="post__content content">
+      <p><em>Introducing interactivity to time series visualization</em></p>
+
+<ol>
+  <li>
+    <p>Temporal data often have high information density, making
+interactivity worthwhile. In these notes, we’ll review some of the
+general principles of temporal interactivity discussed in the
+reading before illustrating with a few examples.</p>
+  </li>
+  <li>
+    <p>It is often useful to think about interactive visualization in terms
+of Norman’s “gulfs.” The gulf of interaction refers to the mental
+effort required to go from a visual query (in our heads) to a
+physical interaction (on the screen). The gulf of evaluation refers
+to the reader’s attempt to understand what has happened when the
+interface has changed.</p>
+  </li>
+</ol>
+
+<p><img src="https://github.com/krisrs1128/stat679_code/raw/main/examples/week8/week8-2/normans_gulfs.png" width="700" /></p>
+
+<ol>
+  <li>
+    <p>Users need to be able to traverse both gulfs easily. If there is too
+much difficulty in either defining the query or making sense of the
+result, the interaction will typically be ineffective.</p>
+  </li>
+  <li>
+    <p>One of the most useful types of interactivity in time series
+visualization is the overview + detail technique. In this approach,
+the reader is first presented with an overview of the full time
+series. They can then interactively query for details depending on
+their interest. The overview + detail technique is often referred to
+as Shneiderman’s mantra: “Overview first, then details on demand.”</p>
+  </li>
+  <li>
+    <p>For example, in the example below, we’ve built an overview + detail
+version of our gantt chart from the previous lecture. In the
+overview, we only see the high-level tasks and their timelines. When
+we click on any of the parent tasks, they expand into all their
+subtasks.</p>
+
+    <p>[Example with gantt chart]</p>
+  </li>
+  <li>
+    <p>Another form of overview + detail can be implement by linked
+brushing. We can brush to focus in on specific time windows of
+interest, while never losing the context of the overall time series
+shape.</p>
+
+    <p>[Example with focus + context time series]</p>
+  </li>
+  <li>
+    <p>It is also common to use linked brushing to define queries based on
+attributes of the time series. This was used in our earlier bike
+sharing example, where we linked daily bike demand with the day’s
+weather..</p>
+  </li>
+</ol>
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-4/bike.html" width="700" height="320">
+</iframe>
+
+<ol>
+  <li>
+    <p>Finally, we can query series based on summaries of each series. For
+example, we can query time series based on their overall trend. The
+histogram below gives the slopes across all the series. Brushing the
+right hand side of the series highlights those with the largest
+increases in slope.</p>
+  </li>
+  <li>
+    <p>Slope is just one statistic that can be used to navigate a
+collection of time series. There is a small literature on summary
+statistics for time series.
+<a href="https://feasts.tidyverts.org/"><code class="language-plaintext highlighter-rouge">feasts</code></a> is a useful R package for
+extracting these kinds of statistics.</p>
+  </li>
+</ol>
+
+    </div>
+  </article></main><script>hljs.initHighlightingOnLoad();</script><footer class="site-footer">
+  © 2022<a href="/stat679_notes/">Statistical Data Visualization</a>. Theme<a href="https://github.com/erlzhang/jekyll-theme-persephone" target="_blank">Persephone</a>
+</footer>
+
+  </body>
+</html>

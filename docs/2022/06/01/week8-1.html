@@ -79,9 +79,9 @@ series data into an array of objects,</p>
 
     <p>define a temporal scale for the x-axis,</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   d3.scaleTime()
-     .domain(x_extent)
-     .range([margins.left, width - margins.right]),
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> d3.scaleTime()
+   .domain(x_extent)
+   .range([margins.left, width - margins.right]),
 </code></pre></div>    </div>
 
     <p>and finally apply a path generator defined usign <code class="language-plaintext highlighter-rouge">d3.line()</code></p>
@@ -104,7 +104,7 @@ figure,</p>
   </li>
 </ol>
 
-<iframe src="https://krisrs1128.github.io/stat679_code/examples/week8/week8-1/line.html">
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week8/week8-1/line.html" height="500" width="800">
 </iframe>
 
 <ol>
@@ -114,8 +114,8 @@ arrays. Each element of the outer collection provides a path; each
 element within the inner arrays gives one timepoint.</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[
-  [{t1, value1}, {t2, value2}, ...] // first series array
-  [{t2, value2}, {t2, value2}, ...] // second series
+  [{t1, value1}, {t2, value2}, ...] // array for first line
+  [{t2, value2}, {t2, value2}, ...] // array for second line
   ...
 ]
 </code></pre></div>    </div>
@@ -128,26 +128,76 @@ lines.</p>
   </li>
 </ol>
 
-<iframe src="https://krisrs1128.github.io/stat679_code/examples/week8/week8-1/electricity.html">
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week8/week8-1/electricity.html" height="500" width="700">
+</iframe>
+
+<ol>
+  <li>At this point, it’s not hard to add in tooltips using mouseovers.
+For example, the implementation calls <code class="language-plaintext highlighter-rouge">update_series</code> every time the
+mouse is moved. The first block updates the <code class="language-plaintext highlighter-rouge">stroke</code> color by
+checking against the current line’s ID, which is stored in
+<code class="language-plaintext highlighter-rouge">ev.target.id</code>. The second block replaces the previous tooltip text
+and positions it at the mouseevent’s location.</li>
+</ol>
+
+<!-- -->
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function update_series(ev, data) {
+  d3.select("#series")
+    .selectAll("path")
+    .attrs({
+      stroke: d =&gt; d[0].Date_string == ev.target.id ? "red" : "#a8a8a8"
+    })
+    
+  d3.select("#tooltip")
+    .style("top", ev.clientY + "px")
+    .style("left", (20 + ev.clientX) + "px")
+    .text(ev.target.id)
+}
+</code></pre></div></div>
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week8/week8-1/electricity-2.html" height="400" width="700">
 </iframe>
 
 <ol>
   <li>
-    <p>At this point, it’s not hard to add in tooltips using mouseovers.</p>
-  </li>
-  <li>
     <p>Path generators are just one example of a D3 function that maps raw
 data to more complex visual marks. For example, to create a stacked
-time series visualization, we can use <code class="language-plaintext highlighter-rouge">d3.stackArea()</code></p>
+time series visualization, we can use <code class="language-plaintext highlighter-rouge">d3.stack()</code> together with
+<code class="language-plaintext highlighter-rouge">d3.area()</code>. <code class="language-plaintext highlighter-rouge">d3.stack()</code> reshapes the data so that the y-axis
+values for adjacent bands are easy to access.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// toy input / output of d3.stack()
+</code></pre></div>    </div>
+
+    <p>while <code class="language-plaintext highlighter-rouge">d3.area()</code> converts the output from <code class="language-plaintext highlighter-rouge">d3.stack()</code> into a path
+generator analogous to <code class="language-plaintext highlighter-rouge">d3.line()</code>, but for full shaded areas rather
+than isolated lines.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let area_generator = d3.area()
+  .x(d =&gt; scales.x(d.data.issue))
+  .y0(d =&gt; scales.y(d[0])) // lower envelope
+  .y1(d =&gt; scales.y(d[1])) // upper envelope
+  .curve(d3.curveBasis) // makes it smooth
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Using an alternative centering, the same area generator can be used
-to create a D3 streamgraph.</p>
+to create a D3 streamgraph. For example, this code
+[<a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week8/week8-1/xmen.html">1</a>,
+<a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week8/week8-1/xmen.js">2</a>]
+regenerates the x-men graph that we created last week.</p>
   </li>
+</ol>
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week8/week8-1/xmen.html" height="400" width="500" style="text-align: center">
+</iframe>
+
+<ol>
   <li>
     <p>Just to show how flexible D3 can be, let’s see how we can create two
-other types of temporal visualizations from scratch: gantt charts
-and bump charts.</p>
+other types of temporal visualizations from scratch: Gantt charts
+and Bump charts.</p>
   </li>
   <li>
     <p>Gantt charts encode the start and end of discrete temporal events.
@@ -166,7 +216,9 @@ encoding this using each path’s stroke attribute.</p>
   <li>
     <p>You can see a full interactive version of this visualization at this
 link — we’ll be discussing this in our next lecture. Notice the use
-of the voronoi mouseover, like the one used in our previous notes.
+of the Voronoi mouseover, like what we discussed in our
+<a href="https://krisrs1128.github.io/stat679_notes/2022/06/01/week6-3.html">interactivity
+notes</a>.
 We’ll discuss some more techniques for temporal interaction in the
 next set of notes.</p>
   </li>
