@@ -37,10 +37,10 @@
 
 <ol>
   <li>
-    <p>Time often has a special role in many datasets. In the next few
+    <p>Time often has a special role in data analysis. In the next few
 notes, we’ll study some of the types of time-related questions that
-can be answered through visualizations. We’ll also tour both some
-familiar (as well as some more obscure) visualizations strategies.
+can be answered through visualization. We’ll also tour some familiar
+(as well as some more obscure) visualizations strategies.
 Throughout, we’ll restrict attention to static views — next week,
 we’ll consider some interactive approaches to understanding temporal
 data.</p>
@@ -88,16 +88,20 @@ or variable values.</p>
   <li>
     <p>In fact, there have been several efforts to systematically
 taxonomize the types of queries that time series visualizations have
-been used for. See for example:
-<a href="https://drive.google.com/file/d/1AIxHHlZqmzP4W8AT25dMmlX8vkJRk0oe/view?usp=sharing">https://drive.google.com/file/d/1AIxHHlZqmzP4W8AT25dMmlX8vkJRk0oe/view?usp=sharing</a></p>
+been used for, like the example from this week’s reading,</p>
   </li>
+</ol>
+
+<p><img src="https://github.com/krisrs1128/stat679_notes/raw/main/assets/week7-1/taxonomy-ts.png" width="500" /></p>
+
+<ol>
   <li>
     <p>It can be useful to have this theory in mind, if only because it
 helps clarify the wide range of design decisions that are implicitly
 made anytime we make a time series visualization. An approach that
 streamlines one type of lookup / comparison might come at the cost
-of another — it’s helpful to have language to express the trade-offs
-involved.</p>
+of another, and it’s helpful to have language to express the
+trade-offs involved.</p>
   </li>
   <li>
     <p>That said, this will be enough theory for now. Let’s make some
@@ -105,12 +109,8 @@ plots. First, we begin with the simple line plot. A notable aspect
 of this approach is that it highlights change. Our eyes immediately
 pick up the steepness, shallowness, or roughness of different parts
 of the curve.</p>
-  </li>
-</ol>
 
-<!-- -->
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tsibble)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tsibble)
 library(tsibbledata)
 library(tidyverse)
 
@@ -120,58 +120,49 @@ theme679 &lt;- theme_bw() +
     panel.grid.minor = element_blank()
   )
 theme_set(theme679)
-</code></pre></div></div>
-
-<ol>
-  <li>For example, in the figure below, we’re showing the amount of trade
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>For example, in the figure below, we’re showing the amount of trade
 in Canadian Lynx pelts near the beginning of the 20th century. We
-can immediately recognize the seasonal structure.</li>
-</ol>
+can immediately recognize the seasonal structure.</p>
 
-<!-- -->
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(pelt) +
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(pelt) +
   geom_line(aes(Year, Lynx)) +
   scale_x_continuous(expand = c(0, 1))
-</code></pre></div></div>
+</code></pre></div>    </div>
 
-<p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-3-1.png" alt="" /></p>
-
-<ol>
-  <li>We made this figure using the <code class="language-plaintext highlighter-rouge">geom_line</code> geometry in ggplot2. The
+    <p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-3-1.png" alt="" /></p>
+  </li>
+  <li>
+    <p>We made this figure using the <code class="language-plaintext highlighter-rouge">geom_line</code> geometry in ggplot2. The
 <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> arguments are used to encode time and trade volume,
 respectively. Alternatively, we can emphasize the fact that these
 are amounts (they must be nonnegative) by drawing this as an area
-plot. This uses the <code class="language-plaintext highlighter-rouge">geom_area</code> mark.</li>
-</ol>
+plot. This uses the <code class="language-plaintext highlighter-rouge">geom_area</code> mark.</p>
 
-<!-- -->
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(pelt) +
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(pelt) +
   geom_area(aes(Year, Lynx)) +
   scale_x_continuous(expand = c(0, 1)) +
   scale_y_continuous(expand = c(0, 0, 0.1, 0)) 
-</code></pre></div></div>
+</code></pre></div>    </div>
 
-<p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-4-1.png" alt="" /></p>
-
-<ol>
-  <li>What if we had a larger collection of time series? For example, the
+    <p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-4-1.png" alt="" /></p>
+  </li>
+  <li>
+    <p>What if we had a larger collection of time series? For example, the
 dataset below includes the number of tourists in different states in
-Australia, measured quarterly by (bureau of tourism?). We are
-interested in questions like, which destinations are more popular,
-and when? Have there been periods when one (or several) regions were
-especially popular / avoided? Is there any strong seasonal structure
-or are there (upward or downward) trends?</li>
-</ol>
+Australia, measured quarterly. We are interested in questions like,
+which destinations are more popular, and when? Have there been
+periods when one (or several) regions were especially popular /
+avoided? Is there any strong seasonal structure or are there (upward
+or downward) trends?</p>
 
-<!-- -->
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>data(tourism)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># filter to most popular regions
+data(tourism)
 tourism &lt;- tourism %&gt;%
   filter(Purpose == "Holiday")
 
-# filter to most popular regions
 region_totals &lt;- tourism %&gt;%
   as_tibble() %&gt;%
   group_by(Region) %&gt;%
@@ -185,46 +176,46 @@ filter_regions &lt;- function(x, K = 6) {
 
 ggplot(filter_regions(tourism)) +
   geom_line(aes(Quarter, Trips, col = Region))
-</code></pre></div></div>
+</code></pre></div>    </div>
 
-<p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-5-1.png" alt="" /></p>
-
-<ol>
-  <li>To approach these questions, we can try some simple modifications of
+    <p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-5-1.png" alt="" /></p>
+  </li>
+  <li>
+    <p>To approach these questions, we can try some simple modifications of
 the lineplot. A first attempt is to include all the lines in one
 frame, with color used to distinguish each state. The result is
-almost impossible to read, though.</li>
-</ol>
+almost impossible to read, though.</p>
 
-<ul>
-  <li>Aside: If we hadn’t included color in our mapping, the figure would
-look like this. This happens because each timepoint has multiple
-y-values. To tell ggplot2 to create separate lines for each state,
-we have to use the <code class="language-plaintext highlighter-rouge">group</code> argument.</li>
-</ul>
+    <ul>
+      <li>Aside: If we hadn’t included color in our mapping, the figure
+would look like this. This happens because each timepoint has
+multiple y-values. To tell ggplot2 to create separate lines for
+each state, we have to use the <code class="language-plaintext highlighter-rouge">group</code> argument.</li>
+    </ul>
 
-<!-- -->
+    <!-- -->
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(filter_regions(tourism)) +
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(filter_regions(tourism)) +
   geom_line(aes(Quarter, Trips))
-</code></pre></div></div>
+</code></pre></div>    </div>
 
-<p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-6-1.png" alt="" /></p>
+    <p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-6-1.png" alt="" /></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(filter_regions(tourism)) +
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(filter_regions(tourism)) +
   geom_line(aes(Quarter, Trips, group = Region))
-</code></pre></div></div>
+</code></pre></div>    </div>
 
-<p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-6-2.png" alt="" /></p>
-
-<ol>
-  <li>Another variation on the line plot is to use faceting. This works
+    <p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-6-2.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Another variation on the line plot is to use faceting. This works
 better, but can take up quite a bit of space when there are many
 regions. Another downside of this approach is that it’s hard to
 exactly compare the y-values for pairs of series, since they no are
 no longer overlapping. Also, as soon as we have to start scrolling
 up and down to compare different states, the value of the small
-multiples starts dropping.</li>
+multiples starts dropping.</p>
+  </li>
 </ol>
 
 <!-- -->
