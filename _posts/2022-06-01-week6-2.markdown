@@ -68,14 +68,14 @@ selection. We move the tooltip using a translation of the parent `div` element.
 We also change the circle to class `highlighted` so that it appears larger than
 the surrounding circles.
   ```
-  function mouseover(ev, d) {
+function mouseover(ev, d) {
     d3.select("#tooltip")
       .attr("transform", `translate(${ev.pageX}, ${ev.pageY})`)
       .select("text")
       .text(d.Title)
 
     d3.select(ev.target).attr("class", "highlighted")
-  }
+}
   ```
 
 7. If we want to display much more information about an item using hover events,
@@ -86,13 +86,13 @@ within the table that will allow us to quickly substitute titles, genres, etc.
 within it. In a way, this implementation is even simpler, because we don’t have
 to move the text to user’s mouse location.
   ```
-  function mouseover(ev, d) {
+function mouseover(ev, d) {
     d3.select("#title").text(d.title)
     d3.select("#genre").text(d.genre)
     d3.select("#year").text(d.year)
     d3.select("#gross").text(d.gross)
     d3.select(ev.target).attr("class", "highlighted")
-  }
+}
   ```
 
 9. Next, let’s consider click events. Imagine we wanted to allow select movie

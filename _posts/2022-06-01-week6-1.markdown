@@ -77,7 +77,7 @@ object that is pass into the function by default,
   }
 
   d3.select("#circle4")
-    .on("mousemove", e => f4(e))
+    .on("mousemove", f4)
   ```
 
 8. We can even distinguish between when the mouse has just entered or exited an

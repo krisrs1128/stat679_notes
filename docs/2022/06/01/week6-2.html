@@ -98,14 +98,14 @@ which we can append the movie title.</p>
 selection. We move the tooltip using a translation of the parent <code class="language-plaintext highlighter-rouge">div</code> element.
 We also change the circle to class <code class="language-plaintext highlighter-rouge">highlighted</code> so that it appears larger than
 the surrounding circles.
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  function mouseover(ev, d) {
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function mouseover(ev, d) {
  d3.select("#tooltip")
    .attr("transform", `translate(${ev.pageX}, ${ev.pageY})`)
    .select("text")
    .text(d.Title)
 
  d3.select(ev.target).attr("class", "highlighted")
-  }
+}
 </code></pre></div>    </div>
   </li>
   <li>If we want to display much more information about an item using hover events,
@@ -115,13 +115,13 @@ text in a predefined HTML element (a <code class="language-plaintext highlighter
 within the table that will allow us to quickly substitute titles, genres, etc.
 within it. In a way, this implementation is even simpler, because we don’t have
 to move the text to user’s mouse location.
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  function mouseover(ev, d) {
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function mouseover(ev, d) {
  d3.select("#title").text(d.title)
  d3.select("#genre").text(d.genre)
  d3.select("#year").text(d.year)
  d3.select("#gross").text(d.gross)
  d3.select(ev.target).attr("class", "highlighted")
-  }
+}
 </code></pre></div>    </div>
   </li>
   <li>Next, let’s consider click events. Imagine we wanted to allow select movie
