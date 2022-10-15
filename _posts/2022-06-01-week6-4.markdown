@@ -8,7 +8,7 @@ output:
 
 _Use cases for and implementation of brush events_
 
-[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week6/week6-4), [Recording]()
+[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week6/week6-4), [Recording](https://mediaspace.wisc.edu/media/Week%206%20-%204%3A%20Brush%20Interaction%20in%20D3/1_ov35af68)
 
 1. When we are interactively defining a graphical query, it’s often useful to be able to specify a range of values of interest. For example, brushes can be used for dynamically linking two plots, like in these linked scatterplots,
 
