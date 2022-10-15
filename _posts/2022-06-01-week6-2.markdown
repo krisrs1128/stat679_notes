@@ -6,6 +6,10 @@ output:
     preserve_yaml: true
 ---
 
+_Updating a visualization through clicks and mouseovers_
+
+[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week6/week6-2), [Recording](https://mediaspace.wisc.edu/media/Week%206%20-%202%3A%20Click%20and%20Hover%20Interaction%20in%20D3%20(Part%201)/1_279viw2s)
+
 1. In the previous notes, we saw how user can supply interactions using D3 event
 listeners. Here, we’ll see how to design interactive visualizations that respond
 to mouse click and hover events.
@@ -21,7 +25,7 @@ d3.select("#circles")
       class: "plain",
       cx: d => scales.x(d.IMDB_Rating),
       cy: d => scales.y(d.Rotten_Tomatoes_Rating),
-      fill: d => scales.fill(d.genre)
+      fill: d => scales.fill(d.Genre_Group)
     })
   ```
   and the axes are created using `d3.axisLeft` and `d3.axisBottom` applied to the scales,
@@ -68,7 +72,6 @@ selection. We move the tooltip using a translation of the parent `div` element.
 We also change the circle to class `highlighted` so that it appears larger than
 the surrounding circles.
   ```
-
 function mouseover(ev, d) {
     let loc = d3.pointer(ev)
     d3.select("#tooltip")
@@ -89,13 +92,15 @@ within it. In a way, this implementation is even simpler, because we don’t hav
 to move the text to user’s mouse location.
   ```
 function mouseover(ev, d) {
-    d3.select("#title").text(d.title)
-    d3.select("#genre").text(d.genre)
-    d3.select("#year").text(d.year)
-    d3.select("#gross").text(d.gross)
+    d3.select("#title").text(d.Title)
+    d3.select("#genre").text(d.Genre_Group)
+    d3.select("#year").text(d.Release_Date)
+    d3.select("#gross").text(d.Worldwide_Gross)
     d3.select(ev.target).attr("class", "highlighted")
 }
   ```
+
+<iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-2/imdb-table.html" width=700 height=600></iframe>
 
 9. Next, let’s consider click events. Imagine we wanted to allow select movie
 genres by clicking elements of the legend, like in the visualization below,

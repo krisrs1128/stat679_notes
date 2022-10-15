@@ -6,6 +6,10 @@ output:
     preserve_yaml: true
 ---
 
+_Voronoi mouse over and graphical queries_
+
+[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week6/week6-3), [Recording](https://mediaspace.wisc.edu/media/Week%206%20-%203%3A%20Click%20and%20Hover%20Interaction%20in%20D3%20(Part%202)/1_onon3q5m)
+
 1. In our previous notes, we saw how to use hover and click events to define
 user interaction in D3 visualizations. In these notes, we’ll consider two
 extensions that can lead to more effective interfaces: Voronoi mouseover effects

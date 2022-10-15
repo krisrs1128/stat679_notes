@@ -6,7 +6,11 @@ output:
     preserve_yaml: true
 ---
 
-1. When we are interactively defining a graphical query, it’s often useful to be able to specify a range of values of interest.For example, brushes can be used for dynamically linking two plots, like in these linked scatterplots,
+_Use cases for and implementation of brush events_
+
+[Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week6/week6-4), [Recording]()
+
+1. When we are interactively defining a graphical query, it’s often useful to be able to specify a range of values of interest. For example, brushes can be used for dynamically linking two plots, like in these linked scatterplots,
 
 <iframe src="https://krisrs1128.github.io/stat679_code/examples/week6/week6-4/penguins.html" width=800 height=500></iframe>
 
