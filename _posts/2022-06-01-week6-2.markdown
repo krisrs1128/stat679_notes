@@ -68,9 +68,11 @@ selection. We move the tooltip using a translation of the parent `div` element.
 We also change the circle to class `highlighted` so that it appears larger than
 the surrounding circles.
   ```
+
 function mouseover(ev, d) {
+    let loc = d3.pointer(ev)
     d3.select("#tooltip")
-      .attr("transform", `translate(${ev.pageX}, ${ev.pageY})`)
+      .attr("transform", `translate(${loc[0]}, ${loc[1]})`)
       .select("text")
       .text(d.Title)
 
