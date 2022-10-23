@@ -35,13 +35,13 @@
     <div class="post__content content">
       <p><em>An introduction to visualizing geospatial data</em></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```r
-library(sf)
+<p><a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week7-3.Rmd">Code</a>, <a href="https://krisrs1128.github.io/stat679_notes/2022/06/01/week7-3.html">Recording</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(sf)
 library(tmap)
 library(terra)
 library(ceramic)
 library(tidyverse)
-```
 </code></pre></div></div>
 
 <ol>
@@ -284,6 +284,8 @@ tm_shape(im_crop) +
   tm_polygons(col = "Thickness", palette = "Blues", legend.hist = TRUE, alpha = 0.5) +
   tm_layout(legend.outside = TRUE)
 </code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week7-3/unnamed-chunk-9-1.png" alt="" /></p>
   </li>
   <li>
     <p><code class="language-plaintext highlighter-rouge">tmap</code> provides many functions for customizing the appearance of our

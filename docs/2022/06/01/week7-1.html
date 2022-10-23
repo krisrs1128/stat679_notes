@@ -35,6 +35,9 @@
     <div class="post__content content">
       <p><em>Basic tasks and visual strategies for temporal data</em></p>
 
+<p><a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week7-1.Rmd">Code</a>,
+<a href="https://krisrs1128.github.io/stat679_notes/2022/06/01/week7-1.html">Recording</a></p>
+
 <ol>
   <li>
     <p>Time often has a special role in data analysis. In the next few
@@ -228,26 +231,23 @@ multiples starts dropping.</p>
 <p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-7-1.png" alt="" /></p>
 
 <ol>
-  <li>To address this, we could consider dropping line plots entirely. The
+  <li>
+    <p>To address this, we could consider dropping line plots entirely. The
 approach below uses a heatmap, with each state on its own line. This
 approach is very compact and relatively accessible, but we no longer
 see trends so clearly: differences in color are harder to evaluate
-than differences in y-position.</li>
-</ol>
+than differences in y-position.</p>
 
-<!-- -->
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(filter_regions(tourism, 18)) +
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(filter_regions(tourism, 18)) +
   geom_tile(aes(Quarter, reorder(Region, Trips), fill = Trips, col = Trips)) +
   scale_fill_distiller(direction = 1) +
   scale_x_yearquarter(expand = c(0, 0)) +
   scale_y_discrete(expand = c(0, 0)) +
   scale_color_distiller(direction = 1)
-</code></pre></div></div>
+</code></pre></div>    </div>
 
-<p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-8-1.png" alt="" /></p>
-
-<ol>
+    <p><img src="/stat679_notes/assets/week7-1/unnamed-chunk-8-1.png" alt="" /></p>
+  </li>
   <li>
     <p>We made this using the <code class="language-plaintext highlighter-rouge">geom_tile</code> layer. Notice that we gave values
 for both the fill and color arguments — without color, there would

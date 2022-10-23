@@ -8,6 +8,9 @@ output:
 
 *Basic tasks and visual strategies for temporal data*
 
+[Code](https://github.com/krisrs1128/stat679_code/blob/main/notes/week7-1.Rmd),
+[Recording](https://krisrs1128.github.io/stat679_notes/2022/06/01/week7-1.html)
+
 1.  Time often has a special role in data analysis. In the next few
     notes, we’ll study some of the types of time-related questions that
     can be answered through visualization. We’ll also tour some familiar
@@ -175,23 +178,21 @@ output:
     see trends so clearly: differences in color are harder to evaluate
     than differences in y-position.
 
-<!-- -->
+        ggplot(filter_regions(tourism, 18)) +
+          geom_tile(aes(Quarter, reorder(Region, Trips), fill = Trips, col = Trips)) +
+          scale_fill_distiller(direction = 1) +
+          scale_x_yearquarter(expand = c(0, 0)) +
+          scale_y_discrete(expand = c(0, 0)) +
+          scale_color_distiller(direction = 1)
 
-    ggplot(filter_regions(tourism, 18)) +
-      geom_tile(aes(Quarter, reorder(Region, Trips), fill = Trips, col = Trips)) +
-      scale_fill_distiller(direction = 1) +
-      scale_x_yearquarter(expand = c(0, 0)) +
-      scale_y_discrete(expand = c(0, 0)) +
-      scale_color_distiller(direction = 1)
+    ![](/stat679_notes/assets/week7-1/unnamed-chunk-8-1.png)
 
-![](/stat679_notes/assets/week7-1/unnamed-chunk-8-1.png)
-
-1.  We made this using the `geom_tile` layer. Notice that we gave values
+2.  We made this using the `geom_tile` layer. Notice that we gave values
     for both the fill and color arguments — without color, there would
     be small gaps along the borders of each tile. Also, we reordered the
     `Region` column so that rows were sorted from those with the most to
     the least tourism.
 
-2.  These notes have reviewed the more familiar approaches to time
+3.  These notes have reviewed the more familiar approaches to time
     series visualization. In the next lecture, we’ll consider some more
     obscure (but often useful) approaches.

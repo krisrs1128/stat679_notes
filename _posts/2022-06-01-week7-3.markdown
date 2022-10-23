@@ -8,13 +8,13 @@ output:
 
 *An introduction to visualizing geospatial data*
 
-    ```r
+[Code](https://github.com/krisrs1128/stat679_code/blob/main/notes/week7-3.Rmd), [Recording](https://krisrs1128.github.io/stat679_notes/2022/06/01/week7-3.html)
+
     library(sf)
     library(tmap)
     library(terra)
     library(ceramic)
     library(tidyverse)
-    ```
 
 1.  In the same way that time plays a central role in analysis of time
     series datasets, space / location is often a central element in
@@ -234,6 +234,8 @@ output:
           tm_shape(glaciers_crop) +
           tm_polygons(col = "Thickness", palette = "Blues", legend.hist = TRUE, alpha = 0.5) +
           tm_layout(legend.outside = TRUE)
+
+    ![](/stat679_notes/assets/week7-3/unnamed-chunk-9-1.png)
 
 13. `tmap` provides many functions for customizing the appearance of our
     maps. For example, there are layers for adding specific cartographic
