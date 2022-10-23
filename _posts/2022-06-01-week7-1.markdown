@@ -9,7 +9,7 @@ output:
 *Basic tasks and visual strategies for temporal data*
 
 [Code](https://github.com/krisrs1128/stat679_code/blob/main/notes/week7-1.Rmd),
-[Recording](https://krisrs1128.github.io/stat679_notes/2022/06/01/week7-1.html)
+[Recording](https://mediaspace.wisc.edu/media/Week%207%20-%201%3A%20Time%20Series%20Visualization%20(I)/1_dubryjey)
 
 1.  Time often has a special role in data analysis. In the next few
     notes, we’ll study some of the types of time-related questions that

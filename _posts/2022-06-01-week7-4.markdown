@@ -9,7 +9,7 @@ output:
 *Useful tricks for visualizing geospatial data*
 
 [Code](https://github.com/krisrs1128/stat679_code/blob/main/notes/week7-4.Rmd),
-[Recording](https://krisrs1128.github.io/stat679_notes/2022/06/01/week7-4.html)
+[Recording](https://mediaspace.wisc.edu/media/Week+7+-+4A+Geospatial+Visualization+%28II%29/1_cquhy2wg)
 
 1.  The previous lecture outlined general methods available for
     visualizing spatial and raster datasets. Those methods are used in
