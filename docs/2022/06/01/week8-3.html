@@ -2,7 +2,7 @@
 <html lang="en"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content=""><title>Spatial Data in D3 | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+  <meta name="author" content=""><title>Geospatial Data in D3 | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/r.min.js"></script>
 <script>hljs.highlightAll();</script>
@@ -27,7 +27,7 @@
   </div>
   <article class="post">
     <header class="post__header">
-      <h1 class="post__title">Spatial Data in D3</h1>
+      <h1 class="post__title">Geospatial Data in D3</h1>
       <div class="post__meta">
         <time>2022-06-01 00:00</time>
       </div>
@@ -54,12 +54,9 @@ data.</p>
 </code></pre></div>    </div>
 
     <p>which shows an object like this in the console,</p>
+
+    <p><img src="https://github.com/krisrs1128/stat679_code/raw/main/examples/week8/week8-3/glaciers-screenshot.png" width="600" /></p>
   </li>
-</ol>
-
-<p><img src="https://github.com/krisrs1128/stat679_code/raw/main/examples/week8/week8-3/glaciers-screenshot.png" width="600" /></p>
-
-<ol>
   <li>
     <p>Even though these look like basic javascript objects, <code class="language-plaintext highlighter-rouge">d3.geojson</code>
 is actually keeping track geographic metadata behind the scenes.
@@ -94,17 +91,49 @@ applied to any new collection of vector features.</p>
   <li>
     <p>For example, we can use a path generator to draw the glacier
 boundaries,</p>
+
+    <iframe src="https://krisrs1128.github.io/stat679_code/examples/week8/week8-3/glaciers.html" width="700" height="900"></iframe>
+
+    <p>To draw the glacier boundaries, we defined the path generator with
+the block below. The <code class="language-plaintext highlighter-rouge">proj</code> object serves a role similar to the <code class="language-plaintext highlighter-rouge">x</code>
+and <code class="language-plaintext highlighter-rouge">y</code> scales that are used in line generators – it is mapping
+abstract geographical coordinates to the pixel extent of the screen.
+Specifically, <code class="language-plaintext highlighter-rouge">.fitSize</code> takes the spatial coordinates in <code class="language-plaintext highlighter-rouge">data</code> and
+relates it to the size of the screen, <code class="language-plaintext highlighter-rouge">[width, height]</code>. For
+geographic data, this process is formally called a <code class="language-plaintext highlighter-rouge">projection</code>,
+because we have to associate the surface of the 3D globe to a 2D
+plane.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let proj = d3.geoMercator()
+  .fitSize([width, height], data)
+let path = d3.geoPath()
+  .projection(proj);
+</code></pre></div>    </div>
   </li>
-</ol>
-
-<iframe src="https://krisrs1128.github.io/stat679_code/examples/week8/week8-3/glaciers.html" width="700" height="900">
-</iframe>
-
-<ol>
   <li>
-    <p>Remember that we have the vector feature attributes stored in
-<code class="language-plaintext highlighter-rouge">.features</code>. This allows us to modify the SVG attributes to reflect
-the data. For example, we can shade the glaciers in by their depth.</p>
+    <p>Given this <code class="language-plaintext highlighter-rouge">geoPath</code> generator, we can append one polygon per
+glacier in the dataset using the usual D3 data bind. Note that we
+bind <code class="language-plaintext highlighter-rouge">data.features</code> rather than just <code class="language-plaintext highlighter-rouge">data</code>. In geojson objects,
+the <code class="language-plaintext highlighter-rouge">.features</code> attribute contains an array with the spatial
+features coordinates.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#map")
+  .selectAll("path")
+  .data(data.features).enter()
+  .append("path")
+  .attrs({
+    d: path,
+    fill: d =&gt; scales.fill(d.properties.Thickness)
+  })
+</code></pre></div>    </div>
+
+    <p>In the block above, we’ve also passed a color scale to encode
+glacier depth with color. In general, these geospatial data are
+treated just like any other SVG <code class="language-plaintext highlighter-rouge">path</code> element, and we can set set
+their attributes using the usual <code class="language-plaintext highlighter-rouge">.attrs</code> command. This is also how
+we achieved the mouseover effect – we simply added a
+<code class="language-plaintext highlighter-rouge">.on("mouseover", ...)</code> listener for whenever we hover over one of
+these paths.</p>
   </li>
   <li>
     <p>We haven’t considered raster data in this lecture. This is because
