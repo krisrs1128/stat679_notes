@@ -33,7 +33,7 @@
       </div>
     </header>
     <div class="post__content content">
-      <p><em>Manipulating spatial data in D3</em></p>
+      <p><em>An introduction <code class="language-plaintext highlighter-rouge">d3-geo</code> and <code class="language-plaintext highlighter-rouge">geoPath</code></em></p>
 
 <ol>
   <li>
@@ -62,8 +62,8 @@ data.</p>
 is actually keeping track geographic metadata behind the scenes.
 This allows us to do some basic geographic queries directly from
 javascript. For example, if we want to query the geographic
-centroid, bounds, or areas (in steradians) of each feature, we can
-use the calls below,</p>
+centroid, bounds, or areas of each feature, we can use the calls
+below,</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let centroids = data.features.map(d3.geoCentroid),
   bounds = data.features.map(d3.geoBounds),
@@ -94,10 +94,10 @@ boundaries,</p>
 
     <iframe src="https://krisrs1128.github.io/stat679_code/examples/week8/week8-3/glaciers.html" width="700" height="900"></iframe>
 
-    <p>To draw the glacier boundaries, we defined the path generator with
-the block below. The <code class="language-plaintext highlighter-rouge">proj</code> object serves a role similar to the <code class="language-plaintext highlighter-rouge">x</code>
-and <code class="language-plaintext highlighter-rouge">y</code> scales that are used in line generators – it is mapping
-abstract geographical coordinates to the pixel extent of the screen.
+    <p>To draw the glacier boundaries, we defined the geographic path
+generator. The <code class="language-plaintext highlighter-rouge">proj</code> object serves a role similar to the <code class="language-plaintext highlighter-rouge">x</code> and
+<code class="language-plaintext highlighter-rouge">y</code> scales used in <code class="language-plaintext highlighter-rouge">d3.line()</code> generators – it is mapping abstract
+geographical coordinates to the pixel extent of the screen.
 Specifically, <code class="language-plaintext highlighter-rouge">.fitSize</code> takes the spatial coordinates in <code class="language-plaintext highlighter-rouge">data</code> and
 relates it to the size of the screen, <code class="language-plaintext highlighter-rouge">[width, height]</code>. For
 geographic data, this process is formally called a <code class="language-plaintext highlighter-rouge">projection</code>,
@@ -111,7 +111,7 @@ let path = d3.geoPath()
 </code></pre></div>    </div>
   </li>
   <li>
-    <p>Given this <code class="language-plaintext highlighter-rouge">geoPath</code> generator, we can append one polygon per
+    <p>Given this <code class="language-plaintext highlighter-rouge">d3.geoPath()</code> generator, we can append one polygon per
 glacier in the dataset using the usual D3 data bind. Note that we
 bind <code class="language-plaintext highlighter-rouge">data.features</code> rather than just <code class="language-plaintext highlighter-rouge">data</code>. In geojson objects,
 the <code class="language-plaintext highlighter-rouge">.features</code> attribute contains an array with the spatial
