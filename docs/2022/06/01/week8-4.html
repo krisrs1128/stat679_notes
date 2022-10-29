@@ -46,18 +46,15 @@ interactive. These notes review some basic strategies for
 interactive spatial data visualization.</p>
   </li>
   <li>
-    <p>A simple approach that’s often sufficient in practice is to use
-leaflet. This library creates good interactive maps using intuitive
-defaults. It offers several types of marks (marks, circles,
-polygons) and allows them to encode fields in a dataset. Note that
-its interface is more like base R than ggplot2 — we specify each
-attribute in one plot command.</p>
-  </li>
-  <li>
-    <p>In the code block below, <code class="language-plaintext highlighter-rouge">addTiles</code> fetches the background map.
-addCircles overlays the new vector features on top of the map. It’s
-worth noting that the vector features were created automatically –
-there was no need to create or read in any type of sf object.</p>
+    <p><code class="language-plaintext highlighter-rouge">leaflet</code> is an easy-to-use R package that’s often sufficient for
+routine visualization. It offers several types of marks (marks,
+circles, polygons) and allows them to encode fields in a dataset.
+Note that its interface is more like base R than ggplot2 — we
+specify each attribute in one plot command. For example, in the code
+block below, <code class="language-plaintext highlighter-rouge">addTiles</code> fetches the background map. addCircles
+overlays the new vector features on top of the map. It’s worth
+noting that the vector features were created automatically – there
+was no need to create or read in any type of sf object.</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cities &lt;- read_csv("https://uwmadison.box.com/shared/static/j98anvdoasfb1h651qxzrow2ua45oap1.csv")
 leaflet(cities) %&gt;%
@@ -68,13 +65,15 @@ leaflet(cities) %&gt;%
     radius = ~sqrt(Pop) * 30
   )
 </code></pre></div>    </div>
+
+    <iframe src="https://krisrs1128.github.io/stat479/posts/2021-03-02-week7-5/#htmlwidget-d84747f10a4e7901e20d" data-external="1" width="400" height="500"></iframe>
   </li>
   <li>
-    <p>Leaflet maps can be easily <a href="https://rstudio.github.io/leaflet/shiny.html">embedded into Shiny
+    <p>Leaflet maps can be <a href="https://rstudio.github.io/leaflet/shiny.html">embedded into Shiny
 apps</a> using
 <code class="language-plaintext highlighter-rouge">leafletOutput</code> and <code class="language-plaintext highlighter-rouge">renderLeaflet</code>. For example, the Superzip
-Explorer can be used to compare income and education levels across
-ZIP codes in the US. In the
+Explorer is a visualization designed for showing income and
+education levels across ZIP codes in the US. In the
 <a href="https://github.com/rstudio/shiny-examples/blob/main/063-superzip-example/server.R">server</a>,
 the map is initialized using the leaflet command (without even
 adding any data layers).</p>
@@ -86,19 +85,15 @@ output$map &lt;- renderLeaflet({
     setView(lng = -93.85, lat = 37.45, zoom = 4)
 })
 </code></pre></div>    </div>
+
+    <iframe src="https://shiny.rstudio.com/gallery/superzip-example.html" data-external="1" width="900" height="600"></iframe>
   </li>
-</ol>
-
-<iframe src="https://shiny.rstudio.com/gallery/superzip-example.html" data-external="1">
-</iframe>
-
-<ol>
   <li>
     <p>The most interesting aspect of the explorer is that it lets us zoom
-into regions and study properties of ZIP codes within view. First,
-leaflet creates an <code class="language-plaintext highlighter-rouge">input$map_bounds</code> input which is triggered
-anytime we pan or zoom the map. It returns a subset of the full
-dataset within the current view.</p>
+into regions and study properties of ZIP codes within the current
+view. leaflet automatically creates an <code class="language-plaintext highlighter-rouge">input$map_bounds</code> input
+which is triggered anytime we pan or zoom the map. It returns a
+subset of the full dataset within the current view.</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zipsInBounds &lt;- reactive({
   if (is.null(input$map_bounds)) return(zipdata[FALSE,]) # return empty data
@@ -136,21 +131,17 @@ entire leaflet view.</p>
   <li>
     <p>We can often dynamically query spatial data. Querying a map can
 highlight properties of samples within a geographic region. For
-example, here is a map of where each US county has been associated
-with a (random) pair of data features. Clicking on counties (or
-hovering with the shift key pressed) updates the bars on the right.
-Each bar shows the average from one of the data fields, across all
-selected counties.</p>
+example, here is a map of in which each US county has been
+associated with a (random) pair of data features. Clicking on
+counties (or hovering with the shift key pressed) updates the bars
+on the right. Each bar shows the average from one of the data
+fields, across all selected counties.</p>
+
+    <iframe width="100%" height="556" frameborder="0" src="https://observablehq.com/embed/@krisrs1128/geojson-mouseover?cells=output"></iframe>
   </li>
-</ol>
-
-<iframe width="100%" height="556" frameborder="0" src="https://observablehq.com/embed/@krisrs1128/geojson-mouseover?cells=output">
-</iframe>
-
-<ol>
   <li>
-    <p>This is linking is accomplished using event listeners. For example,
-the map includes the call <code class="language-plaintext highlighter-rouge">.on("mouseover", update_selection)</code>, and
+    <p>This linking is accomplished using event listeners. For example, the
+map includes the call <code class="language-plaintext highlighter-rouge">.on("mouseover", update_selection)</code>, and
 <code class="language-plaintext highlighter-rouge">update_selection</code> changes the fill of the currently hovered county,</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>svg.selectAll("path")
@@ -165,39 +156,34 @@ SVG paths, and all our interaction events behave in the same way.</p>
   </li>
   <li>
     <p>We can also imagine selecting geographic regions by interacting with
-linked views. This is used in the Urbanization in East Asia
-<a href="http://nbremer.github.io/urbanization/">visualization</a>, for
-example, where we can see all the urban areas within one country
-when we hover its associated bar.</p>
+linked views. This is used in Nadieh Bremer’s Urbanization in East
+Asia <a href="http://nbremer.github.io/urbanization/">visualization</a>, for
+example, where we can see all the urban areas within a country by
+hovering its associated bar.</p>
+
+    <iframe width="600" height="400" src="https://www.youtube.com/embed/Z0K_H_zjcYo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
   </li>
-</ol>
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/Z0K_H_zjcYo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">
-</iframe>
-
-<ol>
-  <li>Here is a somewhat more complex version of the earlier random data
+  <li>
+    <p>Here is a somewhat more complex version of the earlier random data
 example where acounties are associated with (random) time series.
 Redrawing the lower and upper bounds on the time series changes
-which counties are highlighted.</li>
-</ol>
+which counties are highlighted.</p>
 
-<iframe width="100%" height="584" frameborder="0" src="https://observablehq.com/embed/@krisrs1128/geo-time-selection?cells=chart">
-</iframe>
-
-<ol>
-  <li>Though it’s not exactly interaction, another common strategy for
+    <iframe width="800" height="584" frameborder="0" src="https://observablehq.com/embed/@krisrs1128/geo-time-selection?cells=chart"></iframe>
+  </li>
+  <li>
+    <p>Though it’s not exactly interaction, another common strategy for
 spatiotemporal data is animation. The major trends often become
 apparent by visualizing the flow of visual marks on the screen. For
 example, how can we visualize where football players go on a field
 before they score a goal? One approach is to animate the
 trajectories leading up to the goal. Here is one beautiful
-visualization (in D3!) that shows the most common paths and the
-speed at which the players run.</li>
-</ol>
+visualization (in D3!) by Karim Douieb that shows the most common
+paths and the speed at which the players run.</p>
 
-<iframe width="100%" height="818" frameborder="0" src="https://observablehq.com/embed/dfbbfbde8609dd9e?cells=output">
-</iframe>
+    <iframe width="100%" height="718" frameborder="0" src="https://observablehq.com/embed/dfbbfbde8609dd9e?cells=output"></iframe>
+  </li>
+</ol>
 
     </div>
   </article></main><script>hljs.initHighlightingOnLoad();</script><footer class="site-footer">
