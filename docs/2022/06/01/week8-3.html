@@ -72,10 +72,16 @@ use the calls below,</p>
   bounds = data.features.map(d3.geoBounds),
   areas = data.features.map(d3.geoArea);
 
-console.log(centroids, bounds, areas)  
+console.log(centroids, bounds, areas)
 </code></pre></div>    </div>
 
-    <p>A variety of related processing functions can be found in the
+    <p>You can view the console output at <a href="https://krisrs1128.github.io/stat679_code/examples/week8/week8-3/glaciers-query.html">this
+link</a>.
+A <a href="https://github.com/krisrs1128/stat679_code/blob/main/examples/week8/week8-3/road-properties.js">similar
+query</a>
+for the Brasilia roads dataset prints output <a href="https://krisrs1128.github.io/stat679_code/examples/week8/week8-3/road-properties.html">like
+this</a>.
+A variety of related processing functions can be found in the
 <a href="https://github.com/d3/d3-geo"><code class="language-plaintext highlighter-rouge">d3-geo</code> library</a>.</p>
   </li>
   <li>
@@ -104,12 +110,15 @@ the data. For example, we can shade the glaciers in by their depth.</p>
     <p>We haven’t considered raster data in this lecture. This is because
 javascript doesn’t have a simple built-in way to handle raster data.
 If we want to visualize a raster dataset, we need to first convert
-them to simple PNG images — this loses the geographic metadata, and
+them to simple PNG images. This loses the geographic metadata, and
 so any geographic processing has to be done before this step. In
 practice, it’s common to either manually convert to a PNG or to use
 a tiling library, which automatically converts raster data into a
 collection of PNGs. Both of these techniques are beyond the scope of
-our class, unfortunately.</p>
+our class, but if you are curious, you can check out these resources
+[<a href="https://datawanderings.com/2020/08/08/raster-backgrounds/">1</a>,
+<a href="https://developmentseed.org/titiler/">2</a>,
+<a href="https://cran.r-project.org/web/packages/tiler/vignettes/tiler-intro.html">3</a>].</p>
   </li>
 </ol>
 
