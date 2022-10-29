@@ -148,56 +148,9 @@ through the path generator.</p>
   .append("path")
   .attrs({
     d: path_generator,
-    id: d =&gt; d[0].Date_string,
-    stroke: "#a8a8a8",
-    "stroke-width": 1
+    id: d =&gt; d[0].Date_string
   })
 </code></pre></div>    </div>
-  </li>
-  <li>
-    <p>At this point, it’s not hard to add in tooltips that give details of
-the series closest to the mouse. We will use a Voronoi mouseover, so
-that it’s not necessary to hover exactly over each path (which can
-be quite narrow). We define the Voronoi neighborhoods using
-<code class="language-plaintext highlighter-rouge">d3.Delaunay</code> together with the <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> scales, just like in our
-<a href="https://krisrs1128.github.io/stat679_notes/2022/06/01/week6-3.html">earlier scatterplot
-notes</a>.
-One subtlety here is that we had to reshape the data structure
-containing all the timepoints, because <code class="language-plaintext highlighter-rouge">d3.Delaunay</code> only knows how
-to work with ordinary arrays (not arrays of arrays, like how our
-original temporal data are stored).</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function add_voronoi(flat_data, scales) {
-  let delaunay = d3.Delaunay.from(flat_data, d =&gt; scales.x(d.time_of_day), d =&gt; scales.y(d.Demand));
-  d3.select("svg").on("mousemove", (ev) =&gt; update_series(ev, flat_data, delaunay, scales))
-}
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>In <code class="language-plaintext highlighter-rouge">update_series()</code>, we use <code class="language-plaintext highlighter-rouge">delaunay.find()</code> to look up the date
-of the closest time series so that it can be highlighted. The first
-block updates the <code class="language-plaintext highlighter-rouge">stroke</code> color and width. The second block
-replaces the previous tooltip text and positions it at the closest
-measurement location. Note that the index refers to the flattened
-array, not the original array of arrays.</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function update_series(ev, flat_data, delaunay, scales) {
-  let ix = delaunay.find(ev.pageX, ev.pageY);
-  d3.select("#series")
-    .selectAll("path")
-    .attrs({
-      stroke: e =&gt; e[0].Date_string == flat_data[ix].Date_string ? "red" : "#a8a8a8",
-      "stroke-width": e =&gt; e[0].Date_string == flat_data[ix].Date_string ? "4px" : "1px"
-    })
-
-  d3.select(ev.target).raise()
-  d3.select("#tooltip text")
-    .attr("transform", `translate(${scales.x(flat_data[ix].time_of_day) + 5}, ${scales.y(data[ix].Demand) - 5})`)
-    .text(data[ix].Date_string)
-}
-</code></pre></div>    </div>
-
-    <iframe src="https://krisrs1128.github.io/stat679_code/examples/week8/week8-1/electricity-2.html" height="400" width="700"></iframe>
   </li>
   <li>
     <p>Path generators are just one example of a D3 function that maps raw
@@ -253,8 +206,7 @@ isolated lines.</p>
   .y1(d =&gt; scales.y(d[1])) // upper envelope
   .curve(d3.curveBasis) // makes it smooth
 </code></pre></div>    </div>
-  </li>
-  <li>
+
     <p>This area generator can be used to create the D3 streamgraph by
 binding the stacked character data and passing in our area generator
 for the <code class="language-plaintext highlighter-rouge">d</code> attribute,</p>
@@ -396,9 +348,7 @@ worth reading to learn some other nice tricks. For example, note how
 the authors have used <code class="language-plaintext highlighter-rouge">diff</code> to color in the increasing vs
 decreasing ranks. They also introduced an interesting color gradient
 (rather than having all links in a solid color) by invoking <a href="https://observablehq.com/@washpostgraphics/gradient-generators">this
-library</a>.
-Finally, they use a Voronoi mouseover, like what we used in our
-electricity example above.</p>
+library</a>.</p>
   </li>
 </ol>
 
