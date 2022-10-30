@@ -35,6 +35,9 @@
     <div class="post__content content">
       <p><em>Path generators for temporal visualization</em></p>
 
+<p><a href="https://github.com/krisrs1128/stat679_code/tree/main/examples/week8/week8-1">Code</a>,
+<a href="">Recording</a></p>
+
 <ol>
   <li>
     <p>These notes give the D3 analogs of visualizations created in our
@@ -53,11 +56,11 @@ before
 <a href="https://krisrs1128.github.io/stat679_notes/2022/06/01/week6-4.html">2</a>],
 but we glossed over important details of D3’s path generators.
 Remember that in the first of those examples, we had manually
-generated paths using strings like<code class="language-plaintext highlighter-rouge">M 100 100 L 200 105 L 300 115</code>.
-This means to start a path at pixel coordinates (100, 100), move to
-the right and down by (200, 105) pixels, and so on. For a larger
-time series dataset, it woulud be impossible to construct these path
-strings manually.</p>
+generated paths by setting their <code class="language-plaintext highlighter-rouge">d</code> attributes to strings
+like<code class="language-plaintext highlighter-rouge">M 100 100 L 200 105 L 300 115</code>. This means to start a path at
+pixel coordinates (100, 100), move to the right and down by
+(200, 105) pixels, and so on. For a larger time series dataset, it
+woulud be impossible to construct these path strings manually.</p>
   </li>
   <li>
     <p>To do this more automatically, we can use an SVG path generator.
@@ -161,7 +164,7 @@ values for adjacent bands are easy to access. For our X-Men dataset,
 it transforms an array whose elements correspond to individual
 issues (each with multiple characters),</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let data = [
 ...
 {
   "issue": 187,
@@ -188,8 +191,8 @@ character.</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[
 ...
-  [index: "Magneto_Costume", data: [issue: t1, ymin: y1_min, ymax: y1_max], [issue: t2, ymin: y2_min, ymax: y2_max], ...]],
-  [index: "Nightcrawler_Costume", data: [issue: t1, ymin: y1_min, ymax: y1_max], [issue: t2, ymin: y2_min, ymax: y2_max], ...]],
+  [[y0_min_magneto, y0_max_magneto, data[0]], [y1_min_magneto, y1_max_magneto, data[1]], ...] // Magneto Costume
+  [[y0_min_nightcrawler, y0_max_nightcrawler, data[0]], [y1_min_nightcrawler, y1_max_nightcrawler, data[1]], ...] // Nightcrawler Costume
   ...
 ]
 </code></pre></div>    </div>

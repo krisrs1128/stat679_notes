@@ -35,12 +35,15 @@
     <div class="post__content content">
       <p><em>An introduction <code class="language-plaintext highlighter-rouge">d3-geo</code> and <code class="language-plaintext highlighter-rouge">geoPath</code></em></p>
 
+<p><a href="https://github.com/krisrs1128/stat679_code/tree/main/examples/week8/week8-3">Code</a>,
+<a href="">Recording</a></p>
+
 <ol>
   <li>
     <p>These notes summarize methods for static visualization of geospatial
 data in D3. Before we can make any plots, we need to be able to read
 in data. To read in vector data, it’s most convenient to store the
-data as geojson and read it in using <code class="language-plaintext highlighter-rouge">d3.geojson()</code>. The javascript
+data as geojson and read it in using <code class="language-plaintext highlighter-rouge">d3.json()</code>. The javascript
 object created by this function includes a <code class="language-plaintext highlighter-rouge">features</code> array. Element
 <code class="language-plaintext highlighter-rouge">i</code> in this array gives properties of feature <code class="language-plaintext highlighter-rouge">i</code> in the vector
 dataset.</p>
@@ -58,9 +61,9 @@ data.</p>
     <p><img src="https://github.com/krisrs1128/stat679_code/raw/main/examples/week8/week8-3/glaciers-screenshot.png" width="600" /></p>
   </li>
   <li>
-    <p>Even though these look like basic javascript objects, <code class="language-plaintext highlighter-rouge">d3.geojson</code>
-is actually keeping track geographic metadata behind the scenes.
-This allows us to do some basic geographic queries directly from
+    <p>Even though these look like basic javascript objects, <code class="language-plaintext highlighter-rouge">d3.json</code> is
+actually keeping track geographic metadata behind the scenes. This
+allows us to do some basic geographic queries directly from
 javascript. For example, if we want to query the geographic
 centroid, bounds, or areas of each feature, we can use the calls
 below,</p>
