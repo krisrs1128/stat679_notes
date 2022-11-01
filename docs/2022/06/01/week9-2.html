@@ -47,6 +47,17 @@ visualize the network. But why is visualization ever useful in this
 context? We’ll explore a few answers in these notes, along with some
 criteria that can be used to evaluate the quality of a graph
 visualization.</p>
+
+    <p><img src="/stat679_notes/assets/week9-2/tree_of_life.png" alt="An evolutionary tree, from the Interactive Tree of Life." width="350" /></p>
+    <p class="caption">
+An evolutionary tree, from the Interactive Tree of Life.
+</p>
+
+    <p><img src="/stat679_notes/assets/week9-2/covid-network.png" alt="A COVID-19 transmission network, from 'Clustering and superspreading potential of SARS-CoV-2 infections in Hong Kong.'" width="500" /></p>
+    <p class="caption">
+A COVID-19 transmission network, from ‘Clustering and superspreading
+potential of SARS-CoV-2 infections in Hong Kong.’
+</p>
   </li>
   <li>
     <p>Viewed narrowly, there are two basic types of queries for graph
@@ -64,13 +75,13 @@ structures of interest — for example, we may discover the existence
 of,</p>
 
     <ul>
-      <li>Clusters: Nodes that are tightly linked with one another, but
+      <li><em>Clusters</em>: Nodes that are tightly linked with one another, but
 not with nodes outside of the cluster.</li>
-      <li>Hubs: Nodes with many more neighbors than others.</li>
-      <li>Central nodes: Nodes that lie on the shortest paths between many
-pairs of nodes.</li>
-      <li>Connections: Links between nodes or clusters of interest. though
-there are probably more than is reasonable to list.</li>
+      <li><em>Hubs</em>: Nodes with many more neighbors than others.</li>
+      <li><em>Central nodes</em>: Nodes that lie on the shortest paths between
+many pairs of nodes.</li>
+      <li><em>Connections</em>: Links between nodes or clusters of interest.
+though there are probably far more possibilities than these.</li>
     </ul>
   </li>
   <li>
@@ -83,15 +94,24 @@ information does not occupy too much of the reader’s attention.</p>
   <li>
     <p>For example, if a visualization has too many edge crossings, then we
 will have trouble answering any topological queries — crossings can
-make it impossible to follow edges.</p>
-  </li>
-  <li>
-    <p>As an alternative, consider either edge bundling or adjacency matrix
-views. Both highlight the key connectivity structure and minimize
-the overlap that comes with more naive visualizations.</p>
+make it impossible to follow edges. As an alternative, consider
+either edge bundling or adjacency matrix views. Both highlight the
+key connectivity structure and minimize the overlap that comes with
+more naive visualizations.</p>
 
-    <p>[Example with edge bundling and adjacencies] We’ll see how to make
-both types of visualizations in later lectures.</p>
+    <p><img src="/stat679_notes/assets/week9-2/bundle_compare.png" alt="An edge bundled view of a network is much easier to read." width="500" /></p>
+    <p class="caption">
+An edge bundled view of a network is much easier to read.
+</p>
+
+    <p><img src="/stat679_notes/assets/week9-2/adjacency.png" alt="A comparison between node-link and adjacency matrix views of a network, from Munzner's Visualization Analysis and Design." width="500" /></p>
+    <p class="caption">
+A comparison between node-link and adjacency matrix views of a
+network, from Munzner’s Visualization Analysis and Design.
+</p>
+
+    <p>We’ll see how to make both types of visualizations in later
+lectures.</p>
   </li>
   <li>
     <p>In interactive graphs, we should aim to minimize the amount of
