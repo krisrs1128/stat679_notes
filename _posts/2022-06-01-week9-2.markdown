@@ -8,6 +8,9 @@ output:
 
 *What are typical queries for graph data?*
 
+[Code](https://github.com/krisrs1128/stat679_code/blob/main/notes/week9-2.Rmd),
+[Recording]()
+
 1.  Graphs are common across a wide range of fields — for example,
     biochemistry (metabolic networks), sociology (friendship networks),
     digital humanities (letter-writing networks), evolution
@@ -62,7 +65,8 @@ output:
     make it impossible to follow edges. As an alternative, consider
     either edge bundling or adjacency matrix views. Both highlight the
     key connectivity structure and minimize the overlap that comes with
-    more naive visualizations.
+    more naive visualizations. We’ll see how to make both types of
+    visualizations in later lectures.
 
     <img src="/stat679_notes/assets/week9-2/bundle_compare.png" alt="An edge bundled view of a network is much easier to read." width="500" />
     <p class="caption">
@@ -74,9 +78,6 @@ output:
     A comparison between node-link and adjacency matrix views of a
     network, from Munzner’s Visualization Analysis and Design.
     </p>
-
-    We’ll see how to make both types of visualizations in later
-    lectures.
 
 6.  In interactive graphs, we should aim to minimize the amount of
     change in the positions of the nodes and edges given any user input
