@@ -35,6 +35,9 @@
     <div class="post__content content">
       <p><em>What are typical queries for graph data?</em></p>
 
+<p><a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week9-2.Rmd">Code</a>,
+<a href="">Recording</a></p>
+
 <ol>
   <li>
     <p>Graphs are common across a wide range of fields — for example,
@@ -97,7 +100,8 @@ will have trouble answering any topological queries — crossings can
 make it impossible to follow edges. As an alternative, consider
 either edge bundling or adjacency matrix views. Both highlight the
 key connectivity structure and minimize the overlap that comes with
-more naive visualizations.</p>
+more naive visualizations. We’ll see how to make both types of
+visualizations in later lectures.</p>
 
     <p><img src="/stat679_notes/assets/week9-2/bundle_compare.png" alt="An edge bundled view of a network is much easier to read." width="500" /></p>
     <p class="caption">
@@ -109,9 +113,6 @@ An edge bundled view of a network is much easier to read.
 A comparison between node-link and adjacency matrix views of a
 network, from Munzner’s Visualization Analysis and Design.
 </p>
-
-    <p>We’ll see how to make both types of visualizations in later
-lectures.</p>
   </li>
   <li>
     <p>In interactive graphs, we should aim to minimize the amount of
