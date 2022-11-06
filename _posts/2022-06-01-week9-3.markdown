@@ -9,7 +9,7 @@ output:
 *An important special case of graph data visualization*
 
 [Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week9/week9-1),
-[Recording]()
+[Recording](https://mediaspace.wisc.edu/media/Week%209%20-%203%3A%20Tree%20Representations/1_0dtb6zo3)
 
     library(tidygraph)
     library(ggraph)

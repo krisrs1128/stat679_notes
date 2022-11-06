@@ -36,7 +36,7 @@
       <p><em>What are typical queries for graph data?</em></p>
 
 <p><a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week9-2.Rmd">Code</a>,
-<a href="">Recording</a></p>
+<a href="https://mediaspace.wisc.edu/media/Week%209%20-%202%3A%20Graph%20Visualization%20Tasks/1_n5sq9x5d">Recording</a></p>
 
 <ol>
   <li>
@@ -100,8 +100,13 @@ will have trouble answering any topological queries — crossings can
 make it impossible to follow edges. As an alternative, consider
 either edge bundling or adjacency matrix views. Both highlight the
 key connectivity structure and minimize the overlap that comes with
-more naive visualizations. We’ll see how to make both types of
-visualizations in later lectures.</p>
+more naive visualizations. Both can be made using either ggraph
+[<a href="https://ggraph.data-imaginist.com/reference/geom_conn_bundle.html">1</a>,
+<a href="https://ggraph.data-imaginist.com/reference/geom_edge_tile.html">2</a>]
+or D3 layouts
+[<a href="https://observablehq.com/@d3/hierarchical-edge-bundling">3</a>,
+<a href="https://observablehq.com/@fil/hello-reorder-js">4</a>], which we’ll
+be getting more practice with over the next few lectures.</p>
 
     <p><img src="/stat679_notes/assets/week9-2/bundle_compare.png" alt="An edge bundled view of a network is much easier to read." width="500" /></p>
     <p class="caption">
