@@ -90,11 +90,11 @@ G_flare
 type of node-link geoms as before. We can organize nodes by depth
 (distance from the root) by specifying that the layout be <code class="language-plaintext highlighter-rouge">tree</code>.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>p1 &lt;- ggraph(G_flare, 'tree') +
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>p1 &lt;- ggraph(G_flare, "tree") +
   geom_edge_link() +
   geom_node_label(aes(label = shortName), size = 3)
 
-p2 &lt;- ggraph(G_flare, 'tree', circular = TRUE) +
+p2 &lt;- ggraph(G_flare, "tree", circular = TRUE) +
   geom_edge_link() +
   geom_node_label(aes(label = shortName), size = 3)
 

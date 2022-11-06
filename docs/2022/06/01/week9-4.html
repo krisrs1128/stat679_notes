@@ -164,9 +164,9 @@ d3.select("#links")
     <p>More than simply showing the layout after 100 simulation iterations,
 we can redraw the visualization after every tick. The idea is that,
 when we run the simulation, the <code class="language-plaintext highlighter-rouge">nodes</code> and <code class="language-plaintext highlighter-rouge">links</code> data objects
-will be changing after each tick. After rebinding the data, to the
-circle and line SVGs, we can update their <code class="language-plaintext highlighter-rouge">attrs</code> to reflect new
-locations. The function below encapsulates this update.</p>
+will be changing after each tick. After running one step of the
+simulation, we can update the circle and line <code class="language-plaintext highlighter-rouge">attrs</code> to reflect new
+simulation locations. The function below encapsulates this update.</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function ticked() {
   d3.select("#nodes")
