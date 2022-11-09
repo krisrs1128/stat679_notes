@@ -45,14 +45,9 @@ frequently in practice.</p>
   <li>
     <p>When there is no additional structure / specific purpose, a
 reasonable default for node-link diagrams uses force-directed
-layout. In this layout, we think of nodes as particles that want to
-repel one another, but which are tied together by elastic edges. In
-ggraph, this can be specified by the <code class="language-plaintext highlighter-rouge">force</code> layout.</p>
-
-    <p>In D3, we can use the <code class="language-plaintext highlighter-rouge">d3.force()</code> function. This animates the
-physical system as it settles into an equilibrium state. These can
-be visually attractive, but be careful when using this, since the
-animation serves no specific visual purpose.</p>
+layout, as discussed previously. In this layout, we think of nodes
+as particles that want to repel one another, but which are tied
+together by elastic edges.</p>
   </li>
   <li>
     <p>One common situation where we can go beyond force-directed graphs is
@@ -62,19 +57,38 @@ visualization, attempts to visualize the family trees of royal
 families. On the y-axis, the nodes are constrained to be sorted by
 year, and across the x-axis, nodes are constrained according to the
 country of the royal family.</p>
+
+    <iframe src="https://royalconstellations.visualcinnamon.com/" width="800" height="500"></iframe>
   </li>
   <li>
     <p>More generally, we can define x and y-axis constraints and then use
 a force-directed algorithm to layout the nodes, subject to those
-constraints. These can be easily implemented by combining D3 with
-the cola library.</p>
+constraints. These can be implemented by combining D3 with the <a href="https://ialab.it.monash.edu/webcola/">cola
+library</a>. For example, we’ve
+simulated data that are known to fall into three tight clusters, but
+using a naive force-directed layout leads to clusters that cross one
+another.</p>
+
+    <iframe src="https://krisrs1128.github.io/stat679_code/examples/week10/week10-1/cola-example.html" data-external="1" height="400" width="500"></iframe>
   </li>
   <li>
-    <p>The key line in the example above is
-<code class="language-plaintext highlighter-rouge">.constraints(graph.constraints)</code>. This takes a dictionary of pixel
+    <p>To resolve this, we can explicitly tell the layout algorithm to
+constrain the x-coordinates for nodes within each cluster.</p>
+
+    <iframe src="https://krisrs1128.github.io/stat679_code/examples/week10/week10-1/cola-example-2.html" data-external="1" height="400" width="500"></iframe>
+
+    <p>To accomplish this, we defined an array of objects specifying pixel
 constraints between pairs of nodes; e.g.,
-<code class="language-plaintext highlighter-rouge">{"axis":"y", "left":0, "right":1, "gap":25}</code> says that node 1
+<code class="language-plaintext highlighter-rouge">{"axis":"y", "left":0, "right":1,  "gap":25}</code> says that node 1
 should be (at least) 25 pixels above node 0.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let constrained = cola.d3adaptor()
+  .nodes(nodes)
+  .links(links)
+  .constraints(constraints)
+  .groups(groups)
+  .start()
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Another common situation is that the nodes can be organized into a
@@ -87,13 +101,38 @@ to define a coarser partition.</p>
 adjacency matrix visualizations. For example, in node-link views, we
 can draw shapes enclosing the sets,</p>
 
+    <p><img src="/stat679_notes/assets/week10-1/graph-hierarchy.png" width="350" style="display: block; margin: auto;" /></p>
+
     <p>and in adjacency matrices, we can draw trees specifying the
 hierarchy.</p>
+
+    <p><img src="/stat679_notes/assets/week10-1/matlink.png" width="200" style="display: block; margin: auto;" /></p>
   </li>
   <li>
-    <p>We can in fact use the cola library to encode hierarchy in node-link
-views. The example below uses cola to ensure sets don’t overlap. It
-then draws (and fills in) paths that contain the separate sets.</p>
+    <p>Here is a simplified implementation that draws a boundary around
+groups of nodes. In addition to drawing nodes and links, it adds
+(and fills in) paths that contain the separate sets.</p>
+
+    <iframe src="https://krisrs1128.github.io/stat679_code/examples/week10/week10-1/miserables-group.html" data-external="1" height="400" width="500"></iframe>
+  </li>
+  <li>
+    <p>Specifically, each time the <code class="language-plaintext highlighter-rouge">d3.force()</code> simulation ticks, it
+calculates the convex hull of the set of nodes within each group
+using <code class="language-plaintext highlighter-rouge">convex_hull()</code>, which is a light wrapper we have prepared
+around the existing <a href="https://observablehq.com/@d3/d3-polygonhull"><code class="language-plaintext highlighter-rouge">d3.polygonHull</code>
+function</a>. This returns
+an array of <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> coordinates for the group boundary. This is
+then use to draw a path that loops in on itself. We fill in the
+loops according to which group number it corresponds to.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#hulls")
+  .selectAll("path")
+  .data(convex_hull(nodes))
+  .attrs({
+d: path_generator,
+fill: (d, i) =&gt; scales.fill(i)
+  })
+</code></pre></div>    </div>
   </li>
   <li>
     <p>In some graphs, we have clustering structure. Within each cluster,
@@ -103,7 +142,21 @@ visualize the clusters and then draw links for connections between
 adjacency matrices. The reasoning is that adjacency matrices are
 better suited in densely connected graphs (they don’t have the edge
 crossing problem) but node-link encodings are better when we want to
-follow longer paths across clusters.</p>
+follow longer paths across clusters. Below, I’ve included a
+screenshot from the paper that introduced this layout approach,</p>
+
+    <p><img src="/stat679_notes/assets/week10-1/NodeTrix.png" width="767" style="display: block; margin: auto;" /></p>
+
+    <p>Though it would be a nontrivial implementation, I hope you can at
+least get a rough idea about how we could begin to implement
+something like this using D3. We already know how to draw adjacency
+matrices as collections of appended rectangles. We could imagine
+appending each of these rectangles to separate group elements. If we
+knew the links between groups, we could run a <code class="language-plaintext highlighter-rouge">d3.force()</code>
+simulation to arrange groups in a nice layout. We could then append
+lines between the groups (or, if we want to more completely emulate
+the smooth links of figure, we could try a kind of <a href="https://github.com/d3/d3-shape/blob/main/README.md">curve or link
+generator</a>).</p>
   </li>
   <li>
     <p>This is just one example of a larger class of “hybrid” matrix
@@ -127,24 +180,36 @@ compare within an overview graph. The 2-nearest-neighbor graphs for
 each of these selected nodes are then shown (and linked together, if
 applicable). The subgraphs are arranged in a way that minimizes the
 amount of crossing.</p>
+
+    <p><img src="/stat679_notes/assets/week10-1/ego_compare.jpeg" width="1907" style="display: block; margin: auto;" /></p>
   </li>
   <li>
     <p>The last type of graph we’ll consider in these notes are dynamic
 graphs. These are graphs where the sets of nodes and links are
 evolving over time. For example, the interactions between proteins
 in a protein interaction network may change when a cell is exposed
-to environmental stress, like the presence of a virus.</p>
+to environmental stress, like the presence of a virus. There is no
+single way to visualize these networks, but common strategies
+include use of animation, faceting over time, combined encodings
+(like time series within nodes), or dynamic linking between
+coordinated views.</p>
   </li>
   <li>
-    <p>There is no single way to visualize these networks, but common
-strategies include use of animation, faceting over time, combined
-encodings (like time series within nodes), or coordinated views.</p>
+    <p>For example, here is an animated view of conflicts between countries
+over time,</p>
+
+    <iframe width="100%" height="500" frameborder="0" src="https://observablehq.com/embed/@yaslena/dynamic-network-graph?cells=viewof+time%2Cchart"></iframe>
+
+    <p>and here is a combined encoding of time series arranged along a
+graph, from the pathvis paper.</p>
+
+    <p><img src="/stat679_notes/assets/week10-1/pathvis.png" width="350" style="display: block; margin: auto;" /></p>
   </li>
   <li>
     <p>In these notes, we’ve see some academic literature on visualization.
-Even for those of us who are more practically oriented, this
-literature can be worth being familiar, if only because it can be a
-treasure trove of visual problem solving devices.</p>
+Even if you are more practically oriented, this literature can be
+worth being familiar, if only because it can be a treasure trove of
+visual problem solving devices.</p>
   </li>
 </ol>
 
