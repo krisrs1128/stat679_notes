@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-11-09T13:57:01-06:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Visualizing Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html" rel="alternate" type="text/html" title="Visualizing Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html"><![CDATA[<p><em>Short description</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-11-09T15:00:05-06:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Visualizing Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html" rel="alternate" type="text/html" title="Visualizing Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html"><![CDATA[<p><em>Short description</em></p>
 
 <ol>
   <li>
@@ -579,16 +579,57 @@ example, in either node link or adjacency matrix views, we can
 highlight one-step neighborhoods based on the position of the user’s
 mouse. For example, here is an example for node-link views,</p>
 
+    <iframe src="https://krisrs1128.github.io/stat679_code/examples/week10/week10-1/highschool-hover.html" data-external="1" height="450" width="600"></iframe>
+
     <p>and here is one for adjacency matrix views,</p>
+
+    <iframe src="https://krisrs1128.github.io/stat679_code/examples/week10/week10-1/miserables-adj-neighbors.html" data-external="1" height="450" width="600"></iframe>
+  </li>
+  <li>
+    <p>In both of these examples, we first build a data structure
+containing the neighbors of each node in the graph. For example the
+array following <code class="language-plaintext highlighter-rouge">0:</code> gives the indices of all nodes that are
+neighbors with node <code class="language-plaintext highlighter-rouge">0</code>,</p>
+
+    <p><img src="/stat679_notes/assets/week10-1/neighbors-js.png" width="350" style="display: block; margin: auto;" /></p>
+
+    <p>Once we have this data structure, we can quickly look up neighbors
+every time we hover over a node (or matrix tile in the adjacency
+matrix view). We then update the graphical marks to reflect these
+neighborhoods. In the node-link view, we highlight the neighbors in
+red using the following update,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#nodes")
+  .selectAll("circle")
+  .attrs({
+    fill: d =&gt; neighbors[ix].indexOf(d.index) == -1 ? "black" : "red"
+  })
+</code></pre></div>    </div>
+
+    <p>and similarly, for the adjacency matrix visualization, we change the
+x-label font size and opacity using this so that only the neighbors
+are visible,</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#xlabels")
+  .selectAll("text")
+  .attrs({
+"font-size": d =&gt; d.index == target? 14 : 10,
+"opacity": d =&gt; neighbors[source].indexOf(d.index) == -1? 0 : 1
+  })
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Conceptually, there is nothing unique about this interactivity code,
 compared to what we already have used for more basic plots (e.g.,
 for scatterplots), and many of the techniques we learned earlier
 apply here. For example, if want to allow the user to select a node
-without placing their mouse directly over it, we could use a voronoi
-overlay
-<a href="https://bl.ocks.org/alexmacy/15962e97f7a9ebacd55710bf277593d4">https://bl.ocks.org/alexmacy/15962e97f7a9ebacd55710bf277593d4</a>.</p>
+without placing their mouse directly over it, we can adapt the
+Delaunay lookups that we have <a href="https://krisrs1128.github.io/stat679_notes/2022/06/01/week6-3.html">previously
+used</a>
+in scatterplot interaction. Here is an implementation of this idea
+by Alex Macy,</p>
+
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/_8jeKfFnPvk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
   </li>
   <li>
     <p>Brushing and linking is often used for encoding interactivity.
@@ -596,12 +637,9 @@ Properly coordinated views can be used to highlight nodes or edges
 with a particular property. For example, suppose we wanted to a
 simple way of highlighting all the hubs in a network (i.e., nodes
 with many neighbors). One idea is to link a histogram of node
-degrees with the actual node-link diagram.</p>
-  </li>
-  <li>
-    <p>In principle, we could modify a variety of node and edge attributes
-based on user interactions (size, color, line type, …). However,
-it’s usually</p>
+degrees with the actual node-link diagram. In principle, we could
+modify a variety of node and edge attributes based on user
+interactions (size, color, line type, …). However, it’s usually</p>
   </li>
   <li>
     <p>Next, let’s consider data interactions. Two common types of data
@@ -615,6 +653,8 @@ screen.</p>
 edge-betweeness-centrality (a measure of how many paths go through
 that edge). This is helpful for isolating the “backbone” of the
 network.</p>
+
+    <iframe src="https://krisrs1128.github.io/stat679_code/examples/week10/week10-3/interactome-2.html" data-external="1" height="450" width="600"></iframe>
   </li>
   <li>
     <p>To implement this view, we use the standard enter-update-exit
@@ -633,9 +673,12 @@ are shown so that additional details are shown on demand.</p>
   </li>
   <li>
     <p>For example, a semantic zoom with two zoom levels would allow the
-user to collapse and expand metanodes based on user interest. We
-implement a version of this below, based on the compound graph
-visualization from our earlier notes.</p>
+user to collapse and expand metanodes based on user interest. Here
+is an implementation by @rymarchikbot. The construction of the
+enclosing paths is similar to our <code class="language-plaintext highlighter-rouge">convex_hull</code>-based compound graph
+visualization from the first set of notes for this week.</p>
+
+    <iframe width="100%" height="500" frameborder="0" src="https://observablehq.com/embed/@rymarchikbot/d3-js-force-layout-click-to-group-bundle-nodes?cell=*"></iframe>
   </li>
   <li>
     <p>Both filtering and aggregation work by refocusing our attention on
@@ -647,13 +690,15 @@ ones). An intermediate strategy is based on graph navigation.</p>
     <p>The main idea of graph navigation is to start zoomed in, with only a
 small part of the graph visible. Then, based on user interest, we
 can visually signal those directions of the graph that are
-especially worth moving towards.</p>
-  </li>
-  <li>
-    <p>Concretely, we can define a degree-of-interest function across the
-collection of nodes. This function can update based on user inputs.
-The encoding of the graph can then be modified to suggest that
-certain regions be focused in on.</p>
+especially worth moving towards. Concretely, it is possible to
+define a degree-of-interest function across the collection of nodes,
+as formalized by <a href="https://dig.cmu.edu/publications/2009-doigraphs.html">(Van Ham and Perer
+2009)</a>. This
+function can update based on user inputs. The encoding of the graph
+can then be modified to suggest that certain regions be focused in
+on.</p>
+
+    <p><img src="/stat679_notes/assets/week10-1/2009-doigraphs.png" width="350" style="display: block; margin: auto;" /></p>
   </li>
   <li>
     <p>Note that this is different from the overview-plus-detail principle
