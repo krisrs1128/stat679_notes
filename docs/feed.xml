@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-11-09T15:00:05-06:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Visualizing Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html" rel="alternate" type="text/html" title="Visualizing Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html"><![CDATA[<p><em>Short description</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-11-09T15:33:12-06:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Visualizing Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html" rel="alternate" type="text/html" title="Visualizing Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html"><![CDATA[<p><em>Short description</em></p>
 
 <ol>
   <li>
@@ -418,7 +418,7 @@ graph and then pan and zoom to specific neighborhoods of interest.</p>
   </li>
   <li>
     <p>In D3, panning and zooming can be implemented using <code class="language-plaintext highlighter-rouge">d3.zoom()</code>.
-These are used to construct functions that can then be called on <code class="language-plaintext highlighter-rouge">g</code>
+This are used to construct functions that can then be called on <code class="language-plaintext highlighter-rouge">g</code>
 elements containing the objects to pan and zoom over (conceptually,
 this is similar to <code class="language-plaintext highlighter-rouge">d3.brush()</code>). The <code class="language-plaintext highlighter-rouge">scaleExtent()</code> method
 specifies the maximum and minimum zoom levels. For example, to pan
@@ -502,8 +502,8 @@ interaction. Specifically, we append a circle,</p>
   })
 </code></pre></div>    </div>
 
-    <p>and whenever the mose moves, we call a function that will update the
-display.</p>
+    <p>and whenever the mouse moves, we call a function that will update
+the display.</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#overall")
   .on("mousemove", e =&gt; move_lens(e, nodes, links))
@@ -613,8 +613,8 @@ are visible,</p>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#xlabels")
   .selectAll("text")
   .attrs({
-"font-size": d =&gt; d.index == target? 14 : 10,
-"opacity": d =&gt; neighbors[source].indexOf(d.index) == -1? 0 : 1
+    "font-size": d =&gt; d.index == target? 14 : 10,
+    "opacity": d =&gt; neighbors[source].indexOf(d.index) == -1? 0 : 1
   })
 </code></pre></div>    </div>
   </li>
@@ -639,17 +639,14 @@ simple way of highlighting all the hubs in a network (i.e., nodes
 with many neighbors). One idea is to link a histogram of node
 degrees with the actual node-link diagram. In principle, we could
 modify a variety of node and edge attributes based on user
-interactions (size, color, line type, …). However, it’s usually</p>
+interactions (size, color, line type, …).</p>
   </li>
   <li>
     <p>Next, let’s consider data interactions. Two common types of data
 interactions are user-guided filtering and aggregation. In
 filtering, we remove data from view — this can be determined by UI
 inputs, dynamic queries, or direct manipulation of marks on the
-screen.</p>
-  </li>
-  <li>
-    <p>For example, in the example below, we filter edges based on their
+screen. For example, here we filter edges based on their
 edge-betweeness-centrality (a measure of how many paths go through
 that edge). This is helpful for isolating the “backbone” of the
 network.</p>
@@ -658,9 +655,11 @@ network.</p>
   </li>
   <li>
     <p>To implement this view, we use the standard enter-update-exit
-pattern. We had precomputed the edge centralities in advance, so
-updating the displayed marks is simply a matter of determining which
-edge array elements to bind.</p>
+pattern. We used the brush selection to change the subset of edges
+that should be bound to the SVG lines defining the links. We had
+precomputed the edge centralities in advance, so updating the
+displayed marks is simply a matter of determining which edge array
+elements to display.</p>
   </li>
   <li>
     <p>Pruning reduces the number of marks on the display by removing some.

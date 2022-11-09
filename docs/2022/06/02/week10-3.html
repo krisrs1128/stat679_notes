@@ -84,8 +84,8 @@ are visible,</p>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#xlabels")
   .selectAll("text")
   .attrs({
-"font-size": d =&gt; d.index == target? 14 : 10,
-"opacity": d =&gt; neighbors[source].indexOf(d.index) == -1? 0 : 1
+    "font-size": d =&gt; d.index == target? 14 : 10,
+    "opacity": d =&gt; neighbors[source].indexOf(d.index) == -1? 0 : 1
   })
 </code></pre></div>    </div>
   </li>
@@ -110,17 +110,14 @@ simple way of highlighting all the hubs in a network (i.e., nodes
 with many neighbors). One idea is to link a histogram of node
 degrees with the actual node-link diagram. In principle, we could
 modify a variety of node and edge attributes based on user
-interactions (size, color, line type, …). However, it’s usually</p>
+interactions (size, color, line type, …).</p>
   </li>
   <li>
     <p>Next, let’s consider data interactions. Two common types of data
 interactions are user-guided filtering and aggregation. In
 filtering, we remove data from view — this can be determined by UI
 inputs, dynamic queries, or direct manipulation of marks on the
-screen.</p>
-  </li>
-  <li>
-    <p>For example, in the example below, we filter edges based on their
+screen. For example, here we filter edges based on their
 edge-betweeness-centrality (a measure of how many paths go through
 that edge). This is helpful for isolating the “backbone” of the
 network.</p>
@@ -129,9 +126,11 @@ network.</p>
   </li>
   <li>
     <p>To implement this view, we use the standard enter-update-exit
-pattern. We had precomputed the edge centralities in advance, so
-updating the displayed marks is simply a matter of determining which
-edge array elements to bind.</p>
+pattern. We used the brush selection to change the subset of edges
+that should be bound to the SVG lines defining the links. We had
+precomputed the edge centralities in advance, so updating the
+displayed marks is simply a matter of determining which edge array
+elements to display.</p>
   </li>
   <li>
     <p>Pruning reduces the number of marks on the display by removing some.

@@ -69,7 +69,7 @@ graph and then pan and zoom to specific neighborhoods of interest.</p>
   </li>
   <li>
     <p>In D3, panning and zooming can be implemented using <code class="language-plaintext highlighter-rouge">d3.zoom()</code>.
-These are used to construct functions that can then be called on <code class="language-plaintext highlighter-rouge">g</code>
+This are used to construct functions that can then be called on <code class="language-plaintext highlighter-rouge">g</code>
 elements containing the objects to pan and zoom over (conceptually,
 this is similar to <code class="language-plaintext highlighter-rouge">d3.brush()</code>). The <code class="language-plaintext highlighter-rouge">scaleExtent()</code> method
 specifies the maximum and minimum zoom levels. For example, to pan
@@ -153,8 +153,8 @@ interaction. Specifically, we append a circle,</p>
   })
 </code></pre></div>    </div>
 
-    <p>and whenever the mose moves, we call a function that will update the
-display.</p>
+    <p>and whenever the mouse moves, we call a function that will update
+the display.</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d3.select("#overall")
   .on("mousemove", e =&gt; move_lens(e, nodes, links))
