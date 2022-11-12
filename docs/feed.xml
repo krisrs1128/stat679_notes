@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-11-12T13:08:48-06:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Visualizing Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html" rel="alternate" type="text/html" title="Visualizing Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html"><![CDATA[<p><em>Short description</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-11-12T13:11:45-06:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Visualizing Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html" rel="alternate" type="text/html" title="Visualizing Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html"><![CDATA[<p><em>Short description</em></p>
 
 <ol>
   <li>
@@ -204,8 +204,9 @@ ggplot(memberships, aes(gamma, document, fill = topic, col = topic)) +
   theme(axis.text.y = element_blank())
 </code></pre></div>    </div>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Short description]]></summary></entry><entry><title type="html">Structured Graphs</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week10-1.html" rel="alternate" type="text/html" title="Structured Graphs" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week10-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week10-1.html"><![CDATA[<p><em>Representing known structure in graphs</em>
-<a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week10-1.Rmd">Code</a>,
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Short description]]></summary></entry><entry><title type="html">Structured Graphs</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week10-1.html" rel="alternate" type="text/html" title="Structured Graphs" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week10-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week10-1.html"><![CDATA[<p><em>Representing known structure in graphs</em></p>
+
+<p><a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week10-1.Rmd">Code</a>,
 <a href="https://mediaspace.wisc.edu/media/Week%2010%20-%201%3A%20Structured%20Graphs/1_fafxe09y">Recording</a></p>
 
 <ol>
@@ -391,8 +392,9 @@ Even if you are more practically oriented, this literature can be
 worth being familiar, if only because it can be a treasure trove of
 visual problem solving devices.</p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Representing known structure in graphs Code, Recording]]></summary></entry><entry><title type="html">Graph Interactivity I</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week10-2.html" rel="alternate" type="text/html" title="Graph Interactivity I" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week10-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week10-2.html"><![CDATA[<p><em>View interaction in graphs</em>
-<a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week10-2.Rmd">Code</a>,
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Representing known structure in graphs]]></summary></entry><entry><title type="html">Graph Interactivity I</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week10-2.html" rel="alternate" type="text/html" title="Graph Interactivity I" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week10-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week10-2.html"><![CDATA[<p><em>View interaction in graphs</em></p>
+
+<p><a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week10-2.Rmd">Code</a>,
 <a href="https://mediaspace.wisc.edu/media/Week%2010%20-%202%3A%20Graph%20Interactivity%20I/1_ifn5dvu8">Recording</a></p>
 
 <ol>
@@ -573,8 +575,9 @@ Interactivity) or their encodings (Encoding Interactivity). In the
 next set of notes, we’ll consider these more substantive
 interactions.</p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[View interaction in graphs Code, Recording]]></summary></entry><entry><title type="html">Graph Interactivity II</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week10-3.html" rel="alternate" type="text/html" title="Graph Interactivity II" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week10-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week10-3.html"><![CDATA[<p><em>Encoding and data interaction in graphs</em>
-<a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week10-3.Rmd">Code</a>,
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[View interaction in graphs]]></summary></entry><entry><title type="html">Graph Interactivity II</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week10-3.html" rel="alternate" type="text/html" title="Graph Interactivity II" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week10-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week10-3.html"><![CDATA[<p><em>Encoding and data interaction in graphs</em></p>
+
+<p><a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week10-3.Rmd">Code</a>,
 <a href="https://mediaspace.wisc.edu/media/Week%2010%20-%203%3A%20Graph%20Interactivity%20II/1_zbx9zb6t">Recording</a></p>
 
 <ol>
@@ -725,7 +728,7 @@ techniques we described here are still areas of active research, and
 perhaps in the future, it will be easier to design and implement
 graph interactions suited to specific problems of interest.</p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Encoding and data interaction in graphs Code, Recording]]></summary></entry><entry><title type="html">Goals of Dimensionality Reduction</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week11-1.html" rel="alternate" type="text/html" title="Goals of Dimensionality Reduction" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week11-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week11-1.html"><![CDATA[<p><em>When is dimensionality reduction helpful?</em></p>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Encoding and data interaction in graphs]]></summary></entry><entry><title type="html">Goals of Dimensionality Reduction</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week11-1.html" rel="alternate" type="text/html" title="Goals of Dimensionality Reduction" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week11-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week11-1.html"><![CDATA[<p><em>When is dimensionality reduction helpful?</em></p>
 
 <p><a href="https://github.com/krisrs1128/stat679_code/tree/main/examples/week11/week11-1.Rmd">Code</a>,
 <a href="">Recording</a></p>
