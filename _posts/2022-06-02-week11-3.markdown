@@ -1,5 +1,5 @@
 ---
-title: Uniform Manifold Approximation
+title: Uniform Manifold Approximation and Projection
 layout: post
 output:
   md_document:
@@ -9,7 +9,7 @@ output:
 *Nonlinear dimensionality reduction with UMAP*
 
 [Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week11/week11-3.Rmd),
-[Recording]()
+[Recording](https://mediaspace.wisc.edu/media/Week%2010%20%5B4%5D%20Uniform%20Manifold%20Approximation%20and%20Projection/1_8tb5x1es)
 
 1.  Nonlinear dimension reduction methods can give a more faithful
     representation than PCA when the data don’t lie on a low-dimensional
@@ -58,18 +58,18 @@ output:
     not obvious a priori, but is suggested by the simulations described
     in the reading.
 
-<p align="center">
+    <p align="center">
 
-<img src="/stat679_notes/assets/week11-3/soft_neighborhoods.png" alt="When using fewer nearest neighbors, the final dimensionality reduction will place more emphasis on effectively preserving the relationships between points in local neighborhoods." width="400" />
-<p class="caption">
-When using fewer nearest neighbors, the final dimensionality reduction
-will place more emphasis on effectively preserving the relationships
-between points in local neighborhoods.
-</p>
+    <img src="/stat679_notes/assets/week11-3/soft_neighborhoods.png" alt="When using fewer nearest neighbors, the final dimensionality reduction will place more emphasis on effectively preserving the relationships between points in local neighborhoods." width="400" />
+    <p class="caption">
+    When using fewer nearest neighbors, the final dimensionality
+    reduction will place more emphasis on effectively preserving the
+    relationships between points in local neighborhoods.
+    </p>
 
-</p>
+    </p>
 
-1.  One detail in the graph construction: In UMAP, the edges are
+4.  One detail in the graph construction: In UMAP, the edges are
     assigned weights depending on the distance they span, normalized by
     the distance to the closest neighbor. Neighbors that are close,
     relative to the nearest neighbors, are assigned higher weights than
@@ -78,31 +78,33 @@ between points in local neighborhoods.
     layout. This is what the authors mean by using a \`\`fuzzy’’ nearest
     neighbor graph. The fuzziness allows the algorithm to distinguish
     neighbors that are very close from those that are far, even though
-    they all lie within a K-nearest-neighborhood.
+    they all lie within a *K*-nearest-neighborhood.
 
-<p align="center">
+    <p align="center">
 
-<img src="/stat679_notes/assets/week11-3/soft_neighborhoods_large_k.png" alt="When using larger neighborhoods, UMAP will place more emphasis on preserving global structure, sometimes at the cost of local relationships between points." width="400" />
-<p class="caption">
-When using larger neighborhoods, UMAP will place more emphasis on
-preserving global structure, sometimes at the cost of local
-relationships between points.
-</p>
+    <img src="/stat679_notes/assets/week11-3/soft_neighborhoods_large_k.png" alt="When using larger neighborhoods, UMAP will place more emphasis on preserving global structure, sometimes at the cost of local relationships between points." width="400" />
+    <p class="caption">
+    When using larger neighborhoods, UMAP will place more emphasis on
+    preserving global structure, sometimes at the cost of local
+    relationships between points.
+    </p>
 
-</p>
+    </p>
 
-1.  Once the graph is constructed, there is the question of how the
+5.  Once the graph is constructed, there is the question of how the
     graph layout should proceed. UMAP uses a variant of force-directed
     layout, and the global strength of the springs is another
     hyperparameter. Lower tension on the springs allow the points to
     spread out more loosely, higher tension forces points closer
     together. This is a second hyperparameter of UMAP.
 
-<p align="center">
-<img src="/stat679_notes/assets/week11-3/graph_layout.png" width="350" />
-</p>
+    <p align="center">
 
-1.  In R, we can implement this using almost the same code as we used
+    <img src="/stat679_notes/assets/week11-3/graph_layout.png" width="350" />
+
+    </p>
+
+6.  In R, we can implement this using almost the same code as we used
     for PCA. The `step_umap` command is available through the embed
     package.
 
@@ -119,7 +121,7 @@ relationships between points.
 
     ![](/stat679_notes/assets/week11-3/unnamed-chunk-7-1.png)
 
-2.  We can summarize the properties of UMAP,
+7.  We can summarize the properties of UMAP,
 
     -   Global or local structure: The number of nearest neighbors K
         used during graph construction can be used modulate the emphasis

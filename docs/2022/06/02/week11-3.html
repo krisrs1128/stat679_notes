@@ -2,7 +2,7 @@
 <html lang="en"><head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="author" content=""><title>Uniform Manifold Approximation | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+  <meta name="author" content=""><title>Uniform Manifold Approximation and Projection | Statistical Data Visualization</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/r.min.js"></script>
 <script>hljs.highlightAll();</script>
@@ -27,7 +27,7 @@
   </div>
   <article class="post">
     <header class="post__header">
-      <h1 class="post__title">Uniform Manifold Approximation</h1>
+      <h1 class="post__title">Uniform Manifold Approximation and Projection</h1>
       <div class="post__meta">
         <time>2022-06-02 00:00</time>
       </div>
@@ -36,7 +36,7 @@
       <p><em>Nonlinear dimensionality reduction with UMAP</em></p>
 
 <p><a href="https://github.com/krisrs1128/stat679_code/tree/main/examples/week11/week11-3.Rmd">Code</a>,
-<a href="">Recording</a></p>
+<a href="https://mediaspace.wisc.edu/media/Week%2010%20%5B4%5D%20Uniform%20Manifold%20Approximation%20and%20Projection/1_8tb5x1es">Recording</a></p>
 
 <ol>
   <li>
@@ -89,22 +89,20 @@ values of <em>K</em> prioritize preservation of global structure, while
 smaller <em>K</em> will better reflect local differences. This property is
 not obvious a priori, but is suggested by the simulations described
 in the reading.</p>
-  </li>
-</ol>
 
-<p align="center">
+    <p align="center">
 
 <img src="/stat679_notes/assets/week11-3/soft_neighborhoods.png" alt="When using fewer nearest neighbors, the final dimensionality reduction will place more emphasis on effectively preserving the relationships between points in local neighborhoods." width="400" />
 <p class="caption">
-When using fewer nearest neighbors, the final dimensionality reduction
-will place more emphasis on effectively preserving the relationships
-between points in local neighborhoods.
+When using fewer nearest neighbors, the final dimensionality
+reduction will place more emphasis on effectively preserving the
+relationships between points in local neighborhoods.
 </p>
 
 </p>
-
-<ol>
-  <li>One detail in the graph construction: In UMAP, the edges are
+  </li>
+  <li>
+    <p>One detail in the graph construction: In UMAP, the edges are
 assigned weights depending on the distance they span, normalized by
 the distance to the closest neighbor. Neighbors that are close,
 relative to the nearest neighbors, are assigned higher weights than
@@ -113,10 +111,9 @@ edges are pulled together with larger force in the final graph
 layout. This is what the authors mean by using a ``fuzzy’’ nearest
 neighbor graph. The fuzziness allows the algorithm to distinguish
 neighbors that are very close from those that are far, even though
-they all lie within a K-nearest-neighborhood.</li>
-</ol>
+they all lie within a <em>K</em>-nearest-neighborhood.</p>
 
-<p align="center">
+    <p align="center">
 
 <img src="/stat679_notes/assets/week11-3/soft_neighborhoods_large_k.png" alt="When using larger neighborhoods, UMAP will place more emphasis on preserving global structure, sometimes at the cost of local relationships between points." width="400" />
 <p class="caption">
@@ -126,21 +123,21 @@ relationships between points.
 </p>
 
 </p>
-
-<ol>
-  <li>Once the graph is constructed, there is the question of how the
+  </li>
+  <li>
+    <p>Once the graph is constructed, there is the question of how the
 graph layout should proceed. UMAP uses a variant of force-directed
 layout, and the global strength of the springs is another
 hyperparameter. Lower tension on the springs allow the points to
 spread out more loosely, higher tension forces points closer
-together. This is a second hyperparameter of UMAP.</li>
-</ol>
+together. This is a second hyperparameter of UMAP.</p>
 
-<p align="center">
+    <p align="center">
+
 <img src="/stat679_notes/assets/week11-3/graph_layout.png" width="350" />
-</p>
 
-<ol>
+</p>
+  </li>
   <li>
     <p>In R, we can implement this using almost the same code as we used
 for PCA. The <code class="language-plaintext highlighter-rouge">step_umap</code> command is available through the embed

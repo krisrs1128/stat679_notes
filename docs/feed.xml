@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-11-17T15:26:16-06:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Visualizing Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html" rel="alternate" type="text/html" title="Visualizing Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html"><![CDATA[<p><em>Short description</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-11-19T17:22:17-06:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Visualizing Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html" rel="alternate" type="text/html" title="Visualizing Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html"><![CDATA[<p><em>Short description</em></p>
 
 <ol>
   <li>
@@ -731,7 +731,7 @@ graph interactions suited to specific problems of interest.</p>
 </ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Encoding and data interaction in graphs]]></summary></entry><entry><title type="html">Goals of Dimensionality Reduction</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week11-1.html" rel="alternate" type="text/html" title="Goals of Dimensionality Reduction" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week11-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week11-1.html"><![CDATA[<p><em>When is dimensionality reduction helpful?</em></p>
 
 <p><a href="https://github.com/krisrs1128/stat679_code/tree/main/examples/week11/week11-1.Rmd">Code</a>,
-<a href="">Recording</a></p>
+<a href="https://mediaspace.wisc.edu/media/Week%2010%20%5B1%5D%20Introduction%20to%20Dimensionality%20Reduction/1_z4difn4d">Recording</a></p>
 
 <ol>
   <li>
@@ -793,7 +793,7 @@ near to one another.</p>
 </ol>]]></content><author><name></name></author><summary type="html"><![CDATA[When is dimensionality reduction helpful?]]></summary></entry><entry><title type="html">Principal Components Analysis</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week11-2.html" rel="alternate" type="text/html" title="Principal Components Analysis" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week11-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week11-2.html"><![CDATA[<p><em>Linear dimensionality reduction with PCA</em></p>
 
 <p><a href="https://github.com/krisrs1128/stat679_code/tree/main/examples/week11/week11-2.Rmd">Code</a>,
-<a href="">Recording</a></p>
+<a href="https://mediaspace.wisc.edu/media/Week%2010%20%5B3%5D%20Principal%20Components%20Analysis%20II/1_uows5d33">Recording</a></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
 library(tidymodels)
@@ -925,16 +925,16 @@ tidy, but with the argument <code class="language-plaintext highlighter-rouge">t
 ## # A tibble: 1,600 × 4
 ##    terms             value component id       
 ##    &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    
-##  1 light_rum        0.163  PC1       pca_V6l0A
-##  2 lemon_juice     -0.0140 PC1       pca_V6l0A
-##  3 lime_juice       0.224  PC1       pca_V6l0A
-##  4 sweet_vermouth  -0.0661 PC1       pca_V6l0A
-##  5 orange_juice     0.0308 PC1       pca_V6l0A
-##  6 powdered_sugar  -0.476  PC1       pca_V6l0A
-##  7 dark_rum         0.124  PC1       pca_V6l0A
-##  8 cranberry_juice  0.0954 PC1       pca_V6l0A
-##  9 pineapple_juice  0.119  PC1       pca_V6l0A
-## 10 bourbon_whiskey  0.0963 PC1       pca_V6l0A
+##  1 light_rum        0.163  PC1       pca_tMJA6
+##  2 lemon_juice     -0.0140 PC1       pca_tMJA6
+##  3 lime_juice       0.224  PC1       pca_tMJA6
+##  4 sweet_vermouth  -0.0661 PC1       pca_tMJA6
+##  5 orange_juice     0.0308 PC1       pca_tMJA6
+##  6 powdered_sugar  -0.476  PC1       pca_tMJA6
+##  7 dark_rum         0.124  PC1       pca_tMJA6
+##  8 cranberry_juice  0.0954 PC1       pca_tMJA6
+##  9 pineapple_juice  0.119  PC1       pca_tMJA6
+## 10 bourbon_whiskey  0.0963 PC1       pca_tMJA6
 ## # … with 1,590 more rows
 
 juice(pca_prep)
@@ -959,16 +959,16 @@ tidy(pca_prep, 2, type = "variance")
 ## # A tibble: 160 × 4
 ##    terms    value component id       
 ##    &lt;chr&gt;    &lt;dbl&gt;     &lt;int&gt; &lt;chr&gt;    
-##  1 variance  2.00         1 pca_V6l0A
-##  2 variance  1.71         2 pca_V6l0A
-##  3 variance  1.50         3 pca_V6l0A
-##  4 variance  1.48         4 pca_V6l0A
-##  5 variance  1.37         5 pca_V6l0A
-##  6 variance  1.32         6 pca_V6l0A
-##  7 variance  1.30         7 pca_V6l0A
-##  8 variance  1.20         8 pca_V6l0A
-##  9 variance  1.19         9 pca_V6l0A
-## 10 variance  1.18        10 pca_V6l0A
+##  1 variance  2.00         1 pca_tMJA6
+##  2 variance  1.71         2 pca_tMJA6
+##  3 variance  1.50         3 pca_tMJA6
+##  4 variance  1.48         4 pca_tMJA6
+##  5 variance  1.37         5 pca_tMJA6
+##  6 variance  1.32         6 pca_tMJA6
+##  7 variance  1.30         7 pca_tMJA6
+##  8 variance  1.20         8 pca_tMJA6
+##  9 variance  1.19         9 pca_tMJA6
+## 10 variance  1.18        10 pca_tMJA6
 ## # … with 150 more rows
 </code></pre></div>    </div>
   </li>
@@ -1024,10 +1024,10 @@ is deterministic, with the components being unique up to sign
 is the most the results might change).</li>
     </ul>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Linear dimensionality reduction with PCA]]></summary></entry><entry><title type="html">Uniform Manifold Approximation</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week11-3.html" rel="alternate" type="text/html" title="Uniform Manifold Approximation" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week11-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week11-3.html"><![CDATA[<p><em>Nonlinear dimensionality reduction with UMAP</em></p>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Linear dimensionality reduction with PCA]]></summary></entry><entry><title type="html">Uniform Manifold Approximation and Projection</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week11-3.html" rel="alternate" type="text/html" title="Uniform Manifold Approximation and Projection" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week11-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week11-3.html"><![CDATA[<p><em>Nonlinear dimensionality reduction with UMAP</em></p>
 
 <p><a href="https://github.com/krisrs1128/stat679_code/tree/main/examples/week11/week11-3.Rmd">Code</a>,
-<a href="">Recording</a></p>
+<a href="https://mediaspace.wisc.edu/media/Week%2010%20%5B4%5D%20Uniform%20Manifold%20Approximation%20and%20Projection/1_8tb5x1es">Recording</a></p>
 
 <ol>
   <li>
@@ -1080,22 +1080,20 @@ values of <em>K</em> prioritize preservation of global structure, while
 smaller <em>K</em> will better reflect local differences. This property is
 not obvious a priori, but is suggested by the simulations described
 in the reading.</p>
-  </li>
-</ol>
 
-<p align="center">
+    <p align="center">
 
 <img src="/stat679_notes/assets/week11-3/soft_neighborhoods.png" alt="When using fewer nearest neighbors, the final dimensionality reduction will place more emphasis on effectively preserving the relationships between points in local neighborhoods." width="400" />
 <p class="caption">
-When using fewer nearest neighbors, the final dimensionality reduction
-will place more emphasis on effectively preserving the relationships
-between points in local neighborhoods.
+When using fewer nearest neighbors, the final dimensionality
+reduction will place more emphasis on effectively preserving the
+relationships between points in local neighborhoods.
 </p>
 
 </p>
-
-<ol>
-  <li>One detail in the graph construction: In UMAP, the edges are
+  </li>
+  <li>
+    <p>One detail in the graph construction: In UMAP, the edges are
 assigned weights depending on the distance they span, normalized by
 the distance to the closest neighbor. Neighbors that are close,
 relative to the nearest neighbors, are assigned higher weights than
@@ -1104,10 +1102,9 @@ edges are pulled together with larger force in the final graph
 layout. This is what the authors mean by using a ``fuzzy’’ nearest
 neighbor graph. The fuzziness allows the algorithm to distinguish
 neighbors that are very close from those that are far, even though
-they all lie within a K-nearest-neighborhood.</li>
-</ol>
+they all lie within a <em>K</em>-nearest-neighborhood.</p>
 
-<p align="center">
+    <p align="center">
 
 <img src="/stat679_notes/assets/week11-3/soft_neighborhoods_large_k.png" alt="When using larger neighborhoods, UMAP will place more emphasis on preserving global structure, sometimes at the cost of local relationships between points." width="400" />
 <p class="caption">
@@ -1117,21 +1114,21 @@ relationships between points.
 </p>
 
 </p>
-
-<ol>
-  <li>Once the graph is constructed, there is the question of how the
+  </li>
+  <li>
+    <p>Once the graph is constructed, there is the question of how the
 graph layout should proceed. UMAP uses a variant of force-directed
 layout, and the global strength of the springs is another
 hyperparameter. Lower tension on the springs allow the points to
 spread out more loosely, higher tension forces points closer
-together. This is a second hyperparameter of UMAP.</li>
-</ol>
+together. This is a second hyperparameter of UMAP.</p>
 
-<p align="center">
+    <p align="center">
+
 <img src="/stat679_notes/assets/week11-3/graph_layout.png" width="350" />
-</p>
 
-<ol>
+</p>
+  </li>
   <li>
     <p>In R, we can implement this using almost the same code as we used
 for PCA. The <code class="language-plaintext highlighter-rouge">step_umap</code> command is available through the embed
