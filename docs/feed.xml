@@ -1,4 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-11-19T21:11:34-06:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Visualizing Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html" rel="alternate" type="text/html" title="Visualizing Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html"><![CDATA[<p><em>Short description</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/stat679_notes/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/stat679_notes/" rel="alternate" type="text/html" /><updated>2022-11-21T16:23:47-06:00</updated><id>http://localhost:4000/stat679_notes/feed.xml</id><title type="html">Statistical Data Visualization</title><subtitle>These are notes from STAT 679 (Fall 2022) at UW Madison.</subtitle><entry><title type="html">Visualizing Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html" rel="alternate" type="text/html" title="Visualizing Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-2</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-2.html"><![CDATA[<p><em>Visual encodings for memberships and topics</em></p>
+
+<p><a href="https://github.com/krisrs1128/stat679_code/tree/main/examples/week12/week12-2.Rmd">Code</a>,
+<a href="">Recording</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
+library(tidytext)
+library(topicmodels)
+library(superheat)
+library(ggrepel)
+load("12-1.rda")
+</code></pre></div></div>
 
 <ol>
   <li>
@@ -6,12 +17,14 @@
 If the vocabulary isn’t too large, two appropriate visualization
 strategies are,</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Faceted barplot: Each facet corresponds to a topic. The height of each bar
- corresponds to a given word’s probability within the topic. The sum of heights
- across all bars is 1.
- * Heatmap: Each row is a topic and each column is a word. The color of the
- heatmap cells gives the probability of the word within the given topic.
-</code></pre></div>    </div>
+    <ul>
+      <li>Faceted barplot: Each facet corresponds to a topic. The height
+of each bar corresponds to a given word’s probability within the
+topic. The sum of heights across all bars is 1.</li>
+      <li>Heatmap: Each row is a topic and each column is a word. The
+color of the heatmap cells gives the probability of the word
+within the given topic.</li>
+    </ul>
   </li>
   <li>
     <p>We can construct a faceted barplot using the tidied beta matrix.
@@ -20,11 +33,13 @@ in at least one topic, but there are still more words than we could
 begin to inspect. Nonetheless, it seems that there are words that
 have relatively high probability in one topic, but not others.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ggplot(topics %&gt;% filter(beta &gt; 3e-4), aes(term, beta)) +
-      geom_col() +
-      facet_grid(topic ~ .) +
-      theme(axis.text.x = element_blank())
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ggplot(topics %&gt;% filter(beta &gt; 3e-4), aes(term, beta)) +
+  geom_col() +
+  facet_grid(topic ~ .) +
+  theme(axis.text.x = element_blank())
 </code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week12-2/unnamed-chunk-4-1.png" alt="" /></p>
   </li>
   <li>
     <p>For the heatmap, we need to pivot the topics, so that words appear
@@ -33,27 +48,32 @@ the heatmap is that it takes up less space, and while it obscures
 comparisons between word probabilities 1 the main differences of
 interest are between low and high probability words.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    topics %&gt;%
-      filter(beta &gt; 3e-4) %&gt;%
-      pivot_wider(topic, term, values_from = "beta", values_fill = 0, names_repair = "unique") %&gt;%
-      select(-1) %&gt;%
-      superheat(
-        pretty.order.cols = TRUE,
-        legend = FALSE
-      )
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>topics %&gt;%
+  filter(beta &gt; 3e-4) %&gt;%
+  pivot_wider(names_from = "term", values_from = "beta", values_fill = 0, names_repair = "unique") %&gt;%
+  select(-1) %&gt;%
+  superheat(
+  pretty.order.cols = TRUE,
+  legend = FALSE
+  )
 </code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week12-2/unnamed-chunk-5-1.png" alt="" /></p>
   </li>
   <li>
     <p>Neither approach is very satisfactory since there are too many words
 for us to effectively label. A workaround is to restrict attention
 to a subset of “interesting” words. For example, we could filter to,</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Top words overall: We can consider only words whose probabilities are above
- some threshold. This is the approach used in the visualizations above, though
- the threshold is very low (there are still too many words to add labels).
- * Top words per topic: We can sort the words within each topic in order from
- highest to lowest probability, and then keep only the S largest.
-</code></pre></div>    </div>
+    <ul>
+      <li>Top words overall: We can consider only words whose
+probabilities are above some threshold. This is the approach
+used in the visualizations above, though the threshold is very
+low (there are still too many words to add labels).</li>
+      <li>Top words per topic: We can sort the words within each topic in
+order from highest to lowest probability, and then keep only the
+S largest.</li>
+    </ul>
   </li>
   <li>
     <p>Most discriminative words: Some words have high probability just
@@ -72,17 +92,19 @@ we can guess that the topics approximately correspond to: 1 -&gt;
 Great Expectations, 2 -&gt; 20,000 Leagues Under the Sea, 3 -&gt;
 Pride &amp; Prejudice, 4 -&gt; War of the Worlds.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    top_terms &lt;- topics %&gt;%
-      group_by(topic) %&gt;%
-      slice_max(beta, n = 10) %&gt;%
-      mutate(term = reorder_within(term, beta, topic))
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>top_terms &lt;- topics %&gt;%
+  group_by(topic) %&gt;%
+  slice_max(beta, n = 10) %&gt;%
+  mutate(term = reorder_within(term, beta, topic))
 
-    ggplot(top_terms, aes(beta, term, fill = factor(topic))) +
-      geom_col(show.legend = FALSE) +
-      facet_wrap(~ topic, scales = "free") +
-      scale_fill_brewer(palette = "Set2") +
-      scale_y_reordered()
+ggplot(top_terms, aes(beta, term, fill = factor(topic))) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ topic, scales = "free") +
+  scale_fill_brewer(palette = "Set2") +
+  scale_y_reordered()
 </code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week12-2/unnamed-chunk-6-1.png" alt="" /></p>
   </li>
   <li>
     <p>To visualize discriminative words, we first compute a discrimination
@@ -95,22 +117,24 @@ is discriminative between any pair of topics. This might seem like a
 mysterious formula, but it is just a function that is large when
 topic k has much larger probability than topic l (see the figure).</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    p &lt;- seq(0.01, .99, length.out = 50)
-    df &lt;- expand.grid(p, p) %&gt;%
-      mutate(D = kl_div(Var1, Var2))
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>p &lt;- seq(0.01, .99, length.out = 50)
+df &lt;- expand.grid(p, p) %&gt;%
+  mutate(D = kl_div(Var1, Var2))
 
-    ggplot(df, aes(Var2, Var1)) +
-      geom_tile(aes(col = D, fill = D)) +
-      scale_x_continuous(expand = c(0, 0)) +
-      scale_y_continuous(expand = c(0, 0)) +
-      coord_fixed() +
-      scale_color_distiller(direction = 1) +
-      scale_fill_distiller(direction = 1) +
-      labs(
-        y = expression(beta[kw]),
-        x = expression(beta[lw])
-      )
+ggplot(df, aes(Var2, Var1)) +
+  geom_tile(aes(col = D, fill = D)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  coord_fixed() +
+  scale_color_distiller(direction = 1) +
+  scale_fill_distiller(direction = 1) +
+  labs(
+  y = expression(beta[kw]),
+  x = expression(beta[lw])
+  )
 </code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week12-2/unnamed-chunk-7-1.png" alt="" /></p>
   </li>
   <li>
     <p>An example heatmap of discriminative words is shown below. This
@@ -120,24 +144,27 @@ appeared in the plot above) and highlights rarer words that are
 specific to individual topics (e.g., names of characters that appear
 in only one of the books).</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    discriminative_terms &lt;- topics %&gt;%
-      group_by(term) %&gt;%
-      mutate(D = discrepancy(beta)) %&gt;%
-      ungroup() %&gt;%
-      slice_max(D, n = 200) %&gt;%
-      mutate(term = fct_reorder(term, -D))
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>discriminative_terms &lt;- topics %&gt;%
+  group_by(term) %&gt;%
+  mutate(D = discrepancy(beta)) %&gt;%
+  ungroup() %&gt;%
+  slice_max(D, n = 200) %&gt;%
+  mutate(term = fct_reorder(term, -D))
 
-    discriminative_terms %&gt;%
-      pivot_wider(term, topic, values_from = "beta") %&gt;%
-      column_to_rownames("term") %&gt;%
-      superheat(
-        pretty.order.rows = TRUE,
-        left.label.size = 1.5,
-        left.label.text.size = 3,
-        bottom.label.size = 0.05,
-        legend = FALSE
-      )
+discriminative_terms %&gt;%
+  select(-D) %&gt;%
+  pivot_wider(names_from = "topic", values_from = "beta") %&gt;%
+  column_to_rownames("term") %&gt;%
+  superheat(
+    pretty.order.rows = TRUE,
+    left.label.size = 1.5,
+    left.label.text.size = 3,
+    bottom.label.size = 0.05,
+    legend = FALSE
+  )
 </code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week12-2/unnamed-chunk-8-1.png" alt="" /></p>
   </li>
 </ol>
 
@@ -156,14 +183,16 @@ the Sea.</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>memberships &lt;- memberships %&gt;%
   mutate(
-    book = str_extract(document, "[^_]+"),
-    topic = factor(topic)
+book = str_extract(document, "[^_]+"),
+topic = factor(topic)
   )
 
 ggplot(memberships, aes(topic, gamma)) +
   geom_boxplot() +
   facet_wrap(~book)
 </code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week12-2/unnamed-chunk-9-1.png" alt="" /></p>
   </li>
   <li>
     <p>The boxplot considers the collection of documents in aggregate. If
@@ -181,6 +210,8 @@ high membership in Topic 2 and low membership in topic 3.</p>
   facet_wrap(~ book) +
   scale_color_brewer(palette = "Set1")
 </code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week12-2/unnamed-chunk-10-1.png" alt="" /></p>
   </li>
   <li>
     <p>Alternatively, we can use a “structure” plot. This is a type of
@@ -190,7 +221,7 @@ clustering on their proportion vectors. The takeaways here are
 similar to those in the scatterplot above.</p>
 
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gamma &lt;- memberships %&gt;%
-  pivot_wider(document:book, topic, values_from = gamma)
+  pivot_wider(names_from = "topic", values_from = "gamma")
 hclust_result &lt;- hclust(dist(gamma[, 3:6]))
 document_order &lt;- gamma$document[hclust_result$order]
 memberships &lt;- memberships %&gt;%
@@ -203,8 +234,10 @@ ggplot(memberships, aes(gamma, document, fill = topic, col = topic)) +
   scale_color_brewer(palette = "Set2") +
   theme(axis.text.y = element_blank())
 </code></pre></div>    </div>
+
+    <p><img src="/stat679_notes/assets/week12-2/unnamed-chunk-11-1.png" alt="" /></p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Short description]]></summary></entry><entry><title type="html">Structured Graphs</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week10-1.html" rel="alternate" type="text/html" title="Structured Graphs" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week10-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week10-1.html"><![CDATA[<p><em>Representing known structure in graphs</em></p>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Visual encodings for memberships and topics]]></summary></entry><entry><title type="html">Structured Graphs</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week10-1.html" rel="alternate" type="text/html" title="Structured Graphs" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week10-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week10-1.html"><![CDATA[<p><em>Representing known structure in graphs</em></p>
 
 <p><a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week10-1.Rmd">Code</a>,
 <a href="https://mediaspace.wisc.edu/media/Week%2010%20-%201%3A%20Structured%20Graphs/1_fafxe09y">Recording</a></p>
@@ -1270,7 +1303,16 @@ algorithms holistically. In applications where interpretation and
 discovery are important, algorithms and interaction can work
 together to support complex reasoning.</p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Guiding dimensionality reduction through user inputs]]></summary></entry><entry><title type="html">Introduction to Topic Modeling</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-1.html" rel="alternate" type="text/html" title="Introduction to Topic Modeling" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-1.html"><![CDATA[<p><em>Short description</em></p>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Guiding dimensionality reduction through user inputs]]></summary></entry><entry><title type="html">Introduction to Topic Modeling</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-1.html" rel="alternate" type="text/html" title="Introduction to Topic Modeling" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-1</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-1.html"><![CDATA[<p><em>Quantitative descriptions of document topics</em></p>
+
+<p><a href="https://github.com/krisrs1128/stat679_code/tree/main/examples/week12/week12-1.Rmd">Code</a>,
+<a href="">Recording</a></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
+library(tidytext)
+library(topicmodels)
+library(gutenbergr) # devtools::install_github("ropensci/gutenbergr")
+</code></pre></div></div>
 
 <ol>
   <li>
@@ -1278,12 +1320,14 @@ together to support complex reasoning.</p>
 especially useful for high-dimensional count matrices. For example,
 it can be applied to,</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Text data analysis, where each row is a document and each column is a word.
- The ijth entry contains the count of the jth word in the ith document.
- * Gene expression analysis, where each row is a biological sample and each
- column is a gene. The $ij^{th}$ entry measures the amount of gene j expressed in
- sample i.
-</code></pre></div>    </div>
+    <ul>
+      <li>Text data analysis, where each row is a document and each column
+is a word. The <em>i**j</em> entry contains the count of word <em>j</em> word
+in the document <em>i</em>.</li>
+      <li>Gene expression analysis, where each row is a biological sample
+and each column is a gene. The <em>i**j</em> entry measures the amount
+of gene <em>j</em> expressed in sample <em>i</em>.</li>
+    </ul>
 
     <p>This week, we’ll specifically focus on the application to text data,
 since otherwise, we’ve covered relatively few visualization
@@ -1296,15 +1340,18 @@ generally.</p>
     <p>These models are useful to know about because they provide a
 compromise between clustering and PCA.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * In clustering, each document would have to be assigned to a single topic. In
- contrast, topic models allow each document to partially belong to several
- topics simultaneously. In this sense, they are more suitable when data do not
- belong to distinct, clearly-defined clusters.
- * PCA is also appropriate when the data vary continuously, but it does not
- provide any notion of clusters. In contrast, topic models estimate K topics,
- which are analogous to a cluster centroids (though documents are typically a
- mix of several centroids).
-</code></pre></div>    </div>
+    <ul>
+      <li>In clustering, each document would have to be assigned to a
+single topic. In contrast, topic models allow each document to
+partially belong to several topics simultaneously. In this
+sense, they are more suitable when data do not belong to
+distinct, clearly-defined clusters.</li>
+      <li>PCA is also appropriate when the data vary continuously, but it
+does not provide any notion of clusters. In contrast, topic
+models estimate <em>K</em> topics, which are analogous to a cluster
+centroids (though documents are typically a mix of several
+centroids).</li>
+    </ul>
   </li>
   <li>
     <p>Without going into mathematical detail, topic models perform
@@ -1318,6 +1365,12 @@ and the “business” topic. For (ii), consider the difference in words
 that would appear in politics and business articles. Articles about
 politics might frequently include words like “congress” and “law,”
 but only rarely words like “stock” and “trade.”</p>
+
+    <p align="center">
+
+<img src="/stat679_notes/assets/week12-1/topics_overview.png" width="700" />
+
+</p>
   </li>
   <li>
     <p>A document is a mixture of topics, with more words coming from the
@@ -1325,14 +1378,20 @@ topics that it is close to. More precisely, a document that is very
 close to a particular topic has a word distribution just like that
 topic. A document that is intermediate between two topics has a word
 distribution that mixes between both topics.</p>
+
+    <p align="center">
+
+<img src="/stat679_notes/assets/week12-1/LDA-f3.png" width="250" />
+
+</p>
   </li>
   <li>
     <p>Let’s see how to fit a topic model in R. We will use LDA as
-implemented in the topicmodels package, which expects input to be
-structured as a DocumentTermMatrix, a special type of matrix that
+implemented in the <code class="language-plaintext highlighter-rouge">topicmodels</code> package, which expects input to be
+structured as a <code class="language-plaintext highlighter-rouge">DocumentTermMatrix</code>, a special type of matrix that
 stores the counts of words (columns) across documents (rows). In
 practice, most of the effort required to fit a topic model goes into
-transforming the raw data into a suitable DocumentTermMatrix.</p>
+transforming the raw data into a suitable <code class="language-plaintext highlighter-rouge">DocumentTermMatrix</code>.</p>
   </li>
   <li>
     <p>To illustrate this process, let’s consider the “Great Library Heist”
@@ -1343,13 +1402,28 @@ out. We are left with pieces of isolated pieces of text and have to
 determine from which book they are from. The block below downloads
 all the books into an R object.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    titles &lt;- c("Twenty Thousand Leagues under the Sea",
-                "The War of the Worlds",
-                "Pride and Prejudice", 
-                "Great Expectations")
-    books &lt;- gutenberg_works(title %in% titles) %&gt;%
-      gutenberg_download(meta_fields = "title")
-    books
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>titles &lt;- c("Twenty Thousand Leagues under the Sea",
+        "The War of the Worlds",
+        "Pride and Prejudice", 
+        "Great Expectations")
+books &lt;- gutenberg_works(title %in% titles) %&gt;%
+  gutenberg_download(meta_fields = "title")
+books
+
+## # A tibble: 53,724 × 3
+##    gutenberg_id text                    title                
+##           &lt;int&gt; &lt;chr&gt;                   &lt;chr&gt;                
+##  1           36 "cover "                The War of the Worlds
+##  2           36 ""                      The War of the Worlds
+##  3           36 ""                      The War of the Worlds
+##  4           36 ""                      The War of the Worlds
+##  5           36 ""                      The War of the Worlds
+##  6           36 "The War of the Worlds" The War of the Worlds
+##  7           36 ""                      The War of the Worlds
+##  8           36 "by H. G. Wells"        The War of the Worlds
+##  9           36 ""                      The War of the Worlds
+## 10           36 ""                      The War of the Worlds
+## # … with 53,714 more rows
 </code></pre></div>    </div>
   </li>
   <li>
@@ -1361,16 +1435,16 @@ anytime the word “Chapter” appears. We will keep track of the book
 names for each chapter, but this information is not passed into the
 topic modeling algorithm.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    by_chapter &lt;- books %&gt;%
-      group_by(title) %&gt;%
-      mutate(
-        chapter = cumsum(str_detect(text, regex("chapter", ignore_case = TRUE)))
-      ) %&gt;%
-      group_by(title, chapter) %&gt;%
-      mutate(n = n()) %&gt;%
-      filter(n &gt; 5) %&gt;%
-      ungroup() %&gt;%
-      unite(document, title, chapter)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>by_chapter &lt;- books %&gt;%
+  group_by(title) %&gt;%
+  mutate(
+    chapter = cumsum(str_detect(text, regex("chapter", ignore_case = TRUE)))
+  ) %&gt;%
+  group_by(title, chapter) %&gt;%
+  mutate(n = n()) %&gt;%
+  filter(n &gt; 5) %&gt;%
+  ungroup() %&gt;%
+  unite(document, title, chapter)
 </code></pre></div>    </div>
   </li>
   <li>
@@ -1391,28 +1465,20 @@ appeared in each document using count, a shortcut for the usual
   </li>
   <li>
     <p>These words counts are still not in a format compatible with
-conversion to a DocumentTermMatrix. The issue is that the
-DocumentTermMatrix expects words to be arranged along columns, but
+conversion to a <code class="language-plaintext highlighter-rouge">DocumentTermMatrix</code>. The issue is that the
+<code class="language-plaintext highlighter-rouge">DocumentTermMatrix</code> expects words to be arranged along columns, but
 currently they are stored across rows. The line below converts the
 original “long” word counts into a “wide” DocumentTermMatrix in one
 step. Across these 4 books, we have 65 chapters and a vocabulary of
-size</p>
+size 18325.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chapters_dtm &lt;- word_counts %&gt;%
+  cast_dtm(document, word, n)
+</code></pre></div>    </div>
   </li>
-  <li></li>
-</ol>
-
-<!-- -->
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```r
-    chapters_dtm &lt;- word_counts %&gt;%
-      cast_dtm(document, word, n)
-```
-</code></pre></div></div>
-
-<ol>
   <li>
     <p>Once the data are in this format, we can use the LDA function to fit
-a topic model. We choose K=4 topics because we expect that each
+a topic model. We choose <em>K</em> = 4 topics because we expect that each
 topic will match a book. Different hyperparameters can be set using
 the control argument. There are two types of outputs produced by the
 LDA model: the topic word distributions (for each topic, which words
@@ -1424,8 +1490,10 @@ whether we want the topics (beta) or memberships (gamma).</p>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chapters_lda &lt;- LDA(chapters_dtm, k = 4, control = list(seed = 1234))
 chapters_lda
 
+## A LDA_VEM topic model with 4 topics.
+
 topics &lt;- tidy(chapters_lda, matrix = "beta")
-    memberships &lt;- tidy(chapters_lda, matrix = "gamma")
+memberships &lt;- tidy(chapters_lda, matrix = "gamma")
 </code></pre></div>    </div>
   </li>
   <li>
@@ -1434,16 +1502,46 @@ directly from the fitted model (e.g., using <code class="language-plaintext high
 because it ensures the output is a tidy data.frame, rather than a
 matrix. Tidy data.frames are easier to visualize using ggplot2.</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    # highest weight words per topic
-    topics %&gt;%
-      arrange(topic, -beta)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># highest weight words per topic
+topics %&gt;%
+  arrange(topic, -beta)
 
-    # topic memberships per document
-    memberships %&gt;%
-      arrange(document, topic)
+## # A tibble: 74,976 × 3
+##    topic term          beta
+##    &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;
+##  1     1 captain    0.0153 
+##  2     1 _nautilus_ 0.0126 
+##  3     1 sea        0.00907
+##  4     1 nemo       0.00863
+##  5     1 ned        0.00789
+##  6     1 conseil    0.00676
+##  7     1 water      0.00599
+##  8     1 land       0.00598
+##  9     1 sir        0.00485
+## 10     1 day        0.00365
+## # … with 74,966 more rows
+
+# topic memberships per document
+memberships %&gt;%
+  arrange(document, topic)
+
+## # A tibble: 780 × 3
+##    document               topic     gamma
+##    &lt;chr&gt;                  &lt;int&gt;     &lt;dbl&gt;
+##  1 Great Expectations_0       1 0.00282  
+##  2 Great Expectations_0       2 0.461    
+##  3 Great Expectations_0       3 0.00282  
+##  4 Great Expectations_0       4 0.533    
+##  5 Great Expectations_100     1 0.000424 
+##  6 Great Expectations_100     2 0.000424 
+##  7 Great Expectations_100     3 0.999    
+##  8 Great Expectations_100     4 0.000424 
+##  9 Great Expectations_101     1 0.0000140
+## 10 Great Expectations_101     2 0.0000140
+## # … with 770 more rows
 </code></pre></div>    </div>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Short description]]></summary></entry><entry><title type="html">Interface Design and Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-3.html" rel="alternate" type="text/html" title="Interface Design and Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-3.html"><![CDATA[<p><em>Short description</em></p>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Quantitative descriptions of document topics]]></summary></entry><entry><title type="html">Interface Design and Topic Models</title><link href="http://localhost:4000/stat679_notes/2022/06/02/week12-3.html" rel="alternate" type="text/html" title="Interface Design and Topic Models" /><published>2022-06-02T00:00:00-05:00</published><updated>2022-06-02T00:00:00-05:00</updated><id>http://localhost:4000/stat679_notes/2022/06/02/week12-3</id><content type="html" xml:base="http://localhost:4000/stat679_notes/2022/06/02/week12-3.html"><![CDATA[<p><em>The Stanford Dissertation Browser case study</em></p>
 
 <ol>
   <li>
@@ -1465,15 +1563,16 @@ the reasons data science training takes years.</p>
   <li>
     <p>The authors of this week’s reading suggest a mnemonic: “interpret
 but verify.” This captures several principles,</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Interpret: Models and visualizations should be designed in such a way that
- users can draw inferences that are relevant to their understanding of a
- domain.
- * Verify: It is the designer’s responsibility that these inferences be
- accurate.
-</code></pre></div>    </div>
   </li>
 </ol>
+
+<ul>
+  <li>Interpret: Models and visualizations should be designed in such a
+way that users can draw inferences that are relevant to their
+understanding of a domain.</li>
+  <li>Verify: It is the designer’s responsibility that these inferences be
+accurate.</li>
+</ul>
 
 <h4 id="stanford-dissertation-browser">Stanford Dissertation Browser</h4>
 
@@ -1499,7 +1598,11 @@ in neurobiology (voltage, current, …) led to theses in this
 department to appear very close to electrical engineering, when they
 really had more in common with those in other biology departments.</p>
 
-    <p>[Show the petroleum engineering example]</p>
+    <p align="center">
+
+<img src="/stat679_notes/assets/week12-3/petroleum_case.png" width="400" />
+
+</p>
   </li>
   <li>
     <p>The authors carefully tracked and manually verified inferences made
@@ -1509,8 +1612,11 @@ example, they used a supervised variant of topics models, and they
 replaced their original dimensionality reduction scatterplot with a
 visualization of topic-derived inter-department similarities.</p>
 
-    <p>[Show the updated dimensionality reduction for petroleum
-engineering]</p>
+    <p align="center">
+
+<img src="/stat679_notes/assets/week12-3/radial_view.png" width="400" />
+
+</p>
   </li>
 </ol>
 
@@ -1520,13 +1626,14 @@ engineering]</p>
   <li>
     <p>To implement the “interpret but verify” idea, the authors recommend,</p>
 
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> * Align the analysis, visualization, and models along appropriate “units of
- analysis.”
- * Verify that the modeling results in abstractions / concepts that are
- relevant to the analysis, and modify accordingly.
- * Progressively disclose data to support reasoning at multiple levels of
- abstraction.
-</code></pre></div>    </div>
+    <ul>
+      <li>Align the analysis, visualization, and models along appropriate
+“units of analysis.”</li>
+      <li>Verify that the modeling results in abstractions / concepts that
+are relevant to the analysis, and modify accordingly.</li>
+      <li>Progressively disclose data to support reasoning at multiple
+levels of abstraction.</li>
+    </ul>
   </li>
   <li>
     <p>The units of analysis in the dissertation browser were departments
@@ -1542,20 +1649,29 @@ model structure, or simply override the model with user-provided
 values.</p>
   </li>
   <li>
-    <p>Progressive disclosure allows the user to go up and down the ladder
-of abstraction. It makes it possible to navigate large-scale data
-while supporting verification through specific examples.</p>
+    <p>Progressive disclosure allows the user to go up and down the <a href="http://worrydream.com/LadderOfAbstraction/">ladder
+of abstraction</a>. It
+makes it possible to navigate large-scale data while supporting
+verification through specific examples.</p>
   </li>
   <li>
     <p>In the dissertation browser, this is implemented through semantic
 zooming (from departmental to dissertation views) and linked
 highlighting (revealing the dissertation abstract on mouseover).</p>
+
+    <p align="center">
+
+<img src="/stat679_notes/assets/week12-3/dissertation_browser_overview.png" width="800" />
+
+</p>
   </li>
   <li>
     <p>The question of how to effectively weave together model building
 with visual design is still one that is actively explored in
 research today. If you enjoyed reading about this project, you may
-enjoy other papers on visualization for topic models or in machine
-learning more generally.</p>
+enjoy other papers on visualization for topic models or machine
+learning [<a href="https://visxai.io/">1</a>, <a href="https://distill.pub/">2</a>,
+<a href="https://www.sciencedirect.com/science/article/pii/S2468502X17300086">3</a>]
+more generally.</p>
   </li>
-</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[Short description]]></summary></entry></feed>
+</ol>]]></content><author><name></name></author><summary type="html"><![CDATA[The Stanford Dissertation Browser case study]]></summary></entry></feed>
