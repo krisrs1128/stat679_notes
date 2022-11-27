@@ -36,7 +36,7 @@
       <p><em>Visual encodings for memberships and topics</em></p>
 
 <p><a href="https://github.com/krisrs1128/stat679_code/tree/main/examples/week12/week12-2.Rmd">Code</a>,
-<a href="">Recording</a></p>
+<a href="https://mediaspace.wisc.edu/media/Week%2012%20-%202%3A%20Visualizing%20Topic%20Models/1_07w1sdg7">Recording</a></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
 library(tidytext)
@@ -145,29 +145,14 @@ ggplot(top_terms, aes(beta, term, fill = factor(topic))) +
     <p>To visualize discriminative words, we first compute a discrimination
 measure for each word and filter to those with the top score. The
 filtered results can be used in either faceted barplots or heatmaps.
-Specifically, to find the words that discriminate between topics k
-and l, we compute D(k,l):=βkwlog(βkwβlw)+(βlw−βkw) for each word w.
-By maximizing over all pairs k,l, we can determine whether the word
-is discriminative between any pair of topics. This might seem like a
-mysterious formula, but it is just a function that is large when
-topic k has much larger probability than topic l (see the figure).</p>
-
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>p &lt;- seq(0.01, .99, length.out = 50)
-df &lt;- expand.grid(p, p) %&gt;%
-  mutate(D = kl_div(Var1, Var2))
-
-ggplot(df, aes(Var2, Var1)) +
-  geom_tile(aes(col = D, fill = D)) +
-  scale_x_continuous(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0)) +
-  coord_fixed() +
-  scale_color_distiller(direction = 1) +
-  scale_fill_distiller(direction = 1) +
-  labs(
-  y = expression(beta[kw]),
-  x = expression(beta[lw])
-  )
-</code></pre></div>    </div>
+Specifically, to find the words that discriminate between topics <em>k</em>
+and <em>l</em>, we compute
+\(D\left(k, l\right) := \beta_{kw}\log\left(\frac{\beta_{kw}}{\beta_{lw}}\right) + \left(\beta_{lw} - \beta_{kw}\right)\)
+for each word <em>w</em>. By maximizing over all pairs <em>k</em>, <em>l</em>, we can
+determine whether the word is discriminative between any pair of
+topics. This might seem like a mysterious formula, but it is just a
+function that is large when topic <em>k</em> has much larger probability
+than topic <em>l</em> (see the figure).</p>
 
     <p><img src="/stat679_notes/assets/week12-2/unnamed-chunk-7-1.png" alt="" /></p>
   </li>

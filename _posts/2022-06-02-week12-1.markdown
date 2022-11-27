@@ -9,7 +9,7 @@ output:
 *Quantitative descriptions of document topics*
 
 [Code](https://github.com/krisrs1128/stat679_code/tree/main/examples/week12/week12-1.Rmd),
-[Recording]()
+[Recording](https://mediaspace.wisc.edu/media/Week%2012%20-%201%3A%20Introduction%20to%20Topic%20Models/1_li5hthm0)
 
     library(tidyverse)
     library(tidytext)
@@ -220,3 +220,7 @@ output:
         ##  9 Great Expectations_101     1 0.0000140
         ## 10 Great Expectations_101     2 0.0000140
         ## # … with 770 more rows
+
+<!-- -->
+
+    save(topics, memberships, file = "12-1.rda")
