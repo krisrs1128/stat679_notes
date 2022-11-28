@@ -35,7 +35,7 @@
     <div class="post__content content">
       <p><em>Visual encodings for memberships and topics</em></p>
 
-<p><a href="https://github.com/krisrs1128/stat679_code/tree/main/examples/week12/week12-2.Rmd">Code</a>,
+<p><a href="https://github.com/krisrs1128/stat679_code/blob/main/notes/week12-2.Rmd">Code</a>,
 <a href="https://mediaspace.wisc.edu/media/Week%2012%20-%202%3A%20Visualizing%20Topic%20Models/1_07w1sdg7">Recording</a></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>library(tidyverse)
@@ -147,7 +147,7 @@ measure for each word and filter to those with the top score. The
 filtered results can be used in either faceted barplots or heatmaps.
 Specifically, to find the words that discriminate between topics <em>k</em>
 and <em>l</em>, we compute
-\(D\left(k, l\right) := \beta_{kw}\log\left(\frac{\beta_{kw}}{\beta_{lw}}\right) + \left(\beta_{lw} - \beta_{kw}\right)\)
+\(D\left(k, l\right) := \beta\_{kw}\log\left(\frac{\beta\_{kw}}{\beta\_{lw}}\right) + \left(\beta\_{lw} - \beta\_{kw}\right)\)
 for each word <em>w</em>. By maximizing over all pairs <em>k</em>, <em>l</em>, we can
 determine whether the word is discriminative between any pair of
 topics. This might seem like a mysterious formula, but it is just a
