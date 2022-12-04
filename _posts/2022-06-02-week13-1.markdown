@@ -8,6 +8,9 @@ output:
 
 *More evocative uncertainty visualization*
 
+[Code](https://github.com/krisrs1128/stat679_code/blob/main/notes/week13-1.Rmd),
+[Recording](https://mediaspace.wisc.edu/media/Week%2013%20-%201%3A%20Frequency%20Framing/1_ywcaurej)
+
     library(tidyverse)
     library(ggdist)
     library(distributional)

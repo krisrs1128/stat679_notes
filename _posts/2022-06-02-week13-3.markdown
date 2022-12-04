@@ -8,6 +8,9 @@ output:
 
 *Imagining alternatives in complex data structures*
 
+[Code](https://github.com/krisrs1128/stat679_code/blob/main/notes/week13-3.Rmd),
+[Recording](https://mediaspace.wisc.edu/media/Week%2013%20-%203%3A%20Hypothetical%20Outcomes/1_m07h0ary)
+
     library(tidyverse)
     library(ggdist)
     library(ungeviz)
@@ -166,8 +169,4 @@ output:
 
 10. A final observation: hypothetical outcome plots can natural build up
     to distributional visualizations. By layering the outcomes on top of
-    one another, we can see the distribution emerge over time. This
-    strategy was used to describe income mobility in an article by the
-    New York Times.
-
-    <iframe src="https://www.nytimes.com/interactive/2018/03/27/upshot/make-your-own-mobility-animation.html" data-external="1" width=700 height=700/></iframe>
+    one another, we can see the distribution emerge over time.
